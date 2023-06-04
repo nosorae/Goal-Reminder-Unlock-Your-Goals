@@ -1,4 +1,4 @@
-package com.yessorae.goalreminder
+package com.yessorae.data
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
