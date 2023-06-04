@@ -44,9 +44,8 @@ private val LightColorScheme = lightColorScheme(
     inversePrimary = md_theme_light_inversePrimary,
     surfaceTint = md_theme_light_surfaceTint,
     outlineVariant = md_theme_light_outlineVariant,
-    scrim = md_theme_light_scrim,
+    scrim = md_theme_light_scrim
 )
-
 
 private val DarkColorScheme = darkColorScheme(
     primary = md_theme_dark_primary,
@@ -77,7 +76,7 @@ private val DarkColorScheme = darkColorScheme(
     inversePrimary = md_theme_dark_inversePrimary,
     surfaceTint = md_theme_dark_surfaceTint,
     outlineVariant = md_theme_dark_outlineVariant,
-    scrim = md_theme_dark_scrim,
+    scrim = md_theme_dark_scrim
 )
 
 @Composable
@@ -91,6 +90,7 @@ fun GoalReminderTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
+
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
@@ -99,12 +99,14 @@ fun GoalReminderTheme(
         SideEffect {
             (view.context as Activity).window.statusBarColor = colorScheme.background.toArgb()
             (view.context as Activity).window.navigationBarColor = colorScheme.background.toArgb()
-            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = darkTheme.not()
+            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars =
+                darkTheme.not()
         }
     }
 
     MaterialTheme(
         colorScheme = colorScheme,
+        shapes = Shapes,
         typography = Typography,
         content = content
     )
