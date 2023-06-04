@@ -1,4 +1,4 @@
-package com.yessorae.goalreminder.ui.theme
+package com.yessorae.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 
