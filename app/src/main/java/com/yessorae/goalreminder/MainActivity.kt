@@ -1,5 +1,6 @@
 package com.yessorae.goalreminder
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -26,8 +27,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.yessorae.common.Logger
 import com.yessorae.designsystem.theme.GoalReminderTheme
-import com.yessorae.goalreminder.util.startScreenOnOffService
-import com.yessorae.goalreminder.util.stopScreenOnOffService
+import com.yessorae.goalreminder.background.ScreenOnService
+import com.yessorae.goalreminder.util.isServiceRunning
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -35,50 +36,29 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
-
-    private val requestOverlayPermission =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (Settings.canDrawOverlays(this)) {
-                Log.d("SR-N", "requestOverlayPermission ok")
-            } else {
-                Log.d("SR-N", "requestOverlayPermission cancel")
-            }
-        }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("SR-N", "MainActivity onCreate")
+        setScreen()
+        startScreenOnOffService()
+    }
+    private fun setScreen() {
         setContent {
-            GoalReminderTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
+            GoalReminderAppScreen()
+        }
+    }
 
+    private fun startScreenOnOffService() {
+        Intent(
+            this,
+            ScreenOnService::class.java
+        ).also { intent ->
+            if (!isServiceRunning(ScreenOnService::class.java)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    startForegroundService(intent)
+                } else {
+                    startService(intent)
                 }
             }
         }
-
-        if (!Settings.canDrawOverlays(this)) {
-            val intent =
-                Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
-            requestOverlayPermission.launch(intent)
-        }
-
-        startScreenOnOffService()
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    com.yessorae.designsystem.theme.GoalReminderTheme {
-        Greeting("Android")
     }
 }

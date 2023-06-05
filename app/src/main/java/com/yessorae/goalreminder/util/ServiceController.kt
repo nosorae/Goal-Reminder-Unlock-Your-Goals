@@ -16,27 +16,3 @@ fun Context.isServiceRunning(serviceClass: Class<*>): Boolean {
     }
     return false
 }
-
-fun Context.startScreenOnOffService() {
-    Intent(
-        this,
-        ScreenOnService::class.java
-    ).also { intent ->
-        if (!isServiceRunning(ScreenOnService::class.java)) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(intent)
-            } else {
-                startService(intent)
-            }
-        }
-    }
-}
-
-fun Context.stopScreenOnOffService() {
-    Intent(
-        this,
-        ScreenOnService::class.java
-    ).also { intent ->
-        stopService(intent)
-    }
-}

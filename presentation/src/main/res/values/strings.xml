@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_title_permission_request">권한 요청</string>
+    <string name="dialog_body_overlay_permission_request">잠금해제할 때마다 목표를 확인하기위해, 권한을 허용해 주세요.\n\n구글 정책에 따라 권한이 필요합니다.</string>
+
+    <string name="common_cancel">취소</string>
+    <string name="common_confirm">확인</string>
+</resources>
