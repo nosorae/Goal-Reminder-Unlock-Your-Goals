@@ -52,7 +52,9 @@ private fun GoalListItem(
                 ) {
                     Text(
                         text = goal.title,
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
                         modifier = Modifier.weight(1f, false),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -71,7 +73,9 @@ private fun GoalListItem(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = stringResource(id = R.string.home_goal_progress).format(goal.percent),
+                        text = stringResource(
+                            id = R.string.home_goal_progress
+                        ).format(goal.percent),
                         style = MaterialTheme.typography.labelMedium,
                         textAlign = TextAlign.Center
                     )
@@ -83,12 +87,13 @@ private fun GoalListItem(
                         trackColor = MaterialTheme.colorScheme.onBackground
                     )
                 }
-            },
+            }
         )
 
         IconButton(
             modifier = Modifier.align(Alignment.TopEnd),
-            onClick = { onClickMore() }) {
+            onClick = { onClickMore() }
+        ) {
             Icon(
                 imageVector = Icons.Filled.MoreVert,
                 contentDescription = null,
@@ -96,10 +101,7 @@ private fun GoalListItem(
             )
         }
     }
-
-
 }
-
 
 @Preview
 @Composable

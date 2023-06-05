@@ -1,6 +1,5 @@
 package com.yessorae.presentation.model
 
-import android.content.Context
 import com.yessorae.presentation.R
 import com.yessorae.presentation.model.enum.GoalType
 import com.yessorae.util.ResString
@@ -8,9 +7,8 @@ import com.yessorae.util.StringModel
 import com.yessorae.util.TextString
 import com.yessorae.util.getMonthDisplay
 import com.yessorae.util.getWeekDisplay
-import kotlinx.datetime.LocalDateTime
 import kotlin.math.roundToInt
-
+import kotlinx.datetime.LocalDateTime
 
 data class Goal(
     val title: String,
@@ -43,7 +41,6 @@ data class Goal(
             }
         }
     }
-
 
     val percent: Int by lazy {
         (currentScore / totalScore.toDouble() * 100).roundToInt()

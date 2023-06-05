@@ -14,7 +14,7 @@ data class Todo(
     val goalId: Int? = null,
     val goalTitle: String? = null,
     val goalContributionScore: Int? = null,
-    val description: String? = null,
+    val description: String? = null
 ) {
     val subtitle: StringModel? by lazy {
         if (startTime == null || endTime == null) {
@@ -60,7 +60,3 @@ val mockTodoData = listOf(
         description = "Buy fresh fruits, vegetables, milk, bread, and eggs"
     )
 )
-
-
-
-

@@ -52,7 +52,9 @@ private fun TodoListItem(
                 ) {
                     Text(
                         text = todo.title,
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
                         modifier = Modifier.weight(1f, false),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -93,7 +95,8 @@ private fun TodoListItem(
 
         IconButton(
             modifier = Modifier.align(Alignment.CenterEnd),
-            onClick = { onClickMore() }) {
+            onClick = { onClickMore() }
+        ) {
             Icon(
                 imageVector = Icons.Filled.MoreVert,
                 contentDescription = null,
@@ -112,4 +115,3 @@ fun TodoListItemPreview() {
         }
     }
 }
-

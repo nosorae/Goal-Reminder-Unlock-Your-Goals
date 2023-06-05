@@ -30,9 +30,6 @@ fun MainScreen(viewModel: HomeViewModel = viewModel()) {
     )
 }
 
-
-
-
 @Composable
 private fun OverlayPermissionDialog(
     showDialog: Boolean,
