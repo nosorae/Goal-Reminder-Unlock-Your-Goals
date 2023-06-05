@@ -1,7 +1,7 @@
 package com.yessorae.goalreminder
 
 import android.app.Application
-//import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.AndroidEntryPoint
 
-//@AndroidEntryPoint
+@AndroidEntryPoint
 class GoalReminderApplication : Application()
