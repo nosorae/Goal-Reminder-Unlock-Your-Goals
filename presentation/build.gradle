@@ -28,8 +28,8 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled true
     }
-
     kotlinOptions {
         jvmTarget = '1.8'
     }
@@ -51,6 +51,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":di"))
     implementation(project(":common"))
+    implementation(project(":designsystem"))
 
     def composeBom = platform(compose_bom)
     implementation composeBom
@@ -74,6 +75,11 @@ dependencies {
     // hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+
+    // datetime
+    implementation "org.jetbrains.kotlinx:kotlinx-datetime:$date_time_version"
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
 
     // delete candidate
     implementation 'androidx.core:core-ktx:1.8.0'

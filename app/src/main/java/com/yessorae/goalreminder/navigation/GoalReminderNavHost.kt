@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.yessorae.presentation.Destination
 import com.yessorae.presentation.MainDestination
-import com.yessorae.presentation.home.MainScreen
+import com.yessorae.presentation.screen.home.MainScreen
 
 @Composable
 fun GoalReminderNavHost(

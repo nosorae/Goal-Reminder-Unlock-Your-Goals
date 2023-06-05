@@ -1,4 +1,4 @@
-package com.yessorae.presentation.home
+package com.yessorae.presentation.screen.home
 
 import com.yessorae.base.BaseScreenViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
