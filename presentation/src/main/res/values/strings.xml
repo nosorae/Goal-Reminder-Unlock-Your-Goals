@@ -22,4 +22,6 @@
     <string name="common_permission_request">권한 요청</string>
     <string name="common_cancel">취소</string>
     <string name="common_confirm">확인</string>
+    <string name="common_day_duration">%d일-%d일</string>
+    <string name="common_hour_duration">%d시-%d시</string>
 </resources>

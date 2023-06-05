@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -39,6 +40,7 @@ private fun GoalListItem(
     onClickGoal: () -> Unit = {},
     onClickMore: () -> Unit = {}
 ) {
+    val context = LocalContext.current
     Box(
         modifier = modifier.clickable { onClickGoal() }
     ) {
@@ -58,7 +60,7 @@ private fun GoalListItem(
                     Margin(dp = Dimen.InsideDividePadding)
                     goal.subtitle?.let { subtitle ->
                         Text(
-                            text = subtitle,
+                            text = subtitle.get(context),
                             style = MaterialTheme.typography.labelSmall
                         )
                     }
@@ -90,6 +92,7 @@ private fun GoalListItem(
             Icon(
                 imageVector = Icons.Filled.MoreVert,
                 contentDescription = null,
+                tint = MaterialTheme.colorScheme.onBackground
             )
         }
     }

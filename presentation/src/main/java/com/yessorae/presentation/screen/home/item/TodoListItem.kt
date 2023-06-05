@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -37,9 +38,11 @@ private fun TodoListItem(
     onClickTodo: () -> Unit = {},
     onClickMore: () -> Unit = {}
 ) {
-    Box(modifier = modifier.clickable {
-        onClickTodo()
-    }
+    val context = LocalContext.current
+    Box(
+        modifier = modifier.clickable {
+            onClickTodo()
+        }
     ) {
         ListItem(
             headlineText = {
@@ -57,7 +60,7 @@ private fun TodoListItem(
                     Margin(dp = Dimen.InsideDividePadding)
                     todo.subtitle?.let { subtitle ->
                         Text(
-                            text = subtitle,
+                            text = subtitle.get(context),
                             style = MaterialTheme.typography.labelSmall
                         )
                     }

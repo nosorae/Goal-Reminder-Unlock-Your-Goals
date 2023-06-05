@@ -1,7 +1,13 @@
 package com.yessorae.presentation.model
 
+import android.content.Context
+import com.yessorae.presentation.R
 import com.yessorae.presentation.model.enum.GoalType
+import com.yessorae.util.ResString
+import com.yessorae.util.StringModel
+import com.yessorae.util.TextString
 import com.yessorae.util.getMonthDisplay
+import com.yessorae.util.getWeekDisplay
 import kotlinx.datetime.LocalDateTime
 import kotlin.math.roundToInt
 
@@ -14,23 +20,30 @@ data class Goal(
     val currentScore: Int,
     val type: GoalType
 ) {
-    val subtitle by lazy {
+    val subtitle: StringModel? by lazy {
         if (startTime == null || endTime == null) {
             null
         } else {
             when (type) {
                 GoalType.YEARLY -> {
-                    "${startTime.getMonthDisplay()}-${endTime.getMonthDisplay()}"
+                    TextString("${startTime.getMonthDisplay()}-${endTime.getMonthDisplay()}")
                 }
 
                 GoalType.MONTHLY -> {
-                    val startDay = "%d".format(startTime.dayOfMonth)
-                    val endDay = "%d".format(endTime.dayOfMonth)
-                    "${startDay}-${endDay}"
+                    ResString(
+                        R.string.common_day_duration,
+                        startTime.dayOfMonth,
+                        endTime.dayOfMonth
+                    )
+                }
+
+                GoalType.WEEKLY -> {
+                    TextString("${startTime.getWeekDisplay()}-${endTime.getWeekDisplay()}")
                 }
             }
         }
     }
+
 
     val percent: Int by lazy {
         (currentScore / totalScore.toDouble() * 100).roundToInt()

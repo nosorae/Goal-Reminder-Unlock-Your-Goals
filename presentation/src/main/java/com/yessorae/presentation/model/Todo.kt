@@ -1,5 +1,8 @@
 package com.yessorae.presentation.model
 
+import com.yessorae.presentation.R
+import com.yessorae.util.ResString
+import com.yessorae.util.StringModel
 import kotlinx.datetime.LocalDateTime
 
 data class Todo(
@@ -13,11 +16,11 @@ data class Todo(
     val goalContributionScore: Int? = null,
     val description: String? = null,
 ) {
-    val subtitle by lazy {
+    val subtitle: StringModel? by lazy {
         if (startTime == null || endTime == null) {
             null
         } else {
-            "${startTime.time.hour}-${endTime.time.hour}"
+            ResString(R.string.common_hour_duration, startTime.time.hour, endTime.time.hour)
         }
     }
 }
