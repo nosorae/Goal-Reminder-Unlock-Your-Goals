@@ -40,6 +40,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":common"))
+
     def composeBom = platform(compose_bom)
     implementation composeBom
     androidTestImplementation composeBom

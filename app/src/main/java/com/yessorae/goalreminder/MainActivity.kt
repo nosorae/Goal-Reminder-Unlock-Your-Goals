@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.yessorae.common.Logger
 import com.yessorae.designsystem.theme.GoalReminderTheme
 import com.yessorae.goalreminder.util.startScreenOnOffService
 import com.yessorae.goalreminder.util.stopScreenOnOffService
@@ -54,32 +55,18 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+
                 }
             }
         }
-
-
-        observe()
 
         if (!Settings.canDrawOverlays(this)) {
             val intent =
                 Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
             requestOverlayPermission.launch(intent)
         }
-    }
 
-    private fun observe() {
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModel.isServiceOn.collectLatest { isServiceOn ->
-                    Log.d("SR-N", "MainActivity isServiceOn $isServiceOn")
-                    if (!isServiceOn) {
-                        startScreenOnOffService()
-                    }
-                }
-            }
-        }
-
+        startScreenOnOffService()
     }
 }
 

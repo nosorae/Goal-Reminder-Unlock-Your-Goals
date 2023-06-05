@@ -23,7 +23,6 @@ fun Context.startScreenOnOffService() {
         ScreenOnService::class.java
     ).also { intent ->
         if (!isServiceRunning(ScreenOnService::class.java)) {
-            Log.d("SR-N", "isServiceRunning is true")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startForegroundService(intent)
             } else {
