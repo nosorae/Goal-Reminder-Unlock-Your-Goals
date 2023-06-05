@@ -56,6 +56,7 @@ android {
 dependencies {
     implementation(project(":designsystem"))
     implementation(project(":presentation"))
+    implementation(project(":domain"))
     implementation(project(":di"))
 
     def composeBom = platform(compose_bom)
