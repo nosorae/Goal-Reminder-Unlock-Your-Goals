@@ -45,7 +45,7 @@ data class Goal(
     }
 }
 
-val goals = listOf(
+val mockGoalData = listOf(
     Goal(
         "운동하기",
         LocalDateTime(2023, 1, 1, 0, 0),
