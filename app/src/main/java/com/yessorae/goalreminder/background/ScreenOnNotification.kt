@@ -14,9 +14,11 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.yessorae.goalreminder.MainActivity
 import com.yessorae.goalreminder.R
+import javax.inject.Inject
+import javax.inject.Singleton
 
-
-class ScreenOnOffNotification {
+@Singleton
+class ScreenOnNotification @Inject constructor() {
     fun createToDoNotification(
         context: Context,
         title: String,
@@ -53,7 +55,7 @@ class ScreenOnOffNotification {
             .setContentTitle(title)
             .setContentText(body)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-//            .setOngoing(true) todo 기획
+//            .setOngoing(true) todo plan
             .setPriority(NotificationCompat.PRIORITY_LOW)
     }
 
@@ -76,14 +78,50 @@ class ScreenOnOffNotification {
             notify(id, builder)
         }
 
-    fun createNotificationChannel(context: Context) {
+    fun createForegroundServiceNotificationChannel(context: Context) {
+        createNotificationChannel(
+            context = context,
+            id = FOREGROUND_SERVICE_CHANNEL_ID,
+            name = FOREGROUND_SERVICE_CHANNEL_NAME,
+            desc = FOREGROUND_SERVICE_CHANNEL_DESCRIPTION,
+            importance = NotificationManager.IMPORTANCE_LOW
+        )
+    }
+
+    fun createGoalNotificationChannel(context: Context) {
+        createNotificationChannel(
+            context = context,
+            id = GOAL_CHANNEL_ID,
+            name = GOAL_CHANNEL_NAME,
+            desc = GOAL_CHANNEL_DESCRIPTION,
+            importance = NotificationManager.IMPORTANCE_HIGH
+        )
+    }
+
+    fun createTodoNotificationChannel(context: Context) {
+        createNotificationChannel(
+            context = context,
+            id = TODO_CHANNEL_ID,
+            name = TODO_CHANNEL_NAME,
+            desc = TODO_CHANNEL_DESCRIPTION,
+            importance = NotificationManager.IMPORTANCE_HIGH
+        )
+    }
+
+    private fun createNotificationChannel(
+        context: Context,
+        id: String,
+        name: String,
+        desc: String,
+        importance: Int
+    ) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                FOREGROUND_SERVICE_CHANNEL_ID,
-                CHANNEL_NAME,
+                id,
+                name,
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = CHANNEL_DESCRIPTION
+                description = desc
             }
 
             val notificationManager: NotificationManager =
@@ -106,11 +144,15 @@ class ScreenOnOffNotification {
     }
 
     companion object {
-        const val TODO_CHANNEL_ID = "Todo Push Channel"
-        const val GOAL_CHANNEL_ID = "Goal Push Channel"
-        const val FOREGROUND_SERVICE_CHANNEL_ID = "Todo Creation Channel"
-
-        const val CHANNEL_NAME = "볼륨버튼 감지 CHANNEL_NAME"
-        const val CHANNEL_DESCRIPTION = "볼륨버튼 감지 CHANNEL_DESCRIPTION"
+        const val TODO_CHANNEL_ID = "Todo push channel"
+        const val TODO_CHANNEL_NAME = "Todo push channel"
+        const val TODO_CHANNEL_DESCRIPTION = "give you todo push"
+        const val GOAL_CHANNEL_ID = "Goal push channel"
+        const val GOAL_CHANNEL_NAME = "Goal push channel"
+        const val GOAL_CHANNEL_DESCRIPTION = "give you goal push"
+        const val FOREGROUND_SERVICE_CHANNEL_ID = "Todo creation service channel"
+        const val FOREGROUND_SERVICE_CHANNEL_NAME = "Todo creation service channel"
+        const val FOREGROUND_SERVICE_CHANNEL_DESCRIPTION =
+            "Todo creation button, launch app every screen on"
     }
 }

@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
-import com.yessorae.goalreminder.background.ScreenOnOffService
+import com.yessorae.goalreminder.background.ScreenOnService
 
 fun Context.isServiceRunning(serviceClass: Class<*>): Boolean {
     val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
@@ -20,9 +20,9 @@ fun Context.isServiceRunning(serviceClass: Class<*>): Boolean {
 fun Context.startScreenOnOffService() {
     Intent(
         this,
-        ScreenOnOffService::class.java
+        ScreenOnService::class.java
     ).also { intent ->
-        if (!isServiceRunning(ScreenOnOffService::class.java)) {
+        if (!isServiceRunning(ScreenOnService::class.java)) {
             Log.d("SR-N", "isServiceRunning is true")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startForegroundService(intent)
@@ -36,7 +36,7 @@ fun Context.startScreenOnOffService() {
 fun Context.stopScreenOnOffService() {
     Intent(
         this,
-        ScreenOnOffService::class.java
+        ScreenOnService::class.java
     ).also { intent ->
         stopService(intent)
     }
