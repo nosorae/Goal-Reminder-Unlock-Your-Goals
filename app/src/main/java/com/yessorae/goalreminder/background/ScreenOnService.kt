@@ -1,20 +1,16 @@
 package com.yessorae.goalreminder.background
 
 import android.app.Service
+import android.content.BroadcastReceiver
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.BroadcastReceiver
 import android.os.IBinder
 import android.util.Log
-import com.yessorae.domain.repository.PreferencesDatastoreRepository
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ScreenOnService : Service() {
@@ -23,7 +19,6 @@ class ScreenOnService : Service() {
 
     @Inject
     lateinit var notification: ScreenOnNotification
-
 
     private val job = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.IO + job)

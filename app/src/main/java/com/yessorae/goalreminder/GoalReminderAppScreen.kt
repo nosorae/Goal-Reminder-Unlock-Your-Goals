@@ -9,7 +9,6 @@ import androidx.navigation.compose.rememberNavController
 import com.yessorae.designsystem.theme.GoalReminderTheme
 import com.yessorae.goalreminder.navigation.GoalReminderNavHost
 
-
 @Composable
 fun GoalReminderAppScreen() {
     GoalReminderTheme {

@@ -6,9 +6,9 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import com.yessorae.data.Constants.PREF_KEY_IS_SCREEN_ON
 import com.yessorae.domain.repository.PreferencesDatastoreRepository
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
 class PreferencesDatastoreRepositoryImpl @Inject constructor(
     private val preferences: DataStore<Preferences>

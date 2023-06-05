@@ -9,7 +9,6 @@ import com.yessorae.presentation.Destination
 import com.yessorae.presentation.MainDestination
 import com.yessorae.presentation.home.MainScreen
 
-
 @Composable
 fun GoalReminderNavHost(
     navController: NavHostController,

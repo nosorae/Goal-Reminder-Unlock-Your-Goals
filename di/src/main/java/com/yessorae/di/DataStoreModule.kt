@@ -12,7 +12,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-val Context.datastore: DataStore<Preferences> by preferencesDataStore(name = Constants.PREFERENCE_DATASTORE_NAME)
+val Context.datastore: DataStore<Preferences> by preferencesDataStore(
+    name = Constants.PREFERENCE_DATASTORE_NAME
+)
 
 @Module
 @InstallIn(SingletonComponent::class)

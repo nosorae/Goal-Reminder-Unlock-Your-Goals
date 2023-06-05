@@ -7,5 +7,3 @@ interface Destination {
 object MainDestination : Destination {
     override val route = "main"
 }
-
-

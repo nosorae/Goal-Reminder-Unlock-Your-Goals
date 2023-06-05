@@ -13,5 +13,7 @@ import javax.inject.Singleton
 interface RepositoryModule {
     @Binds
     @Singleton
-    fun bindPreferencesDatastoreRepository(preferenceDataStoreRepository: PreferencesDatastoreRepositoryImpl): PreferencesDatastoreRepository
+    fun bindPreferencesDatastoreRepository(
+        preferenceDataStoreRepository: PreferencesDatastoreRepositoryImpl
+    ): PreferencesDatastoreRepository
 }

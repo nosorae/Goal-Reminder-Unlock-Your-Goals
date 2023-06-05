@@ -19,9 +19,6 @@ import com.yessorae.presentation.dialogs.ConfirmDialog
 fun MainScreen(viewModel: HomeViewModel = viewModel()) {
     val model by viewModel.state.collectAsState()
 
-
-
-
     OverlayPermissionDialog(
         showDialog = model.showOverlayConfirmDialog,
         onOverlayConfirmed = { confirmed ->
@@ -37,7 +34,7 @@ fun MainScreen(viewModel: HomeViewModel = viewModel()) {
 fun OverlayPermissionDialog(
     showDialog: Boolean,
     onOverlayConfirmed: (Boolean) -> Unit,
-    onCancelDialog: () -> Unit,
+    onCancelDialog: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -45,12 +42,11 @@ fun OverlayPermissionDialog(
         onOverlayConfirmed(Settings.canDrawOverlays(context))
     }
     val launcher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartActivityForResult()
+        ) {
             onOverlayConfirmed(Settings.canDrawOverlays(context))
         }
-
-
-
 
     if (showDialog) {
         ConfirmDialog(

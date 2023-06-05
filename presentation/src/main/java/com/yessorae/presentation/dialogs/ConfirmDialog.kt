@@ -34,7 +34,6 @@ fun ConfirmDialog(
     dismissOnBackPress: Boolean = true,
     dismissOnClickOutside: Boolean = true
 ) {
-
     Dialog(
         onDismissRequest = {
             // do nothing
@@ -65,7 +64,7 @@ fun ConfirmDialog(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = body,
+                    text = body
                 )
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -76,7 +75,7 @@ fun ConfirmDialog(
                         TextButton(
                             onClick = {
                                 onClickCancel()
-                            },
+                            }
                         ) {
                             Text(cancelText)
                         }
@@ -89,12 +88,10 @@ fun ConfirmDialog(
                         Text(confirmText)
                     }
                 }
-
             }
         }
     }
 }
-
 
 @Preview
 @Composable
@@ -104,4 +101,3 @@ fun ConfirmDialogPreview() {
         body = stringResource(id = R.string.dialog_body_overlay_permission_request)
     )
 }
-
