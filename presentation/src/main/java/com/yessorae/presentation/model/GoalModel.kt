@@ -1,8 +1,8 @@
 package com.yessorae.presentation.model
 
 import com.yessorae.domain.model.Goal
-import com.yessorae.presentation.R
 import com.yessorae.domain.model.enum.GoalType
+import com.yessorae.presentation.R
 import com.yessorae.util.ResString
 import com.yessorae.util.StringModel
 import com.yessorae.util.TextString

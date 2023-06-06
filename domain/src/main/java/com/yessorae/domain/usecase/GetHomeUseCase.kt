@@ -5,10 +5,10 @@ import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.domain.repository.PreferencesDatastoreRepository
 import com.yessorae.domain.repository.TodoRepository
 import com.yessorae.domain.util.combine
-import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.Flow
+import kotlinx.datetime.LocalDateTime
 
 @Singleton
 class GetHomeUseCase @Inject constructor(
@@ -35,5 +35,4 @@ class GetHomeUseCase @Inject constructor(
             )
         }
     }
-
 }

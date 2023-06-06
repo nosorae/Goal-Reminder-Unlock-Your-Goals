@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -25,10 +24,8 @@ import androidx.compose.material.icons.outlined.EditCalendar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -98,7 +95,6 @@ fun HomeTopAppBarPreview() {
     BasePreview {
         HomeTopAppBar(title = "2024년 나는,\n경제적 자유를 얻고 선한 영향력을 미치는 사람이다.")
     }
-
 }
 
 /**
@@ -128,8 +124,6 @@ fun CustomTopAppBar(
         scrollBehavior = scrollBehavior
     )
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -199,8 +193,10 @@ private fun SingleRowTopAppBar(
     // app bar's defined constant height value (i.e. the ContainerHeight token).
     Surface(modifier = modifier.then(appBarDragModifier), color = appBarContainerColor) {
         val height = LocalDensity.current.run {
-            ContainerHeight.toPx() + (scrollBehavior?.state?.heightOffset
-                ?: 0f)
+            ContainerHeight.toPx() + (
+                scrollBehavior?.state?.heightOffset
+                    ?: 0f
+                )
         }
         TopAppBarLayout(
             modifier = Modifier
@@ -215,11 +211,11 @@ private fun SingleRowTopAppBar(
             titleTextStyle = titleTextStyle,
             titleAlpha = 1f,
             titleVerticalArrangement = Arrangement.Center,
-            titleHorizontalArrangement =Arrangement.Start,
+            titleHorizontalArrangement = Arrangement.Start,
             titleBottomPadding = 0,
             hideTitleSemantics = false,
             navigationIcon = navigationIcon,
-            actions = actionsRow,
+            actions = actionsRow
         )
     }
 }
@@ -245,7 +241,7 @@ private suspend fun settleAppBar(
         var lastValue = 0f
         AnimationState(
             initialValue = 0f,
-            initialVelocity = velocity,
+            initialVelocity = velocity
         )
             .animateDecay(flingAnimationSpec) {
                 val delta = value - lastValue
@@ -277,12 +273,10 @@ private suspend fun settleAppBar(
     return Velocity(0f, remainingVelocity)
 }
 
-
 private val MediumTitleBottomPadding = 24.dp
 private val LargeTitleBottomPadding = 28.dp
 private val TopAppBarHorizontalPadding = 4.dp
 private val TopAppBarTitleInset = 16.dp - TopAppBarHorizontalPadding
-
 
 @Composable
 private fun TopAppBarLayout(
@@ -299,7 +293,7 @@ private fun TopAppBarLayout(
     titleBottomPadding: Int,
     hideTitleSemantics: Boolean,
     navigationIcon: @Composable () -> Unit,
-    actions: @Composable () -> Unit,
+    actions: @Composable () -> Unit
 ) {
     Layout(
         {
@@ -354,7 +348,12 @@ private fun TopAppBarLayout(
         }
         val titlePlaceable =
             measurables.first { it.layoutId == "title" }
-                .measure(constraints.copy(minWidth = 0, maxWidth =  constraints.maxWidth - TopAppBarTitleInset.roundToPx()))
+                .measure(
+                    constraints.copy(
+                        minWidth = 0,
+                        maxWidth = constraints.maxWidth - TopAppBarTitleInset.roundToPx()
+                    )
+                )
 
         // Locate the title's baseline.
         val titleBaseline =
@@ -389,11 +388,14 @@ private fun TopAppBarLayout(
                     // Apply bottom padding from the title's baseline only when the Arrangement is
                     // "Bottom".
                     Arrangement.Bottom ->
-                        if (titleBottomPadding == 0) layoutHeight - titlePlaceable.height
-                        else layoutHeight - titlePlaceable.height - max(
-                            0,
-                            titleBottomPadding - titlePlaceable.height + titleBaseline
-                        )
+                        if (titleBottomPadding == 0) {
+                            layoutHeight - titlePlaceable.height
+                        } else {
+                            layoutHeight - titlePlaceable.height - max(
+                                0,
+                                titleBottomPadding - titlePlaceable.height + titleBaseline
+                            )
+                        }
                     // Arrangement.Top
                     else -> 0
                 }

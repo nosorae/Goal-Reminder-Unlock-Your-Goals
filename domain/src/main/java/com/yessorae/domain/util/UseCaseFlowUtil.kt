@@ -13,7 +13,7 @@ fun <T1, T2, R> zip(
 
 fun <T1, T2> zip(
     first: Flow<T1>,
-    second: Flow<T2>,
+    second: Flow<T2>
 ): Flow<Pair<T1, T2>> =
     first.zip(second) { a, b -> a to b }
 
@@ -50,7 +50,15 @@ fun <T1, T2, T3, T4, T5, R> zip(
     first.zip(second) { a, b -> a to b }
         .zip(third) { (a, b), c -> Triple(a, b, c) }
         .zip(fourth) { (a, b, c), d -> Pair(a, b) to Pair(c, d) }
-        .zip(fifth) { a, b -> transform(a.first.first, a.first.second, a.second.first, a.second.second, b) }
+        .zip(fifth) { a, b ->
+            transform(
+                a.first.first,
+                a.first.second,
+                a.second.first,
+                a.second.second,
+                b
+            )
+        }
 
 fun <T1, T2, T3, T4, T5, T6, R> zip(
     first: Flow<T1>,
@@ -65,7 +73,16 @@ fun <T1, T2, T3, T4, T5, T6, R> zip(
         .zip(third) { (a, b), c -> Triple(a, b, c) }
         .zip(fourth) { (a, b, c), d -> Pair(a, b) to Pair(c, d) }
         .zip(fifth) { (a, b), c -> Triple(a, b, c) }
-        .zip(sixth) { a, b -> transform(a.first.first, a.first.second, a.second.first, a.second.second, a.third, b) }
+        .zip(sixth) { a, b ->
+            transform(
+                a.first.first,
+                a.first.second,
+                a.second.first,
+                a.second.second,
+                a.third,
+                b
+            )
+        }
 
 fun <T1, T2, T3, T4, T5, T6, R> combine(
     flow: Flow<T1>,

@@ -11,4 +11,3 @@ interface GoalRepository {
 
     fun getWeekdayGoalsFlow(day: LocalDateTime): Flow<List<Goal>>
 }
-

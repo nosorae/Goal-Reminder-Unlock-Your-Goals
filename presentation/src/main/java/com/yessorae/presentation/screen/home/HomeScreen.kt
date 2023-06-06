@@ -49,8 +49,7 @@ enum class HomeTabPage(val index: Int, val titleResId: Int) {
     DAILY_TODO(0, R.string.home_tab_daily_todo),
     WEEKLY_GOAL(1, R.string.home_tab_weekly_goal),
     MONTHLY_GOAL(2, R.string.home_tab_monthly_goal),
-    YEARLY_GOAL(3, R.string.home_tab_yearly_goal),
-
+    YEARLY_GOAL(3, R.string.home_tab_yearly_goal)
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -94,7 +93,7 @@ fun HomeScreen(
                 },
                 scrollBehavior = scrollBehavior
             )
-        },
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -170,7 +169,9 @@ fun HomeScreen(
                     HomeTabPage.DAILY_TODO.index -> {
                         TodoPage(
                             title = TitleListItemModel(
-                                stringResource(id = R.string.common_day_todo).format(model.now.dayOfMonth)
+                                stringResource(id = R.string.common_day_todo).format(
+                                    model.now.dayOfMonth
+                                )
                             ),
                             todos = model.daylyTodoModels,
                             onClickMore = { todo ->
@@ -204,7 +205,7 @@ fun HomeScreen(
 @Composable
 fun HomeTabRow(
     pagerState: PagerState,
-    onClickTab: (HomeTabPage) -> Unit,
+    onClickTab: (HomeTabPage) -> Unit
 ) {
     TabRow(
         modifier = Modifier.fillMaxWidth(),
@@ -266,7 +267,6 @@ fun LabelTab(
         )
     }
 }
-
 
 @Composable
 private fun GoalPage(
@@ -351,6 +351,3 @@ private fun TodoPage(
         }
     }
 }
-
-
-

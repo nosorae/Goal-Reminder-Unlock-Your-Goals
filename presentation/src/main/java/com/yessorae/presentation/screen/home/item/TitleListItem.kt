@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,7 +20,6 @@ import com.yessorae.presentation.model.mockTitleListItemModels
 fun TitleListItem(
     model: TitleListItemModel
 ) {
-
     Box(
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.background)
@@ -40,7 +38,6 @@ fun TitleListItem(
             maxLines = 1
         )
     }
-
 }
 
 @Preview

@@ -6,5 +6,5 @@ data class Home(
     val yearlyGoal: List<Goal>,
     val monthlyGoal: List<Goal>,
     val weeklyGoal: List<Goal>,
-    val dailyTodo: List<Todo>,
+    val dailyTodo: List<Todo>
 )
