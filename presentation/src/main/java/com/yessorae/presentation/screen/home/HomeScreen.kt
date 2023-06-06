@@ -1,23 +1,86 @@
 package com.yessorae.presentation.screen.home
 
-import android.content.Intent
-import android.net.Uri
-import android.provider.Settings
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.yessorae.presentation.R
-import com.yessorae.presentation.dialogs.ConfirmDialog
+import com.yessorae.presentation.screen.home.item.HomeTopAppBar
+import com.yessorae.presentation.screen.home.item.OverlayPermissionDialog
+import com.yessorae.presentation.screen.home.item.TitleListItem
+import com.yessorae.util.getMonthDisplay
+import com.yessorae.util.getWeekDisplay
+import com.yessorae.util.getWeekScopeDisplay
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(viewModel: HomeViewModel = viewModel()) {
+fun MainScreen(viewModel: HomeViewModel = hiltViewModel()) {
     val model by viewModel.state.collectAsState()
+
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+
+
+    Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            HomeTopAppBar(
+                title = stringResource(id = R.string.common_final_goal).format(
+                    model.finalGoalYear,
+                    model.finalGoal
+                ),
+                onClickEditCalendar = {
+                    viewModel.onClickEditCalendar()
+                },
+                scrollBehavior = scrollBehavior
+            )
+        },
+        content = { innerPadding ->
+            LazyColumn(
+                contentPadding = innerPadding,
+            ) {
+                item {
+                    TitleListItem(
+                        title = stringResource(
+                            id = R.string.common_yearly_goal
+                        ).format(model.now.year)
+                    )
+                }
+
+                item {
+                    TitleListItem(
+                        title = stringResource(
+                            id = R.string.common_monthly_goal
+                        ).format(model.now.monthNumber)
+                    )
+                }
+
+                item {
+                    TitleListItem(
+                        title = stringResource(
+                            id = R.string.common_weekly_goal
+                        ).format(model.now.getWeekScopeDisplay())
+
+                    )
+                }
+
+                item {
+                    TitleListItem(
+                        title = stringResource(id = R.string.common_day_todo).format(model.now.dayOfMonth)
+                    )
+                }
+
+
+            }
+        }
+    )
 
     OverlayPermissionDialog(
         showDialog = model.showOverlayConfirmDialog,
@@ -30,43 +93,5 @@ fun MainScreen(viewModel: HomeViewModel = viewModel()) {
     )
 }
 
-@Composable
-private fun OverlayPermissionDialog(
-    showDialog: Boolean,
-    onOverlayConfirmed: (Boolean) -> Unit,
-    onCancelDialog: () -> Unit
-) {
-    val context = LocalContext.current
 
-    LaunchedEffect(key1 = Unit) {
-        onOverlayConfirmed(Settings.canDrawOverlays(context))
-    }
-    val launcher =
-        rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.StartActivityForResult()
-        ) {
-            onOverlayConfirmed(Settings.canDrawOverlays(context))
-        }
 
-    if (showDialog) {
-        ConfirmDialog(
-            title = stringResource(id = R.string.common_permission_request),
-            body = stringResource(id = R.string.dialog_body_overlay_permission_request),
-            onClickCancel = {
-                onCancelDialog()
-            },
-            onClickConfirm = {
-                if (!Settings.canDrawOverlays(context)) {
-                    val intent =
-                        Intent(
-                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:${context.packageName}")
-                        )
-                    launcher.launch(intent)
-                }
-            },
-            dismissOnClickOutside = false,
-            dismissOnBackPress = false
-        )
-    }
-}

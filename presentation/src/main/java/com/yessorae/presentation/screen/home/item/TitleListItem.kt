@@ -14,14 +14,14 @@ import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.designsystem.util.BasePreview
 
 @Composable
-private fun TitleListItem(
+fun TitleListItem(
     title: String
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                top = Dimen.LargeDividePadding,
+                top = Dimen.MediumDividePadding,
                 bottom = Dimen.SmallDividePadding,
                 start = Dimen.SidePadding,
                 end = Dimen.SidePadding

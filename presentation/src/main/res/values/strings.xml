@@ -5,6 +5,8 @@
     <string name="home_goal_contribution">기여도 %d%%</string>
     <string name="home_goal_contribution_">%s에 %d만큼 기여</string>
 
+    <!-- 온보딩 -->
+
     <!-- 목표 추가/수정 -->
 
     <!-- 할 일 추가/수정 -->
@@ -24,4 +26,9 @@
     <string name="common_confirm">확인</string>
     <string name="common_day_duration">%d일-%d일</string>
     <string name="common_hour_duration">%d시-%d시</string>
+    <string name="common_yearly_goal">%d년간 목표</string>
+    <string name="common_monthly_goal">%d월간 목표</string>
+    <string name="common_weekly_goal">%s 주간 목표</string>
+    <string name="common_day_todo">%s일 할일</string>
+    <string name="common_final_goal">%d년에 나는\n%s이다.</string>
 </resources>
