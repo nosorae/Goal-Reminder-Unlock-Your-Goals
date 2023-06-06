@@ -1,4 +1,4 @@
-package com.yessorae.data.local.preference
+package com.yessorae.data.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -9,45 +9,37 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.yessorae.data.Constants.PREF_KEY_FINAL_GOAL
 import com.yessorae.data.Constants.PREF_KEY_FINAL_GOAL_YEAR
 import com.yessorae.data.Constants.PREF_KEY_IS_SCREEN_ON
+import com.yessorae.data.local.preference.PreferenceDataStore
 import com.yessorae.domain.repository.PreferencesDatastoreRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class PreferencesDatastoreRepositoryImpl @Inject constructor(
-    private val preferences: DataStore<Preferences>
+    private val preferenceDataStore: PreferenceDataStore
 ) : PreferencesDatastoreRepository {
-    private val isServiceOnKey = booleanPreferencesKey(PREF_KEY_IS_SCREEN_ON)
-    private val finalGoalKey = stringPreferencesKey(PREF_KEY_FINAL_GOAL)
-    private val finalGoalYearKey = intPreferencesKey(PREF_KEY_FINAL_GOAL_YEAR)
 
-    override val isServiceOn: Flow<Boolean> = preferences.data.map { preferences ->
-        preferences[isServiceOnKey] ?: false
+    override fun getServiceOnOff(): Flow<Boolean> {
+        return preferenceDataStore.getServiceOnOff()
     }
 
     override suspend fun setServiceOnOff(on: Boolean) {
-        preferences.edit { settings ->
-            settings[isServiceOnKey] = on
-        }
+        preferenceDataStore.setServiceOnOff(on = on)
     }
 
-    override val finalGoal: Flow<String> = preferences.data.map { preferences ->
-        preferences[finalGoalKey] ?: ""
+    override fun getFinalGoal(): Flow<String> {
+        return preferenceDataStore.getFinalGoal()
     }
 
     override suspend fun setFinalGoal(goal: String) {
-        preferences.edit { settings ->
-            settings[finalGoalKey] = goal
-        }
+        preferenceDataStore.setFinalGoal(goal = goal)
     }
 
-    override val finalGoalYear: Flow<Int> = preferences.data.map { preferences ->
-        preferences[finalGoalYearKey] ?: 0
+    override fun getFinalGoalYear(): Flow<Int> {
+        return preferenceDataStore.getFinalGoalYear()
     }
 
     override suspend fun setFinalGoalYear(year: Int) {
-        preferences.edit { settings ->
-            settings[finalGoalYearKey] = year
-        }
+        preferenceDataStore.setFinalGoalYear(year = year)
     }
 }
