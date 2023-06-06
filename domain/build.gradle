@@ -18,7 +18,7 @@ compileKotlin {
 dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_core_version"
     implementation "javax.inject:javax.inject:1"
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+    implementation "org.jetbrains.kotlinx:kotlinx-datetime:$date_time_version"
     testImplementation("junit:junit:4.13.2")
 }
 

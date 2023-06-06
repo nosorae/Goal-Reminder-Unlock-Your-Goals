@@ -97,7 +97,7 @@ fun ConfirmDialog(
 @Composable
 fun ConfirmDialogPreview() {
     ConfirmDialog(
-        title = stringResource(id = R.string.dialog_title_permission_request),
+        title = stringResource(id = R.string.common_permission_request),
         body = stringResource(id = R.string.dialog_body_overlay_permission_request)
     )
 }
