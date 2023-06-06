@@ -3,7 +3,12 @@
     <!-- 홈 -->
     <string name="home_goal_progress">진행도 %d%%</string>
     <string name="home_goal_contribution">기여도 %d%%</string>
-    <string name="home_goal_contribution_">%s에 %d만큼 기여</string>
+    <string name="home_goal_contribution_">\"%s\"에 %d만큼 기여</string>
+    <string name="home_tab_yearly_goal">연간 목표</string>
+    <string name="home_tab_monthly_goal">월간 목표</string>
+    <string name="home_tab_weekly_goal">주간 목표</string>
+    <string name="home_tab_daily_todo">일일 할일</string>
+
 
     <!-- 온보딩 -->
 

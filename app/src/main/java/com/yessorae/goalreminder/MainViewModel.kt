@@ -33,7 +33,7 @@ class MainViewModel @Inject constructor(
     }
 
     private fun getIsServiceOn() = scope.launch {
-        preferencesDatastoreRepository.isServiceOn.collectLatest {
+        preferencesDatastoreRepository.getServiceOnOff().collectLatest {
             _isServiceOn.emit(it)
         }
     }

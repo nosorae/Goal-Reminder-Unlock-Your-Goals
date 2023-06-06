@@ -1,7 +1,8 @@
 package com.yessorae.presentation.model
 
+import com.yessorae.domain.model.Goal
 import com.yessorae.presentation.R
-import com.yessorae.presentation.model.enum.GoalType
+import com.yessorae.domain.model.enum.GoalType
 import com.yessorae.util.ResString
 import com.yessorae.util.StringModel
 import com.yessorae.util.TextString
@@ -10,7 +11,7 @@ import com.yessorae.util.getWeekDisplay
 import kotlin.math.roundToInt
 import kotlinx.datetime.LocalDateTime
 
-data class Goal(
+data class GoalModel(
     val title: String,
     val startTime: LocalDateTime? = null,
     val endTime: LocalDateTime? = null,
@@ -55,8 +56,30 @@ data class Goal(
     }
 }
 
-val mockGoalData = listOf(
-    Goal(
+fun Goal.asModel(): GoalModel {
+    return GoalModel(
+        title = title,
+        startTime = startTime,
+        endTime = endTime,
+        totalScore = totalScore,
+        currentScore = currentScore,
+        type = type
+    )
+}
+
+fun GoalModel.asDomainModel(): Goal {
+    return Goal(
+        title = title,
+        startTime = startTime,
+        endTime = endTime,
+        totalScore = totalScore,
+        currentScore = currentScore,
+        type = type
+    )
+}
+
+val mockGoalDatumModels = listOf(
+    GoalModel(
         "운동하기",
         LocalDateTime(2023, 1, 1, 0, 0),
         LocalDateTime(2023, 12, 31, 23, 59),
@@ -64,7 +87,7 @@ val mockGoalData = listOf(
         150,
         GoalType.YEARLY
     ),
-    Goal(
+    GoalModel(
         "독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기",
         LocalDateTime(2023, 6, 1, 0, 0),
         LocalDateTime(2023, 6, 30, 23, 59),
@@ -72,7 +95,7 @@ val mockGoalData = listOf(
         10,
         GoalType.MONTHLY
     ),
-    Goal(
+    GoalModel(
         "영어공부하기",
         LocalDateTime(2023, 1, 1, 0, 0),
         LocalDateTime(2023, 12, 31, 23, 59),
@@ -80,7 +103,7 @@ val mockGoalData = listOf(
         200,
         GoalType.YEARLY
     ),
-    Goal(
+    GoalModel(
         "물 마시기",
         LocalDateTime(2023, 6, 1, 0, 0),
         LocalDateTime(2023, 6, 30, 23, 59),
@@ -88,7 +111,7 @@ val mockGoalData = listOf(
         15,
         GoalType.MONTHLY
     ),
-    Goal(
+    GoalModel(
         "걷기",
         LocalDateTime(2023, 1, 1, 0, 0),
         LocalDateTime(2023, 12, 31, 23, 59),
@@ -96,7 +119,7 @@ val mockGoalData = listOf(
         250,
         GoalType.YEARLY
     ),
-    Goal(
+    GoalModel(
         "일기쓰기",
         LocalDateTime(2023, 6, 1, 0, 0),
         LocalDateTime(2023, 6, 30, 23, 59),
@@ -104,7 +127,7 @@ val mockGoalData = listOf(
         20,
         GoalType.MONTHLY
     ),
-    Goal(
+    GoalModel(
         "조기일어나기",
         LocalDateTime(2023, 1, 1, 0, 0),
         LocalDateTime(2023, 12, 31, 23, 59),
@@ -112,7 +135,7 @@ val mockGoalData = listOf(
         180,
         GoalType.YEARLY
     ),
-    Goal(
+    GoalModel(
         "계단오르기",
         LocalDateTime(2023, 6, 1, 0, 0),
         LocalDateTime(2023, 6, 30, 23, 59),
@@ -120,7 +143,7 @@ val mockGoalData = listOf(
         25,
         GoalType.MONTHLY
     ),
-    Goal(
+    GoalModel(
         "식사량 줄이기",
         LocalDateTime(2023, 1, 1, 0, 0),
         LocalDateTime(2023, 12, 31, 23, 59),
@@ -128,7 +151,7 @@ val mockGoalData = listOf(
         200,
         GoalType.YEARLY
     ),
-    Goal(
+    GoalModel(
         "코드작성하기",
         LocalDateTime(2023, 6, 1, 0, 0),
         LocalDateTime(2023, 6, 30, 23, 59),

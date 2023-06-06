@@ -1,32 +1,83 @@
 package com.yessorae.presentation.screen.home
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.presentation.R
+import com.yessorae.presentation.model.GoalModel
+import com.yessorae.presentation.model.TitleListItemModel
+import com.yessorae.presentation.model.TodoModel
+import com.yessorae.presentation.screen.home.item.GoalListItem
 import com.yessorae.presentation.screen.home.item.HomeTopAppBar
 import com.yessorae.presentation.screen.home.item.OverlayPermissionDialog
 import com.yessorae.presentation.screen.home.item.TitleListItem
-import com.yessorae.util.getMonthDisplay
-import com.yessorae.util.getWeekDisplay
+import com.yessorae.presentation.screen.home.item.TodoListItem
 import com.yessorae.util.getWeekScopeDisplay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+enum class LabelScreenPage(val index: Int, val titleResId: Int) {
+    DAILY_TODO(0, R.string.home_tab_daily_todo),
+    WEEKLY_GOAL(1, R.string.home_tab_weekly_goal),
+    MONTHLY_GOAL(2, R.string.home_tab_monthly_goal),
+    YEARLY_GOAL(3, R.string.home_tab_yearly_goal),
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun MainScreen(viewModel: HomeViewModel = hiltViewModel()) {
+fun MainScreen2(
+    viewModel: HomeViewModel = hiltViewModel(),
+    onNavOutEvent: (String) -> Unit = {}
+) {
     val model by viewModel.state.collectAsState()
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
+    val pagerState = rememberPagerState()
+
+    LaunchedEffect(key1 = Unit) {
+        launch {
+            viewModel.scrollToPageEvent.collectLatest { page ->
+                pagerState.animateScrollToPage(page)
+            }
+        }
+
+        launch {
+            viewModel.navigationEvent.collectLatest { route ->
+                route?.let {
+                    onNavOutEvent(route)
+                }
+            }
+        }
+    }
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -42,45 +93,99 @@ fun MainScreen(viewModel: HomeViewModel = hiltViewModel()) {
                 scrollBehavior = scrollBehavior
             )
         },
-        content = { innerPadding ->
-            LazyColumn(
-                contentPadding = innerPadding,
-            ) {
-                item {
-                    TitleListItem(
-                        title = stringResource(
-                            id = R.string.common_yearly_goal
-                        ).format(model.now.year)
-                    )
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+        ) {
+            HomeTabRow(
+                pagerState = pagerState,
+                onClickTab = {
+                    // todo
                 }
+            )
 
-                item {
-                    TitleListItem(
-                        title = stringResource(
-                            id = R.string.common_monthly_goal
-                        ).format(model.now.monthNumber)
-                    )
+            HorizontalPager(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                pageCount = LabelScreenPage.values().size,
+                state = pagerState
+            ) { page ->
+                when (page) {
+                    LabelScreenPage.YEARLY_GOAL.index -> {
+                        GoalPage(
+                            title = TitleListItemModel(
+                                stringResource(
+                                    id = R.string.common_yearly_goal
+                                ).format(model.now.year)
+                            ),
+                            goals = model.yearlyGoalModels,
+                            onClickMore = {
+                                // todo
+                            },
+                            onClickGoal = {
+                                // todo
+                            }
+                        )
+                    }
+
+                    LabelScreenPage.MONTHLY_GOAL.index -> {
+                        GoalPage(
+                            title = TitleListItemModel(
+                                stringResource(
+                                    id = R.string.common_monthly_goal
+                                ).format(model.now.monthNumber)
+                            ),
+                            goals = model.monthlyGoalModels,
+                            onClickMore = {
+                                // todo
+                            },
+                            onClickGoal = {
+                                // todo
+                            }
+                        )
+                    }
+
+                    LabelScreenPage.WEEKLY_GOAL.index -> {
+                        GoalPage(
+                            title = TitleListItemModel(
+                                stringResource(
+                                    id = R.string.common_weekly_goal
+                                ).format(model.now.getWeekScopeDisplay())
+                            ),
+                            goals = model.weeklyGoalModels,
+                            onClickMore = {
+                                // todo
+                            },
+                            onClickGoal = {
+                                // todo
+                            }
+                        )
+                    }
+
+                    LabelScreenPage.DAILY_TODO.index -> {
+                        TodoPage(
+                            title = TitleListItemModel(
+                                stringResource(id = R.string.common_day_todo).format(model.now.dayOfMonth)
+                            ),
+                            todos = model.daylyTodoModels,
+                            onClickMore = {
+                                // todo
+                            },
+                            onClickCheckBox = {
+                                // todo
+                            },
+                            onClickTodo = {
+                                // todo
+                            }
+                        )
+                    }
                 }
-
-                item {
-                    TitleListItem(
-                        title = stringResource(
-                            id = R.string.common_weekly_goal
-                        ).format(model.now.getWeekScopeDisplay())
-
-                    )
-                }
-
-                item {
-                    TitleListItem(
-                        title = stringResource(id = R.string.common_day_todo).format(model.now.dayOfMonth)
-                    )
-                }
-
-
             }
         }
-    )
+    }
 
     OverlayPermissionDialog(
         showDialog = model.showOverlayConfirmDialog,
@@ -91,6 +196,157 @@ fun MainScreen(viewModel: HomeViewModel = hiltViewModel()) {
             viewModel.onCancelDialog()
         }
     )
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun HomeTabRow(
+    pagerState: PagerState,
+    onClickTab: (LabelScreenPage) -> Unit,
+) {
+    TabRow(
+        modifier = Modifier.fillMaxWidth(),
+        selectedTabIndex = pagerState.currentPage,
+        indicator = { tabPositions ->
+            TabRowDefaults.Indicator(
+                modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
+                height = 2.dp
+            )
+        },
+        divider = {
+            Divider(
+                thickness = 1.dp
+            )
+        }
+    ) {
+        LabelScreenPage.values().forEach {
+            LabelTab(
+                title = stringResource(id = it.titleResId),
+                selected = it.index == pagerState.currentPage,
+                onClick = {
+                    onClickTab(it)
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun LabelTab(
+    modifier: Modifier = Modifier,
+    title: String,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    Tab(
+        modifier = modifier.padding(
+            top = Dimen.SmallDividePadding,
+            bottom = Dimen.MediumDividePadding
+        ),
+        selected = selected,
+        onClick = onClick,
+//        selectedContentColor = ColorProvider.colors.textPrimary,
+//        unselectedContentColor = ColorProvider.colors.textSecondary
+    ) {
+        Text(
+            title,
+//            style = if (selected) {
+//                TimeLedgerTypography.h6.copy(fontWeight = FontWeight.Bold)
+//            } else {
+//                TimeLedgerTypography.h6
+//            },
+//            color = if (selected) {
+//                ColorProvider.colors.primaryColor
+//            } else {
+//                ColorProvider.colors.textSecondary
+//            }
+        )
+    }
+}
+
+
+@Composable
+private fun GoalPage(
+    modifier: Modifier = Modifier,
+    title: TitleListItemModel,
+    goals: List<GoalModel>,
+    onClickGoal: (GoalModel) -> Unit = {},
+    onClickMore: (GoalModel) -> Unit = {}
+) {
+    val listState = rememberLazyListState()
+
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        state = listState
+    ) {
+        item(
+            contentType = TitleListItemModel::class
+        ) {
+            TitleListItem(
+                model = title
+            )
+        }
+        itemsIndexed(
+            items = goals,
+            contentType = { _, _ ->
+                GoalModel::class
+            }
+        ) { _, item ->
+            GoalListItem(
+                goalModel = item,
+                onClickGoal = {
+                    onClickGoal(item)
+                },
+                onClickMore = {
+                    onClickMore(item)
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun TodoPage(
+    modifier: Modifier = Modifier,
+    title: TitleListItemModel,
+    todos: List<TodoModel>,
+    onClickTodo: (TodoModel) -> Unit = {},
+    onClickMore: (TodoModel) -> Unit = {},
+    onClickCheckBox: (TodoModel) -> Unit = {}
+) {
+    val listState = rememberLazyListState()
+
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        state = listState
+    ) {
+        item(
+            contentType = TitleListItemModel::class
+        ) {
+            TitleListItem(
+                model = title
+            )
+        }
+        itemsIndexed(
+            items = todos,
+            contentType = { _, _ ->
+                GoalModel::class
+            }
+        ) { _, item ->
+            TodoListItem(
+                todoModel = item,
+                onClickTodo = {
+                    onClickTodo(item)
+                },
+                onClickMore = {
+                    onClickMore(item)
+                },
+                onClickCheckBox = {
+                    onClickCheckBox(item)
+                }
+            )
+        }
+    }
 }
 
 

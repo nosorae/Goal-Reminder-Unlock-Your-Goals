@@ -69,7 +69,7 @@ fun HomeTopAppBar(
     onClickEditCalendar: () -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 ) {
-    TopAppBar(
+    CustomTopAppBar(
         title = {
             Text(
                 text = title,
@@ -104,11 +104,11 @@ fun HomeTopAppBarPreview() {
 /**
  *
  */
-val ContainerHeight = 128.0.dp
+val ContainerHeight = 116.0.dp
 
 @ExperimentalMaterial3Api
 @Composable
-fun TopAppBar(
+fun CustomTopAppBar(
     title: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     navigationIcon: @Composable () -> Unit = {},
@@ -385,7 +385,7 @@ private fun TopAppBarLayout(
                     else -> max(TopAppBarTitleInset.roundToPx(), navigationIconPlaceable.width)
                 },
                 y = when (titleVerticalArrangement) {
-                    Arrangement.Center -> (layoutHeight - titlePlaceable.height) - (actionIconsPlaceable.height / 2)
+                    Arrangement.Center -> (layoutHeight - titlePlaceable.height - 16.dp.roundToPx())
                     // Apply bottom padding from the title's baseline only when the Arrangement is
                     // "Bottom".
                     Arrangement.Bottom ->

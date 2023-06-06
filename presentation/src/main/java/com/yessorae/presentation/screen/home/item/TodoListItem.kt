@@ -26,14 +26,14 @@ import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.designsystem.util.BasePreview
 import com.yessorae.designsystem.util.Margin
 import com.yessorae.presentation.R
-import com.yessorae.presentation.model.Todo
-import com.yessorae.presentation.model.mockTodoData
+import com.yessorae.presentation.model.TodoModel
+import com.yessorae.presentation.model.mockTodoDatumModels
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TodoListItem(
+fun TodoListItem(
     modifier: Modifier = Modifier,
-    todo: Todo,
+    todoModel: TodoModel,
     onClickCheckBox: () -> Unit = {},
     onClickTodo: () -> Unit = {},
     onClickMore: () -> Unit = {}
@@ -51,7 +51,7 @@ private fun TodoListItem(
                     modifier = Modifier.padding(end = 24.dp)
                 ) {
                     Text(
-                        text = todo.title,
+                        text = todoModel.title,
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold
                         ),
@@ -60,7 +60,7 @@ private fun TodoListItem(
                         overflow = TextOverflow.Ellipsis
                     )
                     Margin(dp = Dimen.InsideDividePadding)
-                    todo.subtitle?.let { subtitle ->
+                    todoModel.subtitle?.let { subtitle ->
                         Text(
                             text = subtitle.get(context),
                             style = MaterialTheme.typography.labelSmall
@@ -69,8 +69,8 @@ private fun TodoListItem(
                 }
             },
             supportingText = {
-                val goalTitle = todo.goalTitle
-                val score = todo.goalContributionScore
+                val goalTitle = todoModel.goalTitle
+                val score = todoModel.goalContributionScore
                 if (goalTitle != null && score != null) {
                     Text(
                         text = stringResource(id = R.string.home_goal_contribution_).format(
@@ -79,13 +79,14 @@ private fun TodoListItem(
                         ),
                         style = MaterialTheme.typography.titleSmall,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(top = Dimen.InsideDividePadding)
                     )
                 }
             },
             leadingContent = {
                 Checkbox(
-                    checked = todo.completed,
+                    checked = todoModel.completed,
                     onCheckedChange = {
                         onClickCheckBox()
                     }
@@ -110,8 +111,8 @@ private fun TodoListItem(
 @Composable
 fun TodoListItemPreview() {
     BasePreview {
-        mockTodoData.forEach { todo ->
-            TodoListItem(todo = todo)
+        mockTodoDatumModels.forEach { todo ->
+            TodoListItem(todoModel = todo)
         }
     }
 }

@@ -29,14 +29,14 @@ import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.designsystem.util.BasePreview
 import com.yessorae.designsystem.util.Margin
 import com.yessorae.presentation.R
-import com.yessorae.presentation.model.Goal
-import com.yessorae.presentation.model.mockGoalData
+import com.yessorae.presentation.model.GoalModel
+import com.yessorae.presentation.model.mockGoalDatumModels
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun GoalListItem(
+fun GoalListItem(
     modifier: Modifier = Modifier,
-    goal: Goal,
+    goalModel: GoalModel,
     onClickGoal: () -> Unit = {},
     onClickMore: () -> Unit = {}
 ) {
@@ -51,7 +51,7 @@ private fun GoalListItem(
                     modifier = Modifier.padding(end = 24.dp)
                 ) {
                     Text(
-                        text = goal.title,
+                        text = goalModel.title,
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold
                         ),
@@ -60,7 +60,7 @@ private fun GoalListItem(
                         overflow = TextOverflow.Ellipsis
                     )
                     Margin(dp = Dimen.InsideDividePadding)
-                    goal.subtitle?.let { subtitle ->
+                    goalModel.subtitle?.let { subtitle ->
                         Text(
                             text = subtitle.get(context),
                             style = MaterialTheme.typography.labelSmall
@@ -72,17 +72,18 @@ private fun GoalListItem(
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {
+                    Margin(dp = Dimen.InsideDividePadding)
                     Text(
                         text = stringResource(
                             id = R.string.home_goal_progress
-                        ).format(goal.percent),
+                        ).format(goalModel.percent),
                         style = MaterialTheme.typography.labelMedium,
                         textAlign = TextAlign.Center
                     )
                     Margin(Dimen.InsideDividePadding)
                     LinearProgressIndicator(
                         modifier = Modifier.fillMaxWidth(),
-                        progress = goal.progress,
+                        progress = goalModel.progress,
                         color = MaterialTheme.colorScheme.primary,
                         trackColor = MaterialTheme.colorScheme.onBackground
                     )
@@ -105,10 +106,10 @@ private fun GoalListItem(
 
 @Preview
 @Composable
-fun GoalListItem() {
+fun GoalListItemPreview() {
     BasePreview {
-        mockGoalData.forEach { goal ->
-            GoalListItem(goal = goal)
+        mockGoalDatumModels.forEach { goal ->
+            GoalListItem(goalModel = goal)
         }
     }
 }

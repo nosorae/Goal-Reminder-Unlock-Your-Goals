@@ -34,3 +34,6 @@ fun LocalDateTime.getWeekScopeDisplay(): String {
 fun LocalDateTime.Companion.now(): LocalDateTime =
     Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
+fun LocalDate.Companion.now(): LocalDate =
+    Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+
