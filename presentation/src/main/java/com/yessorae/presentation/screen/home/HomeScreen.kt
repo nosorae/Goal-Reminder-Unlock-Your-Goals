@@ -13,6 +13,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -27,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.yessorae.designsystem.theme.Dimen
@@ -43,7 +45,7 @@ import com.yessorae.util.getWeekScopeDisplay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-enum class LabelScreenPage(val index: Int, val titleResId: Int) {
+enum class HomeTabPage(val index: Int, val titleResId: Int) {
     DAILY_TODO(0, R.string.home_tab_daily_todo),
     WEEKLY_GOAL(1, R.string.home_tab_weekly_goal),
     MONTHLY_GOAL(2, R.string.home_tab_monthly_goal),
@@ -53,7 +55,7 @@ enum class LabelScreenPage(val index: Int, val titleResId: Int) {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun MainScreen2(
+fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     onNavOutEvent: (String) -> Unit = {}
 ) {
@@ -101,8 +103,8 @@ fun MainScreen2(
         ) {
             HomeTabRow(
                 pagerState = pagerState,
-                onClickTab = {
-                    // todo
+                onClickTab = { tab ->
+                    viewModel.onClickTab(tab)
                 }
             )
 
@@ -110,11 +112,11 @@ fun MainScreen2(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
-                pageCount = LabelScreenPage.values().size,
+                pageCount = HomeTabPage.values().size,
                 state = pagerState
             ) { page ->
                 when (page) {
-                    LabelScreenPage.YEARLY_GOAL.index -> {
+                    HomeTabPage.YEARLY_GOAL.index -> {
                         GoalPage(
                             title = TitleListItemModel(
                                 stringResource(
@@ -122,16 +124,16 @@ fun MainScreen2(
                                 ).format(model.now.year)
                             ),
                             goals = model.yearlyGoalModels,
-                            onClickMore = {
-                                // todo
+                            onClickMore = { goal ->
+                                viewModel.onClickGoalMore(goal = goal)
                             },
-                            onClickGoal = {
-                                // todo
+                            onClickGoal = { goal ->
+                                viewModel.onClickGoal(goal = goal)
                             }
                         )
                     }
 
-                    LabelScreenPage.MONTHLY_GOAL.index -> {
+                    HomeTabPage.MONTHLY_GOAL.index -> {
                         GoalPage(
                             title = TitleListItemModel(
                                 stringResource(
@@ -139,16 +141,16 @@ fun MainScreen2(
                                 ).format(model.now.monthNumber)
                             ),
                             goals = model.monthlyGoalModels,
-                            onClickMore = {
-                                // todo
+                            onClickMore = { goal ->
+                                viewModel.onClickGoalMore(goal = goal)
                             },
-                            onClickGoal = {
-                                // todo
+                            onClickGoal = { goal ->
+                                viewModel.onClickGoal(goal = goal)
                             }
                         )
                     }
 
-                    LabelScreenPage.WEEKLY_GOAL.index -> {
+                    HomeTabPage.WEEKLY_GOAL.index -> {
                         GoalPage(
                             title = TitleListItemModel(
                                 stringResource(
@@ -156,29 +158,29 @@ fun MainScreen2(
                                 ).format(model.now.getWeekScopeDisplay())
                             ),
                             goals = model.weeklyGoalModels,
-                            onClickMore = {
-                                // todo
+                            onClickMore = { goal ->
+                                viewModel.onClickGoalMore(goal = goal)
                             },
-                            onClickGoal = {
-                                // todo
+                            onClickGoal = { goal ->
+                                viewModel.onClickGoal(goal = goal)
                             }
                         )
                     }
 
-                    LabelScreenPage.DAILY_TODO.index -> {
+                    HomeTabPage.DAILY_TODO.index -> {
                         TodoPage(
                             title = TitleListItemModel(
                                 stringResource(id = R.string.common_day_todo).format(model.now.dayOfMonth)
                             ),
                             todos = model.daylyTodoModels,
-                            onClickMore = {
-                                // todo
+                            onClickMore = { todo ->
+                                viewModel.onClickTodoMore(todo = todo)
                             },
-                            onClickCheckBox = {
-                                // todo
+                            onClickCheckBox = { todo ->
+                                viewModel.onClickTodoCheckBox(todo = todo)
                             },
-                            onClickTodo = {
-                                // todo
+                            onClickTodo = { todo ->
+                                viewModel.onClickTodo(todo = todo)
                             }
                         )
                     }
@@ -202,7 +204,7 @@ fun MainScreen2(
 @Composable
 fun HomeTabRow(
     pagerState: PagerState,
-    onClickTab: (LabelScreenPage) -> Unit,
+    onClickTab: (HomeTabPage) -> Unit,
 ) {
     TabRow(
         modifier = Modifier.fillMaxWidth(),
@@ -219,7 +221,7 @@ fun HomeTabRow(
             )
         }
     ) {
-        LabelScreenPage.values().forEach {
+        HomeTabPage.values().forEach {
             LabelTab(
                 title = stringResource(id = it.titleResId),
                 selected = it.index == pagerState.currentPage,
@@ -239,27 +241,28 @@ fun LabelTab(
     onClick: () -> Unit
 ) {
     Tab(
-        modifier = modifier.padding(
-            top = Dimen.SmallDividePadding,
-            bottom = Dimen.MediumDividePadding
-        ),
+        modifier = modifier,
         selected = selected,
         onClick = onClick,
-//        selectedContentColor = ColorProvider.colors.textPrimary,
-//        unselectedContentColor = ColorProvider.colors.textSecondary
+        selectedContentColor = MaterialTheme.colorScheme.primary,
+        unselectedContentColor = MaterialTheme.colorScheme.onBackground
     ) {
         Text(
             title,
-//            style = if (selected) {
-//                TimeLedgerTypography.h6.copy(fontWeight = FontWeight.Bold)
-//            } else {
-//                TimeLedgerTypography.h6
-//            },
-//            color = if (selected) {
-//                ColorProvider.colors.primaryColor
-//            } else {
-//                ColorProvider.colors.textSecondary
-//            }
+            style = if (selected) {
+                MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+            } else {
+                MaterialTheme.typography.titleMedium
+            },
+            color = if (selected) {
+                MaterialTheme.colorScheme.primary
+            } else {
+                MaterialTheme.colorScheme.onBackground
+            },
+            modifier = Modifier.padding(
+                top = Dimen.MediumDividePadding,
+                bottom = Dimen.MediumDividePadding
+            )
         )
     }
 }

@@ -1,8 +1,7 @@
 package com.yessorae.presentation.screen.home
 
 import com.yessorae.base.BaseScreenViewModel
-import com.yessorae.common.Logger
-import com.yessorae.domain.repository.PreferencesDatastoreRepository
+import com.yessorae.domain.model.Goal
 import com.yessorae.domain.usecase.GetHomeUseCase
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TodoModel
@@ -20,7 +19,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import javax.inject.Inject
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 
 @HiltViewModel
@@ -33,7 +31,6 @@ class HomeViewModel @Inject constructor(
 
     private val _scrollToPageEvent = MutableSharedFlow<Int>()
     val scrollToPageEvent: SharedFlow<Int> = _scrollToPageEvent.asSharedFlow()
-
 
     init {
         getHomeScreenState()
@@ -72,6 +69,30 @@ class HomeViewModel @Inject constructor(
                 showDatePickerDialog = true
             )
         }
+    }
+
+    fun onClickTab(tab: HomeTabPage) = ioScope.launch {
+        _scrollToPageEvent.emit(tab.index)
+    }
+
+    fun onClickGoalMore(goal: GoalModel) {
+        // todo impl
+    }
+
+    fun onClickGoal(goal: GoalModel) {
+        // todo impl
+    }
+
+    fun onClickTodo(todo: TodoModel) {
+        // todo impl
+    }
+
+    fun onClickTodoMore(todo: TodoModel) {
+        // todo impl
+    }
+
+    fun onClickTodoCheckBox(todo: TodoModel) {
+        // todo impl
     }
 
     fun onCancelDialog() {
