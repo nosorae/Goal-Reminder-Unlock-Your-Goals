@@ -45,7 +45,7 @@ fun GoalListItem(
         modifier = modifier.clickable { onClickGoal() }
     ) {
         ListItem(
-            headlineText = {
+            headlineContent = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(end = 24.dp)
@@ -68,7 +68,7 @@ fun GoalListItem(
                     }
                 }
             },
-            supportingText = {
+            supportingContent = {
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {

@@ -45,7 +45,7 @@ fun TodoListItem(
         }
     ) {
         ListItem(
-            headlineText = {
+            headlineContent = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(end = 24.dp)
@@ -68,7 +68,7 @@ fun TodoListItem(
                     }
                 }
             },
-            supportingText = {
+            supportingContent = {
                 val goalTitle = todoModel.goalTitle
                 val score = todoModel.goalContributionScore
                 if (goalTitle != null && score != null) {
