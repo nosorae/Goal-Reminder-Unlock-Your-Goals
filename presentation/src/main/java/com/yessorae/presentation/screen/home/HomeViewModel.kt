@@ -1,11 +1,13 @@
 package com.yessorae.presentation.screen.home
 
 import com.yessorae.base.BaseScreenViewModel
+import com.yessorae.common.Logger
 import com.yessorae.domain.usecase.GetHomeUseCase
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.model.asModel
 import com.yessorae.util.now
+import com.yessorae.util.toLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -60,6 +62,11 @@ class HomeViewModel @Inject constructor(
                 showOverlayConfirmDialog = confirmed.not()
             )
         }
+    }
+
+    fun onSelectDate(timestamp: Long) {
+        _currentDay.value = timestamp.toLocalDateTime()
+        onCancelDialog()
     }
 
     fun onClickEditCalendar() {

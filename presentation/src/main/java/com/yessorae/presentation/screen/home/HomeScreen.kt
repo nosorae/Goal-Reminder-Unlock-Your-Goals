@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.presentation.R
+import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TitleListItemModel
 import com.yessorae.presentation.model.TodoModel
@@ -196,6 +197,16 @@ fun HomeScreen(
             viewModel.onOverlayConfirmed(confirmed)
         },
         onCancelDialog = {
+            viewModel.onCancelDialog()
+        }
+    )
+
+    GoalReminderDatePickerDialog(
+        showDialog = model.showDatePickerDialog,
+        onClickConfirmButton = { timestamp ->
+            viewModel.onSelectDate(timestamp)
+        },
+        onCancel = {
             viewModel.onCancelDialog()
         }
     )

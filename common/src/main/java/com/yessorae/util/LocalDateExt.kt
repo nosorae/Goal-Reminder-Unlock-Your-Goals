@@ -2,6 +2,7 @@ package com.yessorae.util
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -37,3 +38,6 @@ fun LocalDateTime.Companion.now(): LocalDateTime =
 fun LocalDate.Companion.now(): LocalDate =
     Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
 
+fun Long.toLocalDateTime(): LocalDateTime {
+    return Instant.fromEpochMilliseconds(this).toLocalDateTime(TimeZone.currentSystemDefault())
+}
