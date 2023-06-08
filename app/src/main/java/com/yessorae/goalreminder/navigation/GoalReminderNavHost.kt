@@ -7,6 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.yessorae.presentation.Destination
 import com.yessorae.presentation.MainDestination
+import com.yessorae.presentation.TodoEditorDestination
+import com.yessorae.presentation.screen.editors.todo.TodoEditorScreen
 import com.yessorae.presentation.screen.home.HomeScreen
 
 @Composable
@@ -24,6 +26,12 @@ fun GoalReminderNavHost(
             route = MainDestination.route
         ) {
             HomeScreen()
+        }
+
+        composable(
+            route = TodoEditorDestination.route
+        ) {
+            TodoEditorScreen()
         }
     }
 }
