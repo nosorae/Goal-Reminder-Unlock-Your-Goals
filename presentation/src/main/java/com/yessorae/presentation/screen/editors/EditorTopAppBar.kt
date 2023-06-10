@@ -17,9 +17,7 @@ import com.yessorae.presentation.R
 @Composable
 fun EditorTopAppBar(
     title: String? = null,
-    enableSaveButton: Boolean = false,
     onClickBack: () -> Unit = {},
-    onClickSave: () -> Unit = {}
 ) {
     TopAppBar(
         title = {
@@ -30,16 +28,6 @@ fun EditorTopAppBar(
         navigationIcon = {
             IconButton(onClick = { onClickBack() }) {
                 Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
-            }
-        },
-        actions = {
-            Button(
-                onClick = { onClickSave() },
-                shape = MaterialTheme.shapes.large,
-                enabled = enableSaveButton
-
-            ) {
-                Text(text = stringResource(id = R.string.common_save))
             }
         }
     )

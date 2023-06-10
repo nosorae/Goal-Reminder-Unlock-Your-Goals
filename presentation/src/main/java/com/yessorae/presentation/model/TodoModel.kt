@@ -5,11 +5,14 @@ import com.yessorae.domain.model.TodoWithGoal
 import com.yessorae.presentation.R
 import com.yessorae.util.ResString
 import com.yessorae.util.StringModel
+import com.yessorae.util.now
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
 data class TodoModel(
     val todoId: Int = 0,
-    val title: String,
+    val title: String = "",
+    val date: LocalDate = LocalDate.now(),
     val completed: Boolean = false,
     val startTime: LocalDateTime? = null,
     val endTime: LocalDateTime? = null,

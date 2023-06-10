@@ -29,7 +29,7 @@ fun EditorTextField(
         onValueChange = {
             onChangeTitle(it)
         },
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier,
         textStyle = textStyle.copy(fontWeight = FontWeight.Bold),
         placeholder = {
             Text(text = placeholderText, style = textStyle)

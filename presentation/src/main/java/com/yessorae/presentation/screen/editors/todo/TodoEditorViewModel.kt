@@ -53,10 +53,7 @@ class TodoEditorViewModel @Inject constructor(
         if (todoDayMilliSec != TodoEditorDestination.defaultTodoDayMilliSec) {
             val date = todoDayMilliSec.toLocalDateTime()
             updateState {
-                stateValue.copy(
-                    startDate = date.date,
-                    endDate = date.date
-                )
+                stateValue.copy(date = date.date)
             }
         }
     }
@@ -69,28 +66,10 @@ class TodoEditorViewModel @Inject constructor(
         }
     }
 
-    fun onClickAllDay() {
+    fun onClickDate() {
         updateState {
             stateValue.copy(
-                allDay = stateValue.allDay.not(),
-                startTime = null,
-                endTime = null
-            )
-        }
-    }
-
-    fun onClickStartDate() {
-        updateState {
-            stateValue.copy(
-                todoEditorDialogState = TodoEditorDialogState.StartDate
-            )
-        }
-    }
-
-    fun onClickEndDate() {
-        updateState {
-            stateValue.copy(
-                todoEditorDialogState = TodoEditorDialogState.EndDate
+                todoEditorDialogState = TodoEditorDialogState.Date
             )
         }
     }
@@ -111,34 +90,21 @@ class TodoEditorViewModel @Inject constructor(
         }
     }
 
-    fun onSelectDate(milliSec: Long, dialogState: TodoEditorDialogState) {
+    fun onSelectDate(milliSec: Long) {
         val date = milliSec.toLocalDateTime().date
         updateState {
-            when (dialogState) {
-                TodoEditorDialogState.StartDate -> {
-                    stateValue.copy(
-                        startDate = date
-                    )
-                }
-
-                TodoEditorDialogState.EndDate -> {
-                    stateValue.copy(
-                        endDate = date
-                    )
-                }
-
-                else -> stateValue
-            }
+            stateValue.copy(
+                date = date
+            )
         }
         onCancelDialog()
     }
 
-    fun onSelectTime(hour: Int, minute: Int) {
+    fun onSelectTime(hour: Int, minute: Int, dialogState: TodoEditorDialogState) {
         val time = LocalTime.fromHourMinute(hour = hour, minute = minute)
         updateState {
-            when (stateValue.todoEditorDialogState) {
+            when (dialogState) {
                 TodoEditorDialogState.StartTime -> {
-
                     stateValue.copy(
                         startTime = time
                     )
@@ -153,11 +119,13 @@ class TodoEditorViewModel @Inject constructor(
                 else -> stateValue
             }
         }
+
+        onCancelDialog()
     }
 
     fun onClickContributeGoal() = ioScope.launch {
         goalRepository
-            .getWeekdayGoalsFlow(stateValue.startDate.toLocalDateTime())
+            .getWeekdayGoalsFlow(stateValue.date.toLocalDateTime())
             .collectLatest { goals ->
                 val goalModels = goals.map { it.asModel() }
                 updateState {
@@ -175,6 +143,17 @@ class TodoEditorViewModel @Inject constructor(
                 contributionScore = 0
             )
         }
+        onCancelDialog()
+    }
+
+    fun onSelectNoneGoal() {
+        updateState {
+            stateValue.copy(
+                contributeGoal = null,
+                contributionScore = 0
+            )
+        }
+        onCancelDialog()
     }
 
     fun onChangeContributeGoalScore(score: Int) {
@@ -239,9 +218,7 @@ class TodoEditorViewModel @Inject constructor(
 data class TodoEditorScreenState(
     val todoId: Int? = null,
     val title: String? = null,
-    val startDate: LocalDate = LocalDate.now(),
-    val endDate: LocalDate = LocalDate.now(),
-    val allDay: Boolean = false,
+    val date: LocalDate = LocalDate.now(),
     val startTime: LocalTime? = null,
     val endTime: LocalTime? = null,
     val contributeGoal: GoalModel? = null,
@@ -259,8 +236,9 @@ data class TodoEditorScreenState(
                 TodoModel(
                     todoId = todoId,
                     title = title,
-                    startTime = startDate.atTime(startTime ?: LocalTime.getStartOfDay()),
-                    endTime = endDate.atTime(endTime ?: LocalTime.getStartOfDay()),
+                    date = date,
+                    startTime = date.atTime(startTime ?: LocalTime.getStartOfDay()),
+                    endTime = date.atTime(endTime ?: LocalTime.getStartOfDay()),
                     goalModel = contributeGoal,
                     goalContributionScore = contributionScore,
                     memo = memo
@@ -270,8 +248,8 @@ data class TodoEditorScreenState(
             title?.let {
                 TodoModel(
                     title = title,
-                    startTime = startDate.atTime(startTime ?: LocalTime.getStartOfDay()),
-                    endTime = endDate.atTime(endTime ?: LocalTime.getStartOfDay()),
+                    startTime = date.atTime(startTime ?: LocalTime.getStartOfDay()),
+                    endTime = date.atTime(endTime ?: LocalTime.getStartOfDay()),
                     goalModel = contributeGoal,
                     goalContributionScore = contributionScore,
                     memo = memo
@@ -284,9 +262,8 @@ data class TodoEditorScreenState(
 
 sealed class TodoEditorDialogState {
     object None : TodoEditorDialogState()
-    object StartDate : TodoEditorDialogState()
+    object Date : TodoEditorDialogState()
     object StartTime : TodoEditorDialogState()
-    object EndDate : TodoEditorDialogState()
     object EndTime : TodoEditorDialogState()
     data class ContributeGoal(val goals: List<GoalModel>) : TodoEditorDialogState()
     object ExitConfirm : TodoEditorDialogState()

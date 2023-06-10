@@ -2,11 +2,8 @@ package com.yessorae.presentation.screen.editors.todo
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,14 +14,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FlagCircle
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.outlined.Flag
-import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -35,19 +29,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.designsystem.util.BasePreview
-import com.yessorae.designsystem.util.Margin
-import com.yessorae.domain.model.mockGoalModels
 import com.yessorae.presentation.R
+import com.yessorae.presentation.buttons.BackgroundTextButton
 import com.yessorae.presentation.dialogs.GoalReminderAlertDialog
 import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
 import com.yessorae.presentation.dialogs.GoalReminderTimePickerDialog
@@ -87,10 +78,10 @@ fun TodoEditorScreen(
             snapshotFlow {
                 listState.firstVisibleItemIndex
             }.collectLatest {
-                if (it > 0) {
-                    appBarTitle = model.title
+                appBarTitle = if (it > 0) {
+                    model.title
                 } else {
-                    appBarTitle = ""
+                    ""
                 }
             }
         }
@@ -120,79 +111,78 @@ fun TodoEditorScreen(
         topBar = {
             EditorTopAppBar(
                 title = appBarTitle,
-                enableSaveButton = model.enableSaveButton,
                 onClickBack = {
                     viewModel.onClickBack()
-                },
-                onClickSave = {
-                    viewModel.onClickSave()
                 }
             )
         }
     ) { paddingValues ->
 
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(horizontal = Dimen.SidePadding), state = listState
         ) {
-            item {
-                TitleListItem(
-                    title = model.title,
-                    onChangeTitle = { title ->
-                        viewModel.onChangeTitle(title)
-                    }
-                )
+            LazyColumn(
+                modifier = Modifier.weight(1f),
+                state = listState
+            ) {
+                item {
+                    TitleListItem(
+                        title = model.title,
+                        onChangeTitle = { title ->
+                            viewModel.onChangeTitle(title)
+                        }
+                    )
+                }
+
+                item {
+                    TimeListItem(
+                        day = model.date,
+                        startTime = model.startTime,
+                        endTime = model.endTime,
+                        onClickDay = {
+                            viewModel.onClickDate()
+                        },
+                        onClickStartTime = {
+                            viewModel.onClickStartTime()
+                        },
+                        onClickEndTime = {
+                            viewModel.onClickEndTime()
+                        }
+                    )
+                }
+
+                item {
+                    GoalListItem(
+                        contributeGoal = model.contributeGoal,
+                        contributeScore = model.contributionScore,
+                        onChangeContributeGoalScore = { score ->
+                            viewModel.onChangeContributeGoalScore(score)
+                        },
+                        onClickContributeGoal = {
+                            viewModel.onClickContributeGoal()
+                        }
+                    )
+                }
             }
 
-            item {
-                TimeListItem(
-                    allDay = model.allDay,
-                    startDay = model.startDate,
-                    endDay = model.endDate,
-                    startTime = model.startTime,
-                    endTime = model.endTime,
-                    onClickAllDay = {
-                        viewModel.onClickAllDay()
-                    },
-                    onClickStartDay = {
-                        viewModel.onClickStartDate()
-                    },
-                    onClickStartTime = {
-                        viewModel.onClickStartTime()
-                    },
-                    onClickEndDay = {
-                        viewModel.onClickEndDate()
-                    },
-                    onClickEndTime = {
-                        viewModel.onClickEndTime()
-                    }
-                )
-            }
-
-            item {
-                GoalListItem(
-                    contributeGoal = model.contributeGoal,
-                    contributeScore = model.contributionScore,
-                    onChangeContributeGoalScore = { score ->
-                        viewModel.onChangeContributeGoalScore(score)
-                    },
-                    onClickContributeGoal = {
-                        viewModel.onClickContributeGoal()
-                    }
-                )
-            }
+            BackgroundTextButton(
+                onClick = { viewModel.onClickSave() },
+                enabled = model.enableSaveButton,
+                modifier = Modifier
+                    .padding(horizontal = Dimen.SidePadding)
+                    .padding(bottom = Dimen.BottomPadding)
+                    .fillMaxWidth(),
+                text = stringResource(id = R.string.common_save)
+            )
         }
     }
 
     GoalReminderDatePickerDialog(
-        showDialog = model.todoEditorDialogState is TodoEditorDialogState.StartDate,
+        showDialog = model.todoEditorDialogState is TodoEditorDialogState.Date,
         onClickConfirmButton = { milliSec ->
-            viewModel.onSelectDate(
-                milliSec = milliSec,
-                dialogState = TodoEditorDialogState.StartDate
-            )
+            viewModel.onSelectDate(milliSec = milliSec)
         },
         onCancel = {
             viewModel.onCancelDialog()
@@ -202,17 +192,11 @@ fun TodoEditorScreen(
     GoalReminderTimePickerDialog(
         showDialog = model.todoEditorDialogState is TodoEditorDialogState.StartTime,
         onClickConfirmButton = { hour, minute ->
-            viewModel.onSelectTime(hour = hour, minute = minute)
-        },
-        onCancel = {
-            viewModel.onCancelDialog()
-        }
-    )
-
-    GoalReminderDatePickerDialog(
-        showDialog = model.todoEditorDialogState is TodoEditorDialogState.EndDate,
-        onClickConfirmButton = { milliSec ->
-            viewModel.onSelectDate(milliSec = milliSec, dialogState = TodoEditorDialogState.EndDate)
+            viewModel.onSelectTime(
+                hour = hour,
+                minute = minute,
+                dialogState = TodoEditorDialogState.StartTime
+            )
         },
         onCancel = {
             viewModel.onCancelDialog()
@@ -222,7 +206,11 @@ fun TodoEditorScreen(
     GoalReminderTimePickerDialog(
         showDialog = model.todoEditorDialogState is TodoEditorDialogState.EndTime,
         onClickConfirmButton = { hour, minute ->
-            viewModel.onSelectTime(hour = hour, minute = minute)
+            viewModel.onSelectTime(
+                hour = hour,
+                minute = minute,
+                dialogState = TodoEditorDialogState.EndTime
+            )
         },
         onCancel = {
             viewModel.onCancelDialog()
@@ -251,12 +239,24 @@ fun TodoEditorScreen(
             items = (model.todoEditorDialogState as? TodoEditorDialogState.ContributeGoal)?.goals
                 ?: listOf()
         ) { _, goal ->
+
             ListItem(
                 headlineContent = {
                     Text(text = goal.title)
                 },
                 modifier = Modifier.clickable {
                     viewModel.onSelectContributeGoal(goal)
+                }
+            )
+        }
+
+        item {
+            ListItem(
+                headlineContent = {
+                    Text(text = stringResource(id = R.string.todo_none_goal))
+                },
+                modifier = Modifier.clickable {
+                    viewModel.onSelectNoneGoal()
                 }
             )
         }
@@ -276,89 +276,35 @@ private fun TitleListItem(
     title: String?,
     onChangeTitle: (String) -> Unit = {}
 ) {
-    ListItem(
-        modifier = Modifier.fillMaxWidth(),
-        headlineContent = {
-            EditorTextField(
-                title = title ?: "",
-                placeholderText = stringResource(id = R.string.todo_title_placeholder),
-                onChangeTitle = onChangeTitle,
-                textStyle = MaterialTheme.typography.titleLarge
-            )
-        }
+    EditorTextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(Dimen.SidePadding),
+        title = title ?: "",
+        placeholderText = stringResource(id = R.string.todo_title_placeholder),
+        onChangeTitle = onChangeTitle,
+        textStyle = MaterialTheme.typography.titleLarge
     )
 }
 
 @Composable
 private fun TimeListItem(
-    allDay: Boolean = false,
-    startDay: LocalDate,
-    endDay: LocalDate,
+    day: LocalDate,
     startTime: LocalTime? = null,
     endTime: LocalTime? = null,
-    onClickAllDay: () -> Unit = {},
-    onClickStartDay: () -> Unit = {},
-    onClickEndDay: () -> Unit = {},
     onClickStartTime: () -> Unit = {},
-    onClickEndTime: () -> Unit = {}
+    onClickEndTime: () -> Unit = {},
+    onClickDay: () -> Unit = {}
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = MaterialTheme.colorScheme.background)
-            .padding(vertical = 12.dp)
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onClickAllDay() }
-                .padding(start = Dimen.DefaultDividePadding, end = Dimen.LargeDividePadding),
-        ) {
-            Row(modifier = Modifier.weight(weight = 1f, fill = false)) {
-                Icon(
-                    imageVector = Icons.Filled.Schedule,
-                    contentDescription = null
-                )
-                Margin(dp = Dimen.DefaultDividePadding)
-                Text(text = stringResource(id = R.string.todo_all_day))
-            }
-
-            Switch(
-                checked = allDay,
-                onCheckedChange = { },
-                enabled = false,
-                colors = SwitchDefaults.colors(
-                    checkedTrackColor = MaterialTheme.colorScheme.primary,
-                    disabledCheckedTrackColor = MaterialTheme.colorScheme.primary
-                )
-            )
-
-        }
-
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = Dimen.DefaultDividePadding + Dimen.LargeDividePadding,
-                    end = Dimen.DefaultDividePadding
-                )
-        ) {
-            TextButton(
-                onClick = { onClickStartDay() },
-                modifier = Modifier.weight(1f, fill = false)
-            ) {
-                Text(
-                    text = stringResource(id = R.string.common_date_format).format(
-                        startDay.year,
-                        startDay.monthNumber,
-                        startDay.dayOfMonth,
-                        startDay.getWeekDisplay()
-                    )
-                )
-            }
+    TodoEditorListItem(
+        titleValue = stringResource(id = R.string.common_date_format).format(
+            day.year,
+            day.monthNumber,
+            day.dayOfMonth,
+            day.getWeekDisplay()
+        ),
+        placeholderText = stringResource(id = R.string.common_select_date),
+        content = {
             TextButton(onClick = { onClickStartTime() }) {
                 startTime?.let {
                     Text(
@@ -373,29 +319,7 @@ private fun TimeListItem(
                     )
                 }
             }
-        }
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = Dimen.DefaultDividePadding + Dimen.LargeDividePadding,
-                    end = Dimen.DefaultDividePadding
-                )
-        ) {
-            TextButton(
-                onClick = { onClickEndDay() },
-                modifier = Modifier.weight(1f, fill = false)
-            ) {
-                Text(
-                    text = stringResource(id = R.string.common_date_format).format(
-                        endDay.year,
-                        endDay.monthNumber,
-                        endDay.dayOfMonth,
-                        endDay.getWeekDisplay()
-                    )
-                )
-            }
+
             TextButton(onClick = { onClickEndTime() }) {
                 endTime?.let {
                     Text(
@@ -410,8 +334,12 @@ private fun TimeListItem(
                     )
                 }
             }
+        },
+        leadingIcon = Icons.Filled.Schedule,
+        onClick = {
+            onClickDay()
         }
-    }
+    )
 }
 
 @Composable
@@ -432,7 +360,8 @@ private fun GoalListItem(
                     text = stringResource(id = R.string.todo_contribute_score_title).format(
                         contributeScore,
                         contributeGoal?.totalScore
-                    )
+                    ),
+                    style = MaterialTheme.typography.labelMedium
                 )
                 contributeGoal?.let { contributeGoal ->
                     Slider(
@@ -440,7 +369,8 @@ private fun GoalListItem(
                         onValueChange = { score ->
                             onChangeContributeGoalScore(score.roundToInt())
                         },
-                        valueRange = 0f..contributeGoal.totalScore.toFloat()
+                        valueRange = 0f..contributeGoal.totalScore.toFloat(),
+                        modifier = Modifier.padding(top = Dimen.InsideDividePadding)
                     )
                 }
 
@@ -453,6 +383,11 @@ private fun GoalListItem(
     )
 }
 
+@Composable
+fun DescriptionListItem() {
+
+}
+
 @Preview
 @Composable
 fun ListItemsPreview() {
@@ -461,20 +396,17 @@ fun ListItemsPreview() {
         TitleListItem(title = "아니길다아니길다아니길다아니길다아니길다아니길다아니길다아니길다아니길다아니길다")
         TitleListItem(title = null)
 
-        GoalListItem(contributeGoal = mockGoalDatumModels.get(0))
+        GoalListItem(contributeGoal = mockGoalDatumModels[0])
         GoalListItem(contributeGoal = null)
-        GoalListItem(contributeGoal = mockGoalDatumModels.get(1), contributeScore = 20)
+        GoalListItem(contributeGoal = mockGoalDatumModels[1], contributeScore = 20)
 
-        TimeListItem(startDay = LocalDate.now(), endDay = LocalDate.now())
+        TimeListItem(day = LocalDate.now())
         TimeListItem(
-            startDay = LocalDate.now(),
-            endDay = LocalDate.now(),
+            day = LocalDate.now(),
             startTime = LocalDateTime.now().time,
-            allDay = true
         )
         TimeListItem(
-            startDay = LocalDate.now(),
-            endDay = LocalDate.now(),
+            day = LocalDate.now(),
             startTime = LocalDateTime.now().time,
             endTime = LocalDateTime.now().time
         )
