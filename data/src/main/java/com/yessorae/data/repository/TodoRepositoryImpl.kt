@@ -18,4 +18,12 @@ class TodoRepositoryImpl @Inject constructor() : TodoRepository {
     override suspend fun getTodo(todoId: Int): TodoWithGoal {
         return mockTodoWithGoalData[0] // todo replace
     }
+
+    override suspend fun insertTodo(todo: Todo): Int {
+        return 0 // todo impl
+    }
+
+    override suspend fun updateTodo(todo: Todo) {
+        // todo impl
+    }
 }

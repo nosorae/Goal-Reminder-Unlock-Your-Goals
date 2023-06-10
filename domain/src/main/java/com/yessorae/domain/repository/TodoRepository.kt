@@ -9,4 +9,8 @@ interface TodoRepository {
     fun getDailyTodosFlow(day: LocalDateTime): Flow<List<Todo>>
 
     suspend fun getTodo(todoId: Int): TodoWithGoal
+
+    suspend fun insertTodo(todo: Todo): Int
+
+    suspend fun updateTodo(todo: Todo)
 }

@@ -9,6 +9,7 @@ import com.yessorae.presentation.R
 import com.yessorae.presentation.TodoEditorDestination
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TodoModel
+import com.yessorae.presentation.model.asDomainModel
 import com.yessorae.presentation.model.asModel
 import com.yessorae.presentation.model.asTodoWithGoal
 import com.yessorae.util.ResString
@@ -32,6 +33,9 @@ class TodoEditorViewModel @Inject constructor(
 ) : BaseScreenViewModel<TodoEditorScreenState>() {
     private val todoId: Int =
         checkNotNull(savedStateHandle[TodoEditorDestination.todoIdArg])
+    private val isUpdate: Boolean by lazy {
+        todoId == TodoEditorDestination.defaultTodoId
+    }
     private val todoDayMilliSec: Long =
         checkNotNull(savedStateHandle[TodoEditorDestination.todoDayMilliSecArg])
 
@@ -202,10 +206,14 @@ class TodoEditorViewModel @Inject constructor(
         }
     }
 
-    fun onClickSave() {
-        // todo insert or update TODO
-        stateValue.getTodo()?.asTodoWithGoal()?.let {
-            Logger.uiDebug("$it")
+    fun onClickSave() = ioScope.launch {
+        stateValue.getTodo()?.asDomainModel()?.let {
+            if (isUpdate) {
+                todoRepository.updateTodo(it)
+            } else {
+                todoRepository.insertTodo(it)
+            }
+            back()
         }
     }
 

@@ -383,11 +383,6 @@ private fun GoalListItem(
     )
 }
 
-@Composable
-fun DescriptionListItem() {
-
-}
-
 @Preview
 @Composable
 fun ListItemsPreview() {
