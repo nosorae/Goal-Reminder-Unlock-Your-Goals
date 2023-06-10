@@ -2,6 +2,7 @@ package com.yessorae.goalreminder.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -25,13 +26,31 @@ fun GoalReminderNavHost(
         composable(
             route = MainDestination.route
         ) {
-            HomeScreen()
+            HomeScreen(
+                onNavOutEvent = { route ->
+                    navController.navigateSingleTopTo(route)
+                }
+            )
         }
 
         composable(
-            route = TodoEditorDestination.route
+            route = TodoEditorDestination.routeWithArgs,
+            arguments = TodoEditorDestination.arguments
         ) {
-            TodoEditorScreen()
+            TodoEditorScreen(
+                onBackEvent = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }
+
+fun NavHostController.navigateSingleTopTo(route: String) =
+    this.navigate(route) {
+        popUpTo(this@navigateSingleTopTo.graph.findStartDestination().id) {
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = true
+    }

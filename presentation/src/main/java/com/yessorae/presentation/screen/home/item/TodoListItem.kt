@@ -94,16 +94,16 @@ fun TodoListItem(
             }
         )
 
-        IconButton(
-            modifier = Modifier.align(Alignment.CenterEnd),
-            onClick = { onClickMore() }
-        ) {
-            Icon(
-                imageVector = Icons.Filled.MoreVert,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onBackground
-            )
-        }
+//        IconButton(
+//            modifier = Modifier.align(Alignment.CenterEnd),
+//            onClick = { onClickMore() }
+//        ) {
+//            Icon(
+//                imageVector = Icons.Filled.MoreVert,
+//                contentDescription = null,
+//                tint = MaterialTheme.colorScheme.onBackground
+//            )
+//        }
     }
 }
 

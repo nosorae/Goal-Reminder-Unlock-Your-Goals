@@ -40,7 +40,7 @@ import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.screen.home.item.GoalListItem
 import com.yessorae.presentation.screen.home.item.HomeTopAppBar
 import com.yessorae.presentation.screen.home.item.OverlayPermissionDialog
-import com.yessorae.presentation.screen.home.item.TitleListItem
+import com.yessorae.presentation.screen.home.item.HomeTitleListItem
 import com.yessorae.presentation.screen.home.item.TodoListItem
 import com.yessorae.util.getWeekScopeDisplay
 import kotlinx.coroutines.flow.collectLatest
@@ -129,6 +129,9 @@ fun HomeScreen(
                             },
                             onClickGoal = { goal ->
                                 viewModel.onClickGoal(goal = goal)
+                            },
+                            onClickAdd = {
+                                viewModel.onClickAddGoal()
                             }
                         )
                     }
@@ -146,6 +149,9 @@ fun HomeScreen(
                             },
                             onClickGoal = { goal ->
                                 viewModel.onClickGoal(goal = goal)
+                            },
+                            onClickAdd = {
+                                viewModel.onClickAddGoal()
                             }
                         )
                     }
@@ -163,6 +169,9 @@ fun HomeScreen(
                             },
                             onClickGoal = { goal ->
                                 viewModel.onClickGoal(goal = goal)
+                            },
+                            onClickAdd = {
+                                viewModel.onClickAddGoal()
                             }
                         )
                     }
@@ -183,6 +192,9 @@ fun HomeScreen(
                             },
                             onClickTodo = { todo ->
                                 viewModel.onClickTodo(todo = todo)
+                            },
+                            onClickAddTodo = {
+                                viewModel.onClickAddTodo()
                             }
                         )
                     }
@@ -285,7 +297,8 @@ private fun GoalPage(
     title: TitleListItemModel,
     goals: List<GoalModel>,
     onClickGoal: (GoalModel) -> Unit = {},
-    onClickMore: (GoalModel) -> Unit = {}
+    onClickMore: (GoalModel) -> Unit = {},
+    onClickAdd: () -> Unit = {}
 ) {
     val listState = rememberLazyListState()
 
@@ -296,8 +309,11 @@ private fun GoalPage(
         item(
             contentType = TitleListItemModel::class
         ) {
-            TitleListItem(
-                model = title
+            HomeTitleListItem(
+                model = title,
+                onClickAdd = {
+                    onClickAdd()
+                }
             )
         }
         itemsIndexed(
@@ -326,7 +342,8 @@ private fun TodoPage(
     todos: List<TodoModel>,
     onClickTodo: (TodoModel) -> Unit = {},
     onClickMore: (TodoModel) -> Unit = {},
-    onClickCheckBox: (TodoModel) -> Unit = {}
+    onClickCheckBox: (TodoModel) -> Unit = {},
+    onClickAddTodo: () -> Unit = {}
 ) {
     val listState = rememberLazyListState()
 
@@ -337,8 +354,11 @@ private fun TodoPage(
         item(
             contentType = TitleListItemModel::class
         ) {
-            TitleListItem(
-                model = title
+            HomeTitleListItem(
+                model = title,
+                onClickAdd = {
+                    onClickAddTodo()
+                }
             )
         }
         itemsIndexed(

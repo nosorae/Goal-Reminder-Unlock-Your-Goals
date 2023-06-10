@@ -5,7 +5,9 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atTime
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
@@ -40,4 +42,15 @@ fun LocalDate.Companion.now(): LocalDate =
 
 fun Long.toLocalDateTime(): LocalDateTime {
     return Instant.fromEpochMilliseconds(this).toLocalDateTime(TimeZone.currentSystemDefault())
+}
+
+fun LocalTime.Companion.getStartOfDay(): LocalTime {
+    return fromSecondOfDay(0)
+}
+fun LocalTime.Companion.fromHourMinute(hour: Int, minute: Int): LocalTime {
+    return fromSecondOfDay((hour * 60 * 60) + (minute * 60))
+}
+
+fun LocalDate.toLocalDateTime(hour: Int? = null, minute: Int? = null): LocalDateTime {
+    return this.atTime(LocalTime.fromHourMinute(hour = hour ?: 0, minute = minute ?: 0))
 }

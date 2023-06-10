@@ -1,8 +1,8 @@
 package com.yessorae.presentation.screen.home
 
 import com.yessorae.base.BaseScreenViewModel
-import com.yessorae.common.Logger
 import com.yessorae.domain.usecase.GetHomeUseCase
+import com.yessorae.presentation.TodoEditorDestination
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.model.asModel
@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.toJavaLocalDateTime
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -89,7 +90,15 @@ class HomeViewModel @Inject constructor(
         // todo impl
     }
 
-    fun onClickTodo(todo: TodoModel) {
+    fun onClickTodo(todo: TodoModel) = ioScope.launch {
+       _navigationEvent.emit(TodoEditorDestination.getRouteWithArgs(todoId = todo.todoId, todoDay = stateValue.now.second * 1000L))
+    }
+
+    fun onClickAddTodo() = ioScope.launch {
+        _navigationEvent.emit(TodoEditorDestination.getRouteWithArgs())
+    }
+
+    fun onClickAddGoal() = ioScope.launch {
         // todo impl
     }
 
