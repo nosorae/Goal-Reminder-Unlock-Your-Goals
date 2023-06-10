@@ -272,8 +272,8 @@ fun LabelTab(
                 MaterialTheme.colorScheme.onBackground
             },
             modifier = Modifier.padding(
-                top = Dimen.MediumDividePadding,
-                bottom = Dimen.MediumDividePadding
+                top = Dimen.DefaultDividePadding,
+                bottom = Dimen.DefaultDividePadding
             )
         )
     }

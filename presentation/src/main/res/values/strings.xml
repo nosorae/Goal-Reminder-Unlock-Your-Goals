@@ -16,6 +16,7 @@
 
     <!-- 할 일 추가/수정 -->
     <string name="todo_title_placeholder">할 일 입력</string>
+    <string name="todo_all_day">종일</string>
     <string name="todo_start_time_placeholder">시작 시간</string>
     <string name="todo_end_time_placeholder">완료 시간</string>
     <string name="todo_start_date_placeholder">시작 날짜</string>
@@ -25,7 +26,8 @@
     <string name="todo_repeated_todo_placeholder">반복 일정</string>
     <string name="todo_description_placeholder">설명 추가</string>
     <string name="todo_alarm_placeholder">알람 설정</string>
-    <string name="todo_confirm_dialog_title">이 할 일을 </string>
+    <string name="todo_confirm_dialog_title">저장하지 않고 뒤로가면 작성한 내용은 사라져요!</string>
+    <string name="todo_confirm_dialog_cancel">계속 작성하기</string>
 
 
     <!-- 반복 일정 등록  -->
@@ -49,4 +51,5 @@
     <string name="common_day_todo">%s일 할일</string>
     <string name="common_final_goal">%d년에 나는\n%s이다.</string>
     <string name="common_save">저장</string>
+    <string name="common_date_format">%d년 %d월 %d일 (%s)</string>
 </resources>

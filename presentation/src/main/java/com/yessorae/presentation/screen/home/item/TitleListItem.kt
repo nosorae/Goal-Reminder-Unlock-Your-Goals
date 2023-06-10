@@ -25,7 +25,7 @@ fun TitleListItem(
             .background(color = MaterialTheme.colorScheme.background)
             .fillMaxWidth()
             .padding(
-                top = Dimen.MediumDividePadding,
+                top = Dimen.DefaultDividePadding,
                 bottom = Dimen.SmallDividePadding,
                 start = Dimen.SidePadding,
                 end = Dimen.SidePadding

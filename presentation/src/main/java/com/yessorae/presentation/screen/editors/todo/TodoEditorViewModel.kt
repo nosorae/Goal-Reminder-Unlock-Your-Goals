@@ -2,7 +2,9 @@ package com.yessorae.presentation.screen.editors.todo
 
 import com.yessorae.base.BaseScreenViewModel
 import com.yessorae.domain.model.Goal
+import com.yessorae.util.now
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import javax.inject.Inject
@@ -17,6 +19,16 @@ class TodoEditorViewModel @Inject constructor() : BaseScreenViewModel<TodoEditor
             )
         }
 
+    }
+
+    fun onClickAllDay() {
+        updateState {
+            stateValue.copy(
+                allDay = stateValue.allDay.not(),
+                startTime = null,
+                endTime = null
+            )
+        }
     }
 
     fun onClickStartDate() {
@@ -116,12 +128,15 @@ class TodoEditorViewModel @Inject constructor() : BaseScreenViewModel<TodoEditor
         }
     }
 
-    fun onClickBack() {
-        // todo 다시 안보기 조건 따져서 하자
-        updateState {
-            stateValue.copy(
-                todoEditorDialogState = TodoEditorDialogState.ExitConfirm
-            )
+    fun onClickBack() = ioScope.launch {
+        if (stateValue.enableSaveButton) {
+            updateState {
+                stateValue.copy(
+                    todoEditorDialogState = TodoEditorDialogState.ExitConfirm
+                )
+            }
+        } else {
+            _navigationEvent.emit(null)
         }
     }
 
@@ -144,16 +159,21 @@ class TodoEditorViewModel @Inject constructor() : BaseScreenViewModel<TodoEditor
 }
 
 data class TodoEditorScreenState(
-    val title: String = "",
-    val startDate: LocalDate? = null,
-    val endDate: LocalDate? = null,
+    val title: String? = null,
+    val startDate: LocalDate = LocalDate.now(), // todo 이거 인자로 바꿔야함
+    val endDate: LocalDate = LocalDate.now(), // todo 이거 인자로 바꿔야함
+    val allDay: Boolean = false,
     val startTime: LocalDateTime? = null,
     val endTime: LocalDateTime? = null,
     val contributeGoal: Goal? = null,
     val contributeScore: Int? = null,
     val memo: String? = null,
     val todoEditorDialogState: TodoEditorDialogState = TodoEditorDialogState.None
-)
+) {
+    val enableSaveButton by lazy {
+        title.isNullOrEmpty().not()
+    }
+}
 
 sealed class TodoEditorDialogState {
     object None : TodoEditorDialogState()
