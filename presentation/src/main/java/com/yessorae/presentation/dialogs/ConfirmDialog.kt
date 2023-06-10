@@ -36,7 +36,7 @@ fun ConfirmDialog(
 ) {
     Dialog(
         onDismissRequest = {
-            // do nothing
+            onClickCancel()
         },
         properties = DialogProperties(
             dismissOnBackPress = dismissOnBackPress,
