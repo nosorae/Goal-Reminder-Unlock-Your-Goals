@@ -2,7 +2,6 @@ package com.yessorae.presentation.screen.editors.todo
 
 import androidx.lifecycle.SavedStateHandle
 import com.yessorae.base.BaseScreenViewModel
-import com.yessorae.common.Logger
 import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.domain.repository.TodoRepository
 import com.yessorae.presentation.R
@@ -11,7 +10,7 @@ import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.model.asDomainModel
 import com.yessorae.presentation.model.asModel
-import com.yessorae.presentation.model.asTodoWithGoal
+import com.yessorae.presentation.screen.editors.EditorDialogState
 import com.yessorae.util.ResString
 import com.yessorae.util.fromHourMinute
 import com.yessorae.util.getStartOfDay
@@ -73,7 +72,7 @@ class TodoEditorViewModel @Inject constructor(
     fun onClickDate() {
         updateState {
             stateValue.copy(
-                todoEditorDialogState = TodoEditorDialogState.Date
+                editorDialogState = EditorDialogState.Date
             )
         }
     }
@@ -81,7 +80,7 @@ class TodoEditorViewModel @Inject constructor(
     fun onClickStartTime() {
         updateState {
             stateValue.copy(
-                todoEditorDialogState = TodoEditorDialogState.StartTime
+                editorDialogState = EditorDialogState.StartTime
             )
         }
     }
@@ -89,7 +88,7 @@ class TodoEditorViewModel @Inject constructor(
     fun onClickEndTime() {
         updateState {
             stateValue.copy(
-                todoEditorDialogState = TodoEditorDialogState.EndTime
+                editorDialogState = EditorDialogState.EndTime
             )
         }
     }
@@ -104,17 +103,17 @@ class TodoEditorViewModel @Inject constructor(
         onCancelDialog()
     }
 
-    fun onSelectTime(hour: Int, minute: Int, dialogState: TodoEditorDialogState) {
+    fun onSelectTime(hour: Int, minute: Int, dialogState: EditorDialogState) {
         val time = LocalTime.fromHourMinute(hour = hour, minute = minute)
         updateState {
             when (dialogState) {
-                TodoEditorDialogState.StartTime -> {
+                EditorDialogState.StartTime -> {
                     stateValue.copy(
                         startTime = time
                     )
                 }
 
-                TodoEditorDialogState.EndTime -> {
+                EditorDialogState.EndTime -> {
                     stateValue.copy(
                         endTime = time
                     )
@@ -134,7 +133,7 @@ class TodoEditorViewModel @Inject constructor(
                 val goalModels = goals.map { it.asModel() }
                 updateState {
                     stateValue.copy(
-                        todoEditorDialogState = TodoEditorDialogState.ContributeGoal(goalModels)
+                        editorDialogState = EditorDialogState.ContributeGoal(goalModels)
                     )
                 }
             }
@@ -172,7 +171,7 @@ class TodoEditorViewModel @Inject constructor(
         if (stateValue.enableSaveButton) {
             updateState {
                 stateValue.copy(
-                    todoEditorDialogState = TodoEditorDialogState.ExitConfirm
+                    editorDialogState = EditorDialogState.ExitConfirm
                 )
             }
         } else {
@@ -201,7 +200,7 @@ class TodoEditorViewModel @Inject constructor(
     fun onCancelDialog() {
         updateState {
             stateValue.copy(
-                todoEditorDialogState = TodoEditorDialogState.None
+                editorDialogState = EditorDialogState.None
             )
         }
     }
@@ -232,7 +231,7 @@ data class TodoEditorScreenState(
     val contributeGoal: GoalModel? = null,
     val contributionScore: Int = 0,
     val memo: String? = null,
-    val todoEditorDialogState: TodoEditorDialogState = TodoEditorDialogState.None
+    val editorDialogState: EditorDialogState = EditorDialogState.None
 ) {
     val enableSaveButton by lazy {
         title.isNullOrEmpty().not()
@@ -265,15 +264,4 @@ data class TodoEditorScreenState(
             }
         }
     }
-}
-
-
-sealed class TodoEditorDialogState {
-    object None : TodoEditorDialogState()
-    object Date : TodoEditorDialogState()
-    object StartTime : TodoEditorDialogState()
-    object EndTime : TodoEditorDialogState()
-    data class ContributeGoal(val goals: List<GoalModel>) : TodoEditorDialogState()
-    object ExitConfirm : TodoEditorDialogState()
-    object NotificationPermission : TodoEditorDialogState()
 }

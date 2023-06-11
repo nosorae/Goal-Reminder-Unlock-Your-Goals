@@ -46,6 +46,7 @@ import com.yessorae.presentation.dialogs.NotificationPermissionDialog
 import com.yessorae.presentation.dialogs.OptionListDialog
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.mockGoalDatumModels
+import com.yessorae.presentation.screen.editors.EditorDialogState
 import com.yessorae.presentation.screen.editors.EditorTextField
 import com.yessorae.presentation.screen.editors.EditorTopAppBar
 import com.yessorae.presentation.screen.editors.TodoEditorListItem
@@ -180,7 +181,7 @@ fun TodoEditorScreen(
     }
 
     GoalReminderDatePickerDialog(
-        showDialog = model.todoEditorDialogState is TodoEditorDialogState.Date,
+        showDialog = model.editorDialogState is EditorDialogState.Date,
         onClickConfirmButton = { milliSec ->
             viewModel.onSelectDate(milliSec = milliSec)
         },
@@ -190,12 +191,12 @@ fun TodoEditorScreen(
     )
 
     GoalReminderTimePickerDialog(
-        showDialog = model.todoEditorDialogState is TodoEditorDialogState.StartTime,
+        showDialog = model.editorDialogState is EditorDialogState.StartTime,
         onClickConfirmButton = { hour, minute ->
             viewModel.onSelectTime(
                 hour = hour,
                 minute = minute,
-                dialogState = TodoEditorDialogState.StartTime
+                dialogState = EditorDialogState.StartTime
             )
         },
         onCancel = {
@@ -204,12 +205,12 @@ fun TodoEditorScreen(
     )
 
     GoalReminderTimePickerDialog(
-        showDialog = model.todoEditorDialogState is TodoEditorDialogState.EndTime,
+        showDialog = model.editorDialogState is EditorDialogState.EndTime,
         onClickConfirmButton = { hour, minute ->
             viewModel.onSelectTime(
                 hour = hour,
                 minute = minute,
-                dialogState = TodoEditorDialogState.EndTime
+                dialogState = EditorDialogState.EndTime
             )
         },
         onCancel = {
@@ -218,7 +219,7 @@ fun TodoEditorScreen(
     )
 
     GoalReminderAlertDialog(
-        showDialog = model.todoEditorDialogState is TodoEditorDialogState.ExitConfirm,
+        showDialog = model.editorDialogState is EditorDialogState.ExitConfirm,
         text = stringResource(id = R.string.todo_confirm_dialog_title),
         onClickConfirm = {
             viewModel.onConfirmBack()
@@ -229,14 +230,14 @@ fun TodoEditorScreen(
     )
 
     OptionListDialog(
-        showDialog = model.todoEditorDialogState is TodoEditorDialogState.ContributeGoal,
+        showDialog = model.editorDialogState is EditorDialogState.ContributeGoal,
         title = stringResource(id = R.string.todo_goal_placeholder),
         onCancel = {
             viewModel.onCancelDialog()
         }
     ) {
         itemsIndexed(
-            items = (model.todoEditorDialogState as? TodoEditorDialogState.ContributeGoal)?.goals
+            items = (model.editorDialogState as? EditorDialogState.ContributeGoal)?.goals
                 ?: listOf()
         ) { _, goal ->
 
@@ -264,7 +265,7 @@ fun TodoEditorScreen(
 
     NotificationPermissionDialog(
         needRequestPermission =
-        model.todoEditorDialogState is TodoEditorDialogState.NotificationPermission,
+        model.editorDialogState is EditorDialogState.NotificationPermission,
         onCompleteNotificationPermissionLogic = { result ->
             viewModel.onPermissionLogicCompleted(result)
         }
