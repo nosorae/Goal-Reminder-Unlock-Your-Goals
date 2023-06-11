@@ -2,6 +2,7 @@ package com.yessorae.presentation.screen.home
 
 import com.yessorae.base.BaseScreenViewModel
 import com.yessorae.domain.usecase.GetHomeUseCase
+import com.yessorae.presentation.GoalEditorDestination
 import com.yessorae.presentation.TodoEditorDestination
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TodoModel
@@ -85,8 +86,16 @@ class HomeViewModel @Inject constructor(
         // todo impl
     }
 
-    fun onClickGoal(goal: GoalModel) {
-        // todo impl
+    fun onClickGoal(goal: GoalModel) = ioScope.launch {
+       _navigationEvent.emit(GoalEditorDestination.getRouteWithArgs(
+           goalId = goal.goalId,
+           goalDay = stateValue.now.second * 1000L,
+           goalType = goal.type
+       ))
+    }
+
+    fun onClickAddGoal() = ioScope.launch {
+        _navigationEvent.emit(GoalEditorDestination.getRouteWithArgs(goalDay = stateValue.now.second * 1000L))
     }
 
     fun onClickTodo(todo: TodoModel) = ioScope.launch {
@@ -95,10 +104,6 @@ class HomeViewModel @Inject constructor(
 
     fun onClickAddTodo() = ioScope.launch {
         _navigationEvent.emit(TodoEditorDestination.getRouteWithArgs())
-    }
-
-    fun onClickAddGoal() = ioScope.launch {
-        // todo impl
     }
 
     fun onClickTodoMore(todo: TodoModel) {

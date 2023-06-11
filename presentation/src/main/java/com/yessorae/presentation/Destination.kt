@@ -64,11 +64,11 @@ object GoalEditorDestination : Destination {
     )
 
     fun getRouteWithArgs(
-        todoId: Int = defaultGoalId,
-        todoDay: Long = defaultGoalDayMilliSec,
+        goalId: Int = defaultGoalId,
+        goalDay: Long = defaultGoalDayMilliSec,
         goalType: GoalType = GoalType.NONE
     ) =
-        "$route?$goalIdArg=$todoId&$goalDayMilliSecArg=$todoDay&$goalTypeArg=${goalType.name}"
+        "$route?$goalIdArg=$goalId&$goalDayMilliSecArg=$goalDay&$goalTypeArg=${goalType.name}"
 }
 
 object SettingDestination : Destination {
