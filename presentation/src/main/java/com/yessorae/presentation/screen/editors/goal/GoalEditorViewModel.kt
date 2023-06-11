@@ -208,7 +208,7 @@ class GoalEditorViewModel @Inject constructor(
     }
 
     fun onClickSave() = ioScope.launch {
-        stateValue.getGoal()?.asDomainModel()?.let {
+        stateValue.getUpdatedGoal()?.asDomainModel()?.let {
             if (isUpdate) {
                 goalRepository.updateGoal(it)
             } else {
@@ -272,7 +272,7 @@ data class GoalEditorScreenState(
         }
     }
 
-    fun getGoal(): GoalModel? {
+    fun getUpdatedGoal(): GoalModel? {
         val goal = goal
 
         val goalTitle = title ?: goal?.title
