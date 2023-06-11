@@ -34,23 +34,34 @@ fun LocalDateTime.getWeekScopeDisplay(): String {
     return "${firstDayOfWeek.dayOfMonth}-${lastDayOfWarnings.dayOfMonth}"
 }
 
+fun LocalDate.getWeekRange(): IntRange {
+    val ordinal = this.dayOfWeek.ordinal
+    val firstDayOfWeek = this.minus(ordinal, DateTimeUnit.DAY)
+    val lastDayOfWarnings = firstDayOfWeek.plus(6, DateTimeUnit.DAY)
+    return firstDayOfWeek.dayOfMonth..lastDayOfWarnings.dayOfMonth
+}
+
 fun LocalDateTime.Companion.now(): LocalDateTime =
     Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
 fun LocalDate.Companion.now(): LocalDate =
     Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
 
-fun Long.toLocalDateTime(): LocalDateTime {
+fun Long.toDefaultLocalDateTime(): LocalDateTime {
     return Instant.fromEpochMilliseconds(this).toLocalDateTime(TimeZone.currentSystemDefault())
 }
 
 fun LocalTime.Companion.getStartOfDay(): LocalTime {
     return fromSecondOfDay(0)
 }
+
+fun LocalDate.toDefaultLocalDateTime(): LocalDateTime {
+    return atTime(LocalTime.getStartOfDay())
+}
 fun LocalTime.Companion.fromHourMinute(hour: Int, minute: Int): LocalTime {
     return fromSecondOfDay((hour * 60 * 60) + (minute * 60))
 }
 
-fun LocalDate.toLocalDateTime(hour: Int? = null, minute: Int? = null): LocalDateTime {
+fun LocalDate.toDefaultLocalDateTime(hour: Int? = null, minute: Int? = null): LocalDateTime {
     return this.atTime(LocalTime.fromHourMinute(hour = hour ?: 0, minute = minute ?: 0))
 }
