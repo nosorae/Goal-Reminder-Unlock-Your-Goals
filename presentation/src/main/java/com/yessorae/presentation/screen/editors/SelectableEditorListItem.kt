@@ -2,7 +2,6 @@ package com.yessorae.presentation.screen.editors
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -24,53 +23,17 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.designsystem.util.Margin
-import org.w3c.dom.Text
-
-@Composable
-fun DialogTodoEditorListItem(
-    modifier: Modifier = Modifier,
-    valueText: String?,
-    placeholderText: String,
-    leadingIcon: ImageVector?,
-    onClick: () -> Unit = {}
-
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-            .padding(vertical = Dimen.MediumDividePadding),
-        verticalAlignment = Alignment.Top,
-    ) {
-        Margin(dp = Dimen.DefaultDividePadding)
-        leadingIcon?.let {
-            Icon(imageVector = leadingIcon, contentDescription = null)
-            Margin(dp = Dimen.DefaultDividePadding)
-        }
-
-        Column(modifier = Modifier.weight(1f)) {
-            valueText?.let {
-                Text(
-                    text = valueText,
-                    style = LocalTextStyle.current.copy(fontWeight = FontWeight.Bold)
-                )
-            } ?: run {
-                Text(text = placeholderText)
-            }
-        }
-    }
-}
-
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun TodoEditorListItem(
+fun SelectableEditorListItem(
     modifier: Modifier = Modifier,
     titleValue: String?,
     placeholderText: String,
     content: @Composable ColumnScope.() -> Unit,
     leadingIcon: ImageVector,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    clickEnabled: Boolean = true
 
 ) {
     val icon = ConstrainedLayoutReference("icon")
@@ -79,7 +42,7 @@ fun TodoEditorListItem(
 
     ConstraintLayout(
         modifier = modifier
-            .clickable { onClick() }
+            .clickable(enabled = clickEnabled) { onClick() }
             .background(color = MaterialTheme.colorScheme.background)
             .fillMaxWidth()
             .padding(vertical = Dimen.MediumDividePadding)

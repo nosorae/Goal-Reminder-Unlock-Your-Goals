@@ -1,5 +1,6 @@
 package com.yessorae.presentation.screen.editors
 
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -10,11 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import com.yessorae.designsystem.util.BasePreview
+import androidx.compose.ui.text.input.KeyboardType
 
 @Composable
-fun EditorTextField(
+fun EditorNumberField(
     modifier: Modifier = Modifier,
     title: String?,
     placeholderText: String,
@@ -33,6 +33,9 @@ fun EditorTextField(
             Text(text = placeholderText, style = textStyle)
         },
         singleLine = singleLine,
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = KeyboardType.Number
+        ),
         colors = TextFieldDefaults.colors(
             disabledIndicatorColor = MaterialTheme.colorScheme.background,
             focusedIndicatorColor = MaterialTheme.colorScheme.background,
@@ -44,15 +47,3 @@ fun EditorTextField(
     )
 }
 
-
-
-@Preview
-@Composable
-fun EditorTextFieldPreview() {
-    BasePreview {
-        EditorTextField(title = null, placeholderText = "할 일 작성")
-        EditorTextField(title = "아침 일기 작성", placeholderText = "할 일 작성")
-        EditorTextField(title = "아침 일기 작성아침 일기 작성아침 일기 작성아침 일기 작성아침 일기 작성", placeholderText = "할 일 작성", singleLine = false)
-    }
-
-}

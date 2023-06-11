@@ -49,7 +49,7 @@ import com.yessorae.presentation.model.mockGoalDatumModels
 import com.yessorae.presentation.screen.editors.EditorDialogState
 import com.yessorae.presentation.screen.editors.EditorTextField
 import com.yessorae.presentation.screen.editors.EditorTopAppBar
-import com.yessorae.presentation.screen.editors.TodoEditorListItem
+import com.yessorae.presentation.screen.editors.SelectableEditorListItem
 import com.yessorae.util.getWeekDisplay
 import com.yessorae.util.now
 import com.yessorae.util.showToast
@@ -297,7 +297,7 @@ private fun TimeListItem(
     onClickEndTime: () -> Unit = {},
     onClickDay: () -> Unit = {}
 ) {
-    TodoEditorListItem(
+    SelectableEditorListItem(
         titleValue = stringResource(id = R.string.common_date_format).format(
             day.year,
             day.monthNumber,
@@ -352,13 +352,13 @@ private fun GoalListItem(
 
 ) {
     val hasContributeGoal = contributeGoal != null
-    TodoEditorListItem(
+    SelectableEditorListItem(
         titleValue = contributeGoal?.title,
         placeholderText = stringResource(id = R.string.todo_goal_placeholder),
         content = {
             AnimatedVisibility(visible = hasContributeGoal) {
                 Text(
-                    text = stringResource(id = R.string.todo_contribute_score_title).format(
+                    text = stringResource(id = R.string.common_contribution_score_title).format(
                         contributeScore,
                         contributeGoal?.totalScore
                     ),
