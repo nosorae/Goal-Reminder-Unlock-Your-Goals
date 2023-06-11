@@ -10,4 +10,10 @@ interface GoalRepository {
     fun getMonthlyGoalsFlow(day: LocalDateTime): Flow<List<Goal>>
 
     fun getWeekdayGoalsFlow(day: LocalDateTime): Flow<List<Goal>>
+
+    suspend fun getGoalById(goalId: Int): Goal
+
+    suspend fun insertGoal(goal: Goal): Int
+
+    suspend fun updateGoal(goal: Goal)
 }
