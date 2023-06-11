@@ -17,6 +17,7 @@ import com.yessorae.util.StringModel
 import com.yessorae.util.getWeekRange
 import com.yessorae.util.now
 import com.yessorae.util.toDefaultLocalDateTime
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
@@ -26,6 +27,7 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import javax.inject.Inject
 
+@HiltViewModel
 class GoalEditorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val goalRepository: GoalRepository,
