@@ -52,8 +52,8 @@ class GoalEditorViewModel @Inject constructor(
                 stateValue.copy(
                     goal = model,
                     title = model.title,
-                    startDay = model.startTime?.date,
-                    endDay = model.endTime?.date
+                    startDate = model.startTime?.date,
+                    endDate = model.endTime?.date
                 )
             }
         }
@@ -98,6 +98,14 @@ class GoalEditorViewModel @Inject constructor(
         }
     }
 
+    fun onChangeContributionScore(score: Int) {
+        updateState {
+            stateValue.copy(
+                contributionScore = score
+            )
+        }
+    }
+
     fun onClickStartDate() {
         updateState {
             stateValue.copy(
@@ -109,10 +117,12 @@ class GoalEditorViewModel @Inject constructor(
     fun onClickEndDate() {
         updateState {
             stateValue.copy(
-
+                editorDialogState = EditorDialogState.EndDate
             )
         }
     }
+
+
 
     fun onClickContributeGoal() = ioScope.launch {
         goalRepository
@@ -152,6 +162,51 @@ class GoalEditorViewModel @Inject constructor(
         }
     }
 
+    fun onSelectDate(milliSec: Long, dialogState: EditorDialogState) {
+        val date = milliSec.toDefaultLocalDateTime().date
+        when (dialogState) {
+            is EditorDialogState.StartDate -> {
+                updateState {
+                    stateValue.copy(
+                        startDate = date
+                    )
+                }
+            }
+            is EditorDialogState.EndDate -> {
+                updateState {
+                    stateValue.copy(
+                        endDate = date
+                    )
+                }
+            }
+            else -> {
+                // do nothing
+            }
+        }
+
+        onCancelDialog()
+    }
+
+    fun onSelectContributeGoal(goal: GoalModel) {
+        updateState {
+            stateValue.copy(
+                contributionGoal = goal,
+                contributionScore = 0
+            )
+        }
+        onCancelDialog()
+    }
+
+    fun onSelectNoneGoal() {
+        updateState {
+            stateValue.copy(
+                contributionGoal = null,
+                contributionScore = 0
+            )
+        }
+        onCancelDialog()
+    }
+
     fun onClickSave() = ioScope.launch {
         stateValue.getGoal()?.asDomainModel()?.let {
             if (isUpdate) {
@@ -178,8 +233,8 @@ data class GoalEditorScreenState(
     val paramDate: LocalDate = LocalDateTime.now().date,
     val paramGoalType: GoalType = GoalType.NONE,
     val title: String? = null,
-    val startDay: LocalDate? = null,
-    val endDay: LocalDate? = null,
+    val startDate: LocalDate? = null,
+    val endDate: LocalDate? = null,
     val totalScore: Int? = 100,
     val contributionGoal: GoalModel? = null,
     val contributionScore: Int? = null,
@@ -222,12 +277,12 @@ data class GoalEditorScreenState(
 
         val goalTitle = title ?: goal?.title
 
-        val startDate = startDay?.let { startDay ->
+        val startDate = startDate?.let { startDay ->
             paramDate.minus(paramDate.dayOfMonth - startDay.dayOfMonth, DateTimeUnit.DAY)
                 .toDefaultLocalDateTime()
         } ?: goal?.startTime
 
-        val endDate = endDay?.let { endDay ->
+        val endDate = endDate?.let { endDay ->
             paramDate.plus(endDay.dayOfMonth - paramDate.dayOfMonth, DateTimeUnit.DAY).toDefaultLocalDateTime()
         } ?: goal?.endTime
 

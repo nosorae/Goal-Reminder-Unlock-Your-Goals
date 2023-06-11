@@ -1,10 +1,13 @@
 package com.yessorae.presentation.screen.editors
 
+import android.content.SharedPreferences.Editor
 import com.yessorae.presentation.model.GoalModel
 
 sealed class EditorDialogState {
     object None : EditorDialogState()
     object Date : EditorDialogState()
+
+    object StartDate : EditorDialogState()
     object EndDate : EditorDialogState()
     object StartTime : EditorDialogState()
     object EndTime : EditorDialogState()

@@ -37,7 +37,7 @@
     <string name="todo_repeated_todo_placeholder">반복 일정</string>
     <string name="todo_description_placeholder">설명 추가</string>
     <string name="todo_alarm_placeholder">알람 설정</string>
-    <string name="todo_confirm_dialog_title">저장하지 않고 뒤로가면 작성한 내용은 사라져요!</string>
+    <string name="todo_confirm_dialog_title">저장하지 않고 뒤로가면\n새롭게 작성한 내용이 사라져요!</string>
     <string name="todo_confirm_dialog_cancel">계속 작성하기</string>
     <string name="todo_toast_please_alarm_on">알림권한을 켜야 알림을 받아보실 수 있어요 🥺</string>
     <string name="todo_toast_will_send_you_notification">알림을 보내드릴게요 😉</string>

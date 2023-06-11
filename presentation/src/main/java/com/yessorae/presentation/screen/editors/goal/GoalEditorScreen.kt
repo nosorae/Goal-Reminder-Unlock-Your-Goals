@@ -1,16 +1,18 @@
 package com.yessorae.presentation.screen.editors.goal
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FlagCircle
 import androidx.compose.material.icons.filled.Numbers
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.outlined.Flag
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -28,8 +30,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.presentation.R
+import com.yessorae.presentation.buttons.BackgroundTextButton
+import com.yessorae.presentation.dialogs.GoalReminderAlertDialog
+import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
+import com.yessorae.presentation.dialogs.OptionListDialog
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.screen.editors.DefaultEditorListItem
+import com.yessorae.presentation.screen.editors.EditorDialogState
 import com.yessorae.presentation.screen.editors.EditorNumberField
 import com.yessorae.presentation.screen.editors.EditorTextField
 import com.yessorae.presentation.screen.editors.EditorTopAppBar
@@ -105,13 +112,13 @@ fun GoalEditorScreen(
             item {
                 TimeListItem(
                     title = model.dayEditorTitle?.get(context = context),
-                    startDay = model.startDay,
-                    endDay = model.endDay,
+                    startDay = model.startDate,
+                    endDay = model.endDate,
                     onClickStartDay = {
-
+                        viewModel.onClickStartDate()
                     },
                     onClickEndDay = {
-
+                        viewModel.onClickEndDate()
                     },
                 )
             }
@@ -121,13 +128,88 @@ fun GoalEditorScreen(
                     contributeGoal = model.contributionGoal,
                     contributeScore = model.contributionScore ?: 0,
                     onClickContributeGoal = {
-
+                        viewModel.onClickContributeGoal()
                     },
-                    onChangeContributeGoalScore = {
-
+                    onChangeContributeGoalScore = { score ->
+                        viewModel.onChangeContributionScore(score)
                     }
                 )
             }
+        }
+
+        BackgroundTextButton(
+            onClick = { viewModel.onClickSave() },
+            enabled = model.enableSaveButton,
+            modifier = Modifier
+                .padding(horizontal = Dimen.SidePadding)
+                .padding(bottom = Dimen.BottomPadding)
+                .fillMaxWidth(),
+            text = stringResource(id = R.string.common_save)
+        )
+    }
+
+    GoalReminderDatePickerDialog(
+        showDialog = model.editorDialogState is EditorDialogState.StartDate,
+        onClickConfirmButton = { milliSec ->
+            viewModel.onSelectDate(milliSec = milliSec, dialogState = EditorDialogState.StartDate)
+        },
+        onCancel = {
+            viewModel.onCancelDialog()
+        }
+    )
+
+    GoalReminderDatePickerDialog(
+        showDialog = model.editorDialogState is EditorDialogState.EndDate,
+        onClickConfirmButton = { milliSec ->
+            viewModel.onSelectDate(milliSec = milliSec, dialogState = EditorDialogState.EndDate)
+        },
+        onCancel = {
+            viewModel.onCancelDialog()
+        }
+    )
+
+    GoalReminderAlertDialog(
+        showDialog = model.editorDialogState is EditorDialogState.ExitConfirm,
+        text = stringResource(id = R.string.todo_confirm_dialog_title),
+        onClickConfirm = {
+            viewModel.onConfirmBack()
+        },
+        onCancel = {
+            viewModel.onCancelDialog()
+        }
+    )
+
+    OptionListDialog(
+        showDialog = model.editorDialogState is EditorDialogState.ContributeGoal,
+        title = stringResource(id = R.string.todo_goal_placeholder),
+        onCancel = {
+            viewModel.onCancelDialog()
+        }
+    ) {
+        itemsIndexed(
+            items = (model.editorDialogState as? EditorDialogState.ContributeGoal)?.goals
+                ?: listOf()
+        ) { _, goal ->
+
+            ListItem(
+                headlineContent = {
+                    Text(text = goal.title)
+                },
+                modifier = Modifier.clickable {
+                    viewModel.onSelectContributeGoal(goal)
+                }
+            )
+        }
+
+        item {
+            ListItem(
+                headlineContent = {
+                    Text(text = stringResource(id = R.string.todo_none_goal))
+                },
+                modifier = Modifier.clickable {
+                    viewModel.onSelectNoneGoal()
+                }
+            )
         }
     }
 }
