@@ -7,8 +7,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.yessorae.presentation.Destination
+import com.yessorae.presentation.GoalEditorDestination
 import com.yessorae.presentation.MainDestination
 import com.yessorae.presentation.TodoEditorDestination
+import com.yessorae.presentation.screen.editors.goal.GoalEditorScreen
 import com.yessorae.presentation.screen.editors.todo.TodoEditorScreen
 import com.yessorae.presentation.screen.home.HomeScreen
 
@@ -38,6 +40,17 @@ fun GoalReminderNavHost(
             arguments = TodoEditorDestination.arguments
         ) {
             TodoEditorScreen(
+                onBackEvent = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(
+            route = GoalEditorDestination.routeWithArgs,
+            arguments = GoalEditorDestination.arguments
+        ) {
+            GoalEditorScreen(
                 onBackEvent = {
                     navController.popBackStack()
                 }

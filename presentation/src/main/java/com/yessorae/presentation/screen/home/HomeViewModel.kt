@@ -7,7 +7,7 @@ import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.model.asModel
 import com.yessorae.util.now
-import com.yessorae.util.toLocalDateTime
+import com.yessorae.util.toDefaultLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.toJavaLocalDateTime
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -66,7 +65,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onSelectDate(timestamp: Long) {
-        _currentDay.value = timestamp.toLocalDateTime()
+        _currentDay.value = timestamp.toDefaultLocalDateTime()
         onCancelDialog()
     }
 

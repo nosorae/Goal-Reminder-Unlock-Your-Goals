@@ -15,7 +15,7 @@ import com.yessorae.util.ResString
 import com.yessorae.util.fromHourMinute
 import com.yessorae.util.getStartOfDay
 import com.yessorae.util.now
-import com.yessorae.util.toLocalDateTime
+import com.yessorae.util.toDefaultLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -30,12 +30,12 @@ class TodoEditorViewModel @Inject constructor(
     private val goalRepository: GoalRepository,
     private val todoRepository: TodoRepository
 ) : BaseScreenViewModel<TodoEditorScreenState>() {
-    private val todoId: Int =
+    private val todoIdParam: Int =
         checkNotNull(savedStateHandle[TodoEditorDestination.todoIdArg])
     private val isUpdate: Boolean by lazy {
-        todoId == TodoEditorDestination.defaultTodoId
+        todoIdParam == TodoEditorDestination.defaultTodoId
     }
-    private val todoDayMilliSec: Long =
+    private val todoDayMilliSecParam: Long =
         checkNotNull(savedStateHandle[TodoEditorDestination.todoDayMilliSecArg])
 
     init {
@@ -43,18 +43,18 @@ class TodoEditorViewModel @Inject constructor(
     }
 
     private fun initStateValue() = ioScope.launch {
-        if (todoId != TodoEditorDestination.defaultTodoId) {
-            val model = todoRepository.getTodo(todoId = todoId)
+        if (todoIdParam != TodoEditorDestination.defaultTodoId) {
+            val model = todoRepository.getTodo(todoId = todoIdParam)
             updateState {
                 stateValue.copy(
-                    todoId = todoId,
+                    todoId = todoIdParam,
                     title = model.title
                 )
             }
         }
 
-        if (todoDayMilliSec != TodoEditorDestination.defaultTodoDayMilliSec) {
-            val date = todoDayMilliSec.toLocalDateTime()
+        if (todoDayMilliSecParam != TodoEditorDestination.defaultTodoDayMilliSec) {
+            val date = todoDayMilliSecParam.toDefaultLocalDateTime()
             updateState {
                 stateValue.copy(date = date.date)
             }
@@ -94,7 +94,7 @@ class TodoEditorViewModel @Inject constructor(
     }
 
     fun onSelectDate(milliSec: Long) {
-        val date = milliSec.toLocalDateTime().date
+        val date = milliSec.toDefaultLocalDateTime().date
         updateState {
             stateValue.copy(
                 date = date
@@ -128,7 +128,7 @@ class TodoEditorViewModel @Inject constructor(
 
     fun onClickContributeGoal() = ioScope.launch {
         goalRepository
-            .getWeekdayGoalsFlow(stateValue.date.toLocalDateTime())
+            .getWeekdayGoalsFlow(stateValue.date.toDefaultLocalDateTime())
             .collectLatest { goals ->
                 val goalModels = goals.map { it.asModel() }
                 updateState {

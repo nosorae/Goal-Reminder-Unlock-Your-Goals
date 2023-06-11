@@ -2,6 +2,7 @@ package com.yessorae.presentation
 
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.yessorae.domain.model.enum.GoalType
 
 interface Destination {
     val route: String
@@ -35,23 +36,39 @@ object TodoEditorDestination : Destination {
         "$route?$todoIdArg=$todoId&$todoDayMilliSecArg=$todoDay"
 }
 
-//object CategoryEditDestination : TimeLedgerDestination {
-//    override val route = "category_edit"
-//    const val categoryIdArg = "category_id"
-//    val routeWithArgs = "$route?$categoryIdArg={$categoryIdArg}"
-//    const val defaultCategoryId = Int.MAX_VALUE
-//    val arguments = listOf(
-//        navArgument(categoryIdArg) {
-//            defaultValue = defaultCategoryId
-//            type = NavType.IntType
-//        }
-//    )
-//
-//    fun getRouteWithArgs(categoryId: Int = defaultCategoryId) = "$route?$categoryIdArg=$categoryId"
-//}
-
 object GoalEditorDestination : Destination {
     override val route: String = "goal_editor"
+    const val goalIdArg = "goal_id"
+    const val goalDayMilliSecArg = "goal_day_milli_sec"
+    const val goalTypeArg = "goal_type"
+    val routeWithArgs =
+        "$route?$goalIdArg={$goalIdArg}&$goalDayMilliSecArg={$goalDayMilliSecArg}&$goalTypeArg={$goalTypeArg}"
+
+    const val defaultGoalId = Int.MAX_VALUE
+    const val defaultGoalDayMilliSec = Long.MAX_VALUE
+    val defaultGoalType: String = GoalType.NONE.name
+
+    val arguments = listOf(
+        navArgument(goalIdArg) {
+            defaultValue = defaultGoalId
+            type = NavType.IntType
+        },
+        navArgument(goalDayMilliSecArg) {
+            defaultValue = defaultGoalDayMilliSec
+            type = NavType.LongType
+        },
+        navArgument(goalTypeArg) {
+            defaultValue = defaultGoalType
+            type = NavType.StringType
+        }
+    )
+
+    fun getRouteWithArgs(
+        todoId: Int = defaultGoalId,
+        todoDay: Long = defaultGoalDayMilliSec,
+        goalType: GoalType = GoalType.NONE
+    ) =
+        "$route?$goalIdArg=$todoId&$goalDayMilliSecArg=$todoDay&$goalTypeArg=${goalType.name}"
 }
 
 object SettingDestination : Destination {

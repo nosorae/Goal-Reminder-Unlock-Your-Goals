@@ -5,6 +5,7 @@ import com.yessorae.presentation.model.GoalModel
 sealed class EditorDialogState {
     object None : EditorDialogState()
     object Date : EditorDialogState()
+    object EndDate : EditorDialogState()
     object StartTime : EditorDialogState()
     object EndTime : EditorDialogState()
     data class ContributeGoal(val goals: List<GoalModel>) : EditorDialogState()

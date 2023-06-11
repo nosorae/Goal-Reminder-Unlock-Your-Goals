@@ -18,6 +18,8 @@ data class GoalModel(
     val endTime: LocalDateTime? = null,
     val totalScore: Int,
     val currentScore: Int,
+    val contributeGoalId: Int? = null,
+    val contributeScore: Int? = null,
     val type: GoalType,
 ) {
     val subtitle: StringModel? by lazy {
@@ -39,6 +41,10 @@ data class GoalModel(
 
                 GoalType.WEEKLY -> {
                     TextString("${startTime.getWeekDisplay()}-${endTime.getWeekDisplay()}")
+                }
+
+                else -> {
+                    TextString("")
                 }
             }
         }
