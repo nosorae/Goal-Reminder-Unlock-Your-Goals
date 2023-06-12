@@ -10,9 +10,18 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atTime
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
+import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import java.time.format.TextStyle
 import java.util.Locale
+
+fun Long.toLocalDateTime(): LocalDateTime {
+    return Instant.fromEpochMilliseconds(this).toLocalDateTime(TimeZone.currentSystemDefault())
+}
+
+fun LocalDateTime.toMilliSecond(): Long {
+    return this.toInstant(TimeZone.UTC).epochSeconds * 1000
+}
 
 fun LocalDateTime.getMonthDisplay(): String =
     this.date.month.getDisplayName(TextStyle.SHORT, Locale.getDefault())
@@ -46,10 +55,6 @@ fun LocalDateTime.Companion.now(): LocalDateTime =
 
 fun LocalDate.Companion.now(): LocalDate =
     Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
-
-fun Long.toDefaultLocalDateTime(): LocalDateTime {
-    return Instant.fromEpochMilliseconds(this).toLocalDateTime(TimeZone.currentSystemDefault())
-}
 
 fun LocalTime.Companion.getStartOfDay(): LocalTime {
     return fromSecondOfDay(0)

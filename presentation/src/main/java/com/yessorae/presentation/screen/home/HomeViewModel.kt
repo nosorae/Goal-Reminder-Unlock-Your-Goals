@@ -1,6 +1,7 @@
 package com.yessorae.presentation.screen.home
 
 import com.yessorae.base.BaseScreenViewModel
+import com.yessorae.domain.model.enum.GoalType
 import com.yessorae.domain.usecase.GetHomeUseCase
 import com.yessorae.presentation.GoalEditorDestination
 import com.yessorae.presentation.TodoEditorDestination
@@ -8,7 +9,8 @@ import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.model.asModel
 import com.yessorae.util.now
-import com.yessorae.util.toDefaultLocalDateTime
+import com.yessorae.util.toLocalDateTime
+import com.yessorae.util.toMilliSecond
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -66,7 +68,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onSelectDate(timestamp: Long) {
-        _currentDay.value = timestamp.toDefaultLocalDateTime()
+        _currentDay.value = timestamp.toLocalDateTime()
         onCancelDialog()
     }
 
@@ -87,23 +89,40 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onClickGoal(goal: GoalModel) = ioScope.launch {
-       _navigationEvent.emit(GoalEditorDestination.getRouteWithArgs(
-           goalId = goal.goalId,
-           goalDay = stateValue.now.second * 1000L,
-           goalType = goal.type
-       ))
+        com.yessorae.common.Logger.uiDebug("stateValue.now.toMilliSecond() ${stateValue.now.toMilliSecond()}")
+
+        _navigationEvent.emit(
+            GoalEditorDestination.getRouteWithArgs(
+                goalId = goal.goalId,
+                goalDay = goal.startTime?.toMilliSecond() ?: currentDay.value.toMilliSecond(),
+                goalType = goal.type
+            )
+        )
     }
 
-    fun onClickAddGoal() = ioScope.launch {
-        _navigationEvent.emit(GoalEditorDestination.getRouteWithArgs(goalDay = stateValue.now.second * 1000L))
+    fun onClickAddGoal(goalType: GoalType) = ioScope.launch {
+        com.yessorae.common.Logger.uiDebug("stateValue.now.toMilliSecond() ${stateValue.now.toMilliSecond()}")
+        _navigationEvent.emit(
+            GoalEditorDestination.getRouteWithArgs(
+                goalDay = stateValue.now.toMilliSecond(),
+                goalType = goalType
+            )
+        )
     }
 
     fun onClickTodo(todo: TodoModel) = ioScope.launch {
-       _navigationEvent.emit(TodoEditorDestination.getRouteWithArgs(todoId = todo.todoId, todoDay = stateValue.now.second * 1000L))
+        com.yessorae.common.Logger.uiDebug("stateValue.now.toMilliSecond() ${stateValue.now.toMilliSecond()}")
+        _navigationEvent.emit(
+            TodoEditorDestination.getRouteWithArgs(
+                todoId = todo.todoId,
+                todoDay = todo.startTime?.toMilliSecond() ?: currentDay.value.toMilliSecond()
+            )
+        )
     }
 
     fun onClickAddTodo() = ioScope.launch {
-        _navigationEvent.emit(TodoEditorDestination.getRouteWithArgs())
+        com.yessorae.common.Logger.uiDebug("stateValue.now.toMilliSecond() ${stateValue.now.toMilliSecond()}")
+        _navigationEvent.emit(TodoEditorDestination.getRouteWithArgs(todoDay = currentDay.value.toMilliSecond()))
     }
 
     fun onClickTodoMore(todo: TodoModel) {

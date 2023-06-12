@@ -2,6 +2,7 @@ package com.yessorae.presentation.screen.editors.goal
 
 import androidx.lifecycle.SavedStateHandle
 import com.yessorae.base.BaseScreenViewModel
+import com.yessorae.common.Logger
 import com.yessorae.domain.model.enum.GoalType
 import com.yessorae.domain.model.enum.toGoalType
 import com.yessorae.domain.repository.GoalRepository
@@ -17,6 +18,7 @@ import com.yessorae.util.StringModel
 import com.yessorae.util.getWeekRange
 import com.yessorae.util.now
 import com.yessorae.util.toDefaultLocalDateTime
+import com.yessorae.util.toLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -60,8 +62,11 @@ class GoalEditorViewModel @Inject constructor(
             }
         }
 
+        Logger.uiDebug("goalDayMilliSecParam ${goalDayMilliSecParam} /  defaultGoalDayMilliSec ${GoalEditorDestination.defaultGoalDayMilliSec}")
         if (goalDayMilliSecParam != GoalEditorDestination.defaultGoalDayMilliSec) {
-            val date = goalDayMilliSecParam.toDefaultLocalDateTime()
+            Logger.uiError("goalDayMilliSecParam ${goalDayMilliSecParam} /  defaultGoalDayMilliSec ${GoalEditorDestination.defaultGoalDayMilliSec}")
+
+            val date = goalDayMilliSecParam.toLocalDateTime() // todo fix bug
             updateState {
                 stateValue.copy(
                     paramDate = date.date
@@ -70,6 +75,8 @@ class GoalEditorViewModel @Inject constructor(
         }
 
         val goalType = goalTypeParam.toGoalType()
+        Logger.uiDebug("goalType ${goalType} /  goalTypeParam ${goalTypeParam}")
+
         updateState {
             stateValue.copy(
                 paramGoalType = goalType
@@ -111,7 +118,7 @@ class GoalEditorViewModel @Inject constructor(
     fun onClickStartDate() {
         updateState {
             stateValue.copy(
-                editorDialogState = EditorDialogState.Date
+                editorDialogState = EditorDialogState.StartDate
             )
         }
     }
@@ -123,8 +130,6 @@ class GoalEditorViewModel @Inject constructor(
             )
         }
     }
-
-
 
     fun onClickContributeGoal() = ioScope.launch {
         goalRepository
@@ -165,7 +170,7 @@ class GoalEditorViewModel @Inject constructor(
     }
 
     fun onSelectDate(milliSec: Long, dialogState: EditorDialogState) {
-        val date = milliSec.toDefaultLocalDateTime().date
+        val date = milliSec.toLocalDateTime().date
         when (dialogState) {
             is EditorDialogState.StartDate -> {
                 updateState {

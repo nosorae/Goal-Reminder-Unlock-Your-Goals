@@ -2,6 +2,7 @@ package com.yessorae.presentation.screen.editors.todo
 
 import androidx.lifecycle.SavedStateHandle
 import com.yessorae.base.BaseScreenViewModel
+import com.yessorae.common.Logger
 import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.domain.repository.TodoRepository
 import com.yessorae.presentation.R
@@ -16,6 +17,7 @@ import com.yessorae.util.fromHourMinute
 import com.yessorae.util.getStartOfDay
 import com.yessorae.util.now
 import com.yessorae.util.toDefaultLocalDateTime
+import com.yessorae.util.toLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -53,10 +55,14 @@ class TodoEditorViewModel @Inject constructor(
             }
         }
 
+
+        Logger.uiDebug("todoDayMilliSecParam ${todoDayMilliSecParam},TodoEditorDestination.defaultTodoDayMilliSec ${TodoEditorDestination.defaultTodoDayMilliSec} ")
         if (todoDayMilliSecParam != TodoEditorDestination.defaultTodoDayMilliSec) {
-            val date = todoDayMilliSecParam.toDefaultLocalDateTime()
+            val date = todoDayMilliSecParam.toLocalDateTime().date
             updateState {
-                stateValue.copy(date = date.date)
+                stateValue.copy(
+                    date = date
+                )
             }
         }
     }
@@ -94,7 +100,7 @@ class TodoEditorViewModel @Inject constructor(
     }
 
     fun onSelectDate(milliSec: Long) {
-        val date = milliSec.toDefaultLocalDateTime().date
+        val date = milliSec.toLocalDateTime().date
         updateState {
             stateValue.copy(
                 date = date

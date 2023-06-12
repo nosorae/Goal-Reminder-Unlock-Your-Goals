@@ -32,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.yessorae.designsystem.theme.Dimen
+import com.yessorae.domain.model.enum.GoalType
 import com.yessorae.presentation.R
 import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
 import com.yessorae.presentation.model.GoalModel
@@ -131,7 +132,7 @@ fun HomeScreen(
                                 viewModel.onClickGoal(goal = goal)
                             },
                             onClickAdd = {
-                                viewModel.onClickAddGoal()
+                                viewModel.onClickAddGoal(GoalType.YEARLY)
                             }
                         )
                     }
@@ -151,7 +152,7 @@ fun HomeScreen(
                                 viewModel.onClickGoal(goal = goal)
                             },
                             onClickAdd = {
-                                viewModel.onClickAddGoal()
+                                viewModel.onClickAddGoal(GoalType.MONTHLY)
                             }
                         )
                     }
@@ -171,7 +172,7 @@ fun HomeScreen(
                                 viewModel.onClickGoal(goal = goal)
                             },
                             onClickAdd = {
-                                viewModel.onClickAddGoal()
+                                viewModel.onClickAddGoal(GoalType.WEEKLY)
                             }
                         )
                     }
