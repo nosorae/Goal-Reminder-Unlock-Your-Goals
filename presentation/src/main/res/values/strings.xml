@@ -28,6 +28,8 @@
     <string name="goal_contribution_goal_placeholder">상위 목표</string>
 
     <!-- 할 일 추가/수정 -->
+    <string name="todo_add_toolbar_title">목표 추가</string>
+    <string name="todo_edit_toolbar_title">목표 수정</string>
     <string name="todo_title_placeholder">할 일 입력</string>
     <string name="todo_all_day">종일</string>
     <string name="todo_start_time_placeholder">시작 시간</string>

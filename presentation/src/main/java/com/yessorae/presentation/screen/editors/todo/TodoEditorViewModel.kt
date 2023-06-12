@@ -13,6 +13,7 @@ import com.yessorae.presentation.model.asDomainModel
 import com.yessorae.presentation.model.asModel
 import com.yessorae.presentation.screen.editors.EditorDialogState
 import com.yessorae.util.ResString
+import com.yessorae.util.StringModel
 import com.yessorae.util.fromHourMinute
 import com.yessorae.util.getStartOfDay
 import com.yessorae.util.now
@@ -46,11 +47,17 @@ class TodoEditorViewModel @Inject constructor(
 
     private fun initStateValue() = ioScope.launch {
         if (todoIdParam != TodoEditorDestination.defaultTodoId) {
-            val model = todoRepository.getTodo(todoId = todoIdParam)
+            val model = todoRepository.getTodo(todoId = todoIdParam).asModel()
             updateState {
                 stateValue.copy(
-                    todoId = todoIdParam,
-                    title = model.title
+                    paramIsUpdate = true,
+                    paramTodo = model,
+                    todoTitle = model.title,
+                    startTime = model.startTime?.time,
+                    endTime = model.endTime?.time,
+                    contributeGoal = model.goalModel,
+                    contributionScore = model.goalContributionScore ?: 0,
+                    memo = model.memo
                 )
             }
         }
@@ -61,7 +68,7 @@ class TodoEditorViewModel @Inject constructor(
             val date = todoDayMilliSecParam.toLocalDateTime().date
             updateState {
                 stateValue.copy(
-                    date = date
+                    paramDate = date
                 )
             }
         }
@@ -70,7 +77,7 @@ class TodoEditorViewModel @Inject constructor(
     fun onChangeTitle(title: String) {
         updateState {
             stateValue.copy(
-                title = title
+                todoTitle = title
             )
         }
     }
@@ -103,7 +110,7 @@ class TodoEditorViewModel @Inject constructor(
         val date = milliSec.toLocalDateTime().date
         updateState {
             stateValue.copy(
-                date = date
+                paramDate = date
             )
         }
         onCancelDialog()
@@ -134,7 +141,7 @@ class TodoEditorViewModel @Inject constructor(
 
     fun onClickContributeGoal() = ioScope.launch {
         goalRepository
-            .getWeekdayGoalsFlow(stateValue.date.toDefaultLocalDateTime())
+            .getWeekdayGoalsFlow(stateValue.paramDate.toDefaultLocalDateTime())
             .collectLatest { goals ->
                 val goalModels = goals.map { it.asModel() }
                 updateState {
@@ -229,9 +236,10 @@ class TodoEditorViewModel @Inject constructor(
 }
 
 data class TodoEditorScreenState(
-    val todoId: Int? = null,
-    val title: String? = null,
-    val date: LocalDate = LocalDate.now(),
+    val paramTodo: TodoModel? = null,
+    val paramDate: LocalDate = LocalDate.now(),
+    val paramIsUpdate: Boolean = false,
+    val todoTitle: String? = null,
     val startTime: LocalTime? = null,
     val endTime: LocalTime? = null,
     val contributeGoal: GoalModel? = null,
@@ -240,29 +248,36 @@ data class TodoEditorScreenState(
     val editorDialogState: EditorDialogState = EditorDialogState.None
 ) {
     val enableSaveButton by lazy {
-        title.isNullOrEmpty().not()
+        todoTitle.isNullOrEmpty().not()
+    }
+
+    val toolbarTitle: StringModel by lazy {
+        if (paramIsUpdate) {
+            ResString(R.string.todo_edit_toolbar_title)
+        } else {
+            ResString(R.string.todo_add_toolbar_title)
+        }
     }
 
     fun getTodo(): TodoModel? {
-        return todoId?.let {
-            title?.let {
-                TodoModel(
-                    todoId = todoId,
-                    title = title,
-                    date = date,
-                    startTime = date.atTime(startTime ?: LocalTime.getStartOfDay()),
-                    endTime = date.atTime(endTime ?: LocalTime.getStartOfDay()),
+        return paramTodo?.let {
+            todoTitle?.let {
+                paramTodo.copy(
+                    title = todoTitle,
+                    date = paramDate,
+                    startTime = paramDate.atTime(startTime ?: LocalTime.getStartOfDay()),
+                    endTime = paramDate.atTime(endTime ?: LocalTime.getStartOfDay()),
                     goalModel = contributeGoal,
                     goalContributionScore = contributionScore,
                     memo = memo
                 )
             }
         } ?: run {
-            title?.let {
+            todoTitle?.let {
                 TodoModel(
-                    title = title,
-                    startTime = date.atTime(startTime ?: LocalTime.getStartOfDay()),
-                    endTime = date.atTime(endTime ?: LocalTime.getStartOfDay()),
+                    title = todoTitle,
+                    startTime = paramDate.atTime(startTime ?: LocalTime.getStartOfDay()),
+                    endTime = paramDate.atTime(endTime ?: LocalTime.getStartOfDay()),
                     goalModel = contributeGoal,
                     goalContributionScore = contributionScore,
                     memo = memo

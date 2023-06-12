@@ -25,10 +25,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -70,22 +66,7 @@ fun TodoEditorScreen(
     val model by viewModel.state.collectAsState()
     val listState = rememberLazyListState()
 
-    var appBarTitle: String? by remember {
-        mutableStateOf("")
-    }
-
     LaunchedEffect(key1 = Unit) {
-        launch {
-            snapshotFlow {
-                listState.firstVisibleItemIndex
-            }.collectLatest {
-                appBarTitle = if (it > 0) {
-                    model.title
-                } else {
-                    ""
-                }
-            }
-        }
 
         launch {
             viewModel.toast.collectLatest {
@@ -111,7 +92,7 @@ fun TodoEditorScreen(
     Scaffold(
         topBar = {
             EditorTopAppBar(
-                title = appBarTitle,
+                title = model.toolbarTitle.get(context),
                 onClickBack = {
                     viewModel.onClickBack()
                 }
@@ -130,7 +111,7 @@ fun TodoEditorScreen(
             ) {
                 item {
                     TitleListItem(
-                        title = model.title,
+                        title = model.todoTitle,
                         onChangeTitle = { title ->
                             viewModel.onChangeTitle(title)
                         }
@@ -139,7 +120,7 @@ fun TodoEditorScreen(
 
                 item {
                     TimeListItem(
-                        day = model.date,
+                        day = model.paramDate,
                         startTime = model.startTime,
                         endTime = model.endTime,
                         onClickDay = {
