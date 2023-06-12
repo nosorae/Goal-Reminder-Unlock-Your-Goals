@@ -4,9 +4,15 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -30,6 +36,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.designsystem.util.BasePreview
@@ -40,6 +47,7 @@ import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
 import com.yessorae.presentation.dialogs.GoalReminderTimePickerDialog
 import com.yessorae.presentation.dialogs.NotificationPermissionDialog
 import com.yessorae.presentation.dialogs.OptionListDialog
+import com.yessorae.presentation.ext.BottomNavigationBarHeightDp
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.mockGoalDatumModels
 import com.yessorae.presentation.screen.editors.EditorDialogState
@@ -85,7 +93,7 @@ fun TodoEditorScreen(
         }
     }
 
-    BackHandler(enabled = model.enableSaveButton.not()) {
+    BackHandler {
         viewModel.onClickBack()
     }
 
@@ -104,6 +112,11 @@ fun TodoEditorScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .windowInsetsPadding(
+                    WindowInsets.systemBars.only(
+                        WindowInsetsSides.Bottom
+                    )
+                )
         ) {
             LazyColumn(
                 modifier = Modifier.weight(1f),
@@ -154,7 +167,15 @@ fun TodoEditorScreen(
                 enabled = model.enableSaveButton,
                 modifier = Modifier
                     .padding(horizontal = Dimen.SidePadding)
-                    .padding(bottom = Dimen.BottomPadding)
+                    .padding(
+                        bottom = (
+                                Dimen.BottomPadding - BottomNavigationBarHeightDp
+                                )
+                            .value
+                            .coerceAtLeast(0f)
+                            .dp
+                    )
+                    .imePadding()
                     .fillMaxWidth(),
                 text = stringResource(id = R.string.common_save)
             )
