@@ -1,6 +1,7 @@
 package com.yessorae.presentation.screen.editors.goal
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -239,9 +240,6 @@ fun TotalScoreListItem(
         leadingIcon = Icons.Filled.Numbers
     ) {
         EditorNumberField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(Dimen.SidePadding),
             title = title ?: "",
             placeholderText = stringResource(id = R.string.goal_total_score_placeholder),
             onChangeTitle = onChangeNumber,
