@@ -1,7 +1,6 @@
 package com.yessorae.presentation.screen.editors.goal
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,7 +35,7 @@ import com.yessorae.presentation.dialogs.GoalReminderAlertDialog
 import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
 import com.yessorae.presentation.dialogs.OptionListDialog
 import com.yessorae.presentation.model.GoalModel
-import com.yessorae.presentation.screen.editors.DefaultEditorListItem
+import com.yessorae.presentation.screen.editors.EditTextEditorListItem
 import com.yessorae.presentation.screen.editors.EditorDialogState
 import com.yessorae.presentation.screen.editors.EditorNumberField
 import com.yessorae.presentation.screen.editors.EditorTextField
@@ -236,7 +235,7 @@ fun TotalScoreListItem(
     title: String?,
     onChangeNumber: (String) -> Unit
 ) {
-    DefaultEditorListItem(
+    EditTextEditorListItem(
         leadingIcon = Icons.Filled.Numbers
     ) {
         EditorNumberField(

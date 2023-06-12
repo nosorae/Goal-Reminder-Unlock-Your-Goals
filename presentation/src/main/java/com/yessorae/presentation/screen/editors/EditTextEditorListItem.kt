@@ -17,7 +17,7 @@ import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.designsystem.util.Margin
 
 @Composable
-fun DefaultEditorListItem(
+fun EditTextEditorListItem(
     modifier: Modifier = Modifier,
     leadingIcon: ImageVector,
     insidePadding: Dp = 0.dp,
