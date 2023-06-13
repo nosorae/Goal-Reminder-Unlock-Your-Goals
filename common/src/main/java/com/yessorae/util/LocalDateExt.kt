@@ -50,6 +50,12 @@ fun LocalDate.getWeekRange(): IntRange {
     return firstDayOfWeek.dayOfMonth..lastDayOfWarnings.dayOfMonth
 }
 
+fun LocalDate.getWeekRangePair(): Pair<LocalDate, LocalDate> {
+    val ordinal = this.dayOfWeek.ordinal
+    val firstDayOfWeek = this.minus(ordinal, DateTimeUnit.DAY)
+    val lastDayOfWarnings = firstDayOfWeek.plus(6, DateTimeUnit.DAY)
+    return firstDayOfWeek to lastDayOfWarnings
+}
 fun LocalDateTime.Companion.now(): LocalDateTime =
     Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
