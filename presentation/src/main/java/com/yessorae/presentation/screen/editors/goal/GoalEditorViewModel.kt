@@ -16,6 +16,7 @@ import com.yessorae.presentation.screen.editors.EditorDialogState
 import com.yessorae.util.ResString
 import com.yessorae.util.StringModel
 import com.yessorae.util.getWeekRange
+import com.yessorae.util.getWeekRangePair
 import com.yessorae.util.now
 import com.yessorae.util.toDefaultLocalDateTime
 import com.yessorae.util.toLocalDateTime
@@ -169,23 +170,87 @@ class GoalEditorViewModel @Inject constructor(
         }
     }
 
-    fun onSelectDate(milliSec: Long, dialogState: EditorDialogState) {
+    fun onSelectDate(milliSec: Long, dialogState: EditorDialogState) = ioScope.launch {
         val date = milliSec.toLocalDateTime().date
+        val paramDate = stateValue.paramDate
+
+
+        when (stateValue.paramGoalType) {
+            GoalType.YEARLY -> {
+                if (paramDate.year != date.year) {
+                    _toast.emit(
+                        ResString(
+                            R.string.goal_toast_out_of_range_year,
+                            paramDate.year
+                        )
+                    )
+                    return@launch
+                }
+            }
+
+            GoalType.MONTHLY -> {
+                if (paramDate.monthNumber != date.dayOfMonth) {
+                    _toast.emit(
+                        ResString(
+                            R.string.goal_toast_out_of_range_month,
+                            paramDate.monthNumber
+                        )
+                    )
+                    return@launch
+                }
+
+            }
+
+            GoalType.WEEKLY -> {
+                val range = paramDate.getWeekRangePair()
+                Logger.uiDebug("date.dayOfMonth ${date.dayOfMonth} / stateValue.paramDate.getWeekRange() ${stateValue.paramDate.getWeekRange()} ")
+                Logger.uiDebug("range.first.dayOfMonth ${range.first.dayOfMonth} / range.second.dayOfMonth ${range.second.dayOfMonth}")
+                if (date.dayOfMonth in (range.first.dayOfMonth..range.second.dayOfMonth)) {
+                    _toast.emit(
+                        ResString(
+                            R.string.goal_toast_out_of_range_week,
+                            range.first.monthNumber,
+                            range.first.dayOfMonth,
+                            range.second.monthNumber,
+                            range.second.dayOfMonth
+                        )
+                    )
+                    return@launch
+                }
+            }
+
+            else -> {
+                // do nothing
+            }
+        }
+
         when (dialogState) {
             is EditorDialogState.StartDate -> {
+                val endDate = stateValue.endDate
+                if (endDate != null && endDate < date) {
+                    _toast.emit(ResString(R.string.goal_toast_out_of_order_start))
+                    return@launch
+                }
                 updateState {
                     stateValue.copy(
                         startDate = date
                     )
                 }
             }
+
             is EditorDialogState.EndDate -> {
+                val startDate = stateValue.startDate
+                if (startDate != null && startDate > date) {
+                    _toast.emit(ResString(R.string.goal_toast_out_of_order_end))
+                    return@launch
+                }
                 updateState {
                     stateValue.copy(
                         endDate = date
                     )
                 }
             }
+
             else -> {
                 // do nothing
             }
@@ -290,7 +355,8 @@ data class GoalEditorScreenState(
         } ?: goal?.startTime
 
         val endDate = endDate?.let { endDay ->
-            paramDate.plus(endDay.dayOfMonth - paramDate.dayOfMonth, DateTimeUnit.DAY).toDefaultLocalDateTime()
+            paramDate.plus(endDay.dayOfMonth - paramDate.dayOfMonth, DateTimeUnit.DAY)
+                .toDefaultLocalDateTime()
         } ?: goal?.endTime
 
         val goalTotalScore = totalScore ?: goal?.totalScore
