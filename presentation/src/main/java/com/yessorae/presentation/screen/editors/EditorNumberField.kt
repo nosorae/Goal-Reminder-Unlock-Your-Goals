@@ -7,11 +7,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import com.yessorae.presentation.ext.keyboardAsState
 
 @Composable
 fun EditorNumberField(
@@ -22,6 +27,18 @@ fun EditorNumberField(
     onChangeTitle: (String) -> Unit = {},
     singleLine: Boolean = true
 ) {
+    var cursorColor by remember {
+        mutableStateOf(Color.Transparent)
+    }
+
+    val isKeyboardOpen by keyboardAsState()
+
+    cursorColor = if (isKeyboardOpen) {
+        MaterialTheme.colorScheme.onBackground
+    } else {
+        Color.Transparent
+    }
+
     TextField(
         value = title ?: "",
         onValueChange = {
@@ -42,7 +59,8 @@ fun EditorNumberField(
             unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
             focusedContainerColor = Color.Transparent,
             disabledContainerColor = Color.Transparent,
-            unfocusedContainerColor = Color.Transparent
+            unfocusedContainerColor = Color.Transparent,
+            cursorColor = cursorColor
         )
     )
 }
