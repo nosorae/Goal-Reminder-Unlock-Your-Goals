@@ -21,16 +21,11 @@ fun EditTextEditorListItem(
     modifier: Modifier = Modifier,
     leadingIcon: ImageVector,
     insidePadding: Dp = 0.dp,
-    onClick: () -> Unit = {},
-    enable: Boolean = false,
     content: @Composable RowScope.() -> Unit,
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(enabled = enable) {
-                onClick()
-            }
             .padding(
                 vertical = Dimen.MediumDividePadding,
                 horizontal = Dimen.LargeDividePadding
