@@ -360,10 +360,15 @@ data class GoalEditorScreenState(
     val dayEditorTitle: StringModel? by lazy {
         when (paramGoalType) {
             GoalType.WEEKLY -> {
+                val weekRangePair = paramDate.getWeekRangePair()
+                val first = weekRangePair.first
+                val last = weekRangePair.second
                 ResString(
                     R.string.goal_weekly_range,
-                    paramDate.getWeekRange().first,
-                    paramDate.getWeekRange().last
+                    first.monthNumber,
+                    first.dayOfMonth,
+                    last.monthNumber,
+                    last.dayOfMonth
                 )
             }
 
