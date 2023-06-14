@@ -356,7 +356,6 @@ data class GoalEditorScreenState(
     }
 
 
-
     val dayEditorTitle: StringModel? by lazy {
         when (paramGoalType) {
             GoalType.WEEKLY -> {
@@ -373,7 +372,11 @@ data class GoalEditorScreenState(
             }
 
             GoalType.MONTHLY -> {
-                ResString(R.string.goal_monthly_range, paramDate.monthNumber)
+                ResString(
+                    R.string.goal_monthly_range,
+                    paramDate.year,
+                    paramDate.monthNumber
+                )
             }
 
             GoalType.YEARLY -> {
