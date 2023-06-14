@@ -17,9 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FlagCircle
-import androidx.compose.material.icons.filled.Numbers
 import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material.icons.filled.Score
 import androidx.compose.material.icons.filled.TableChart
 import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material3.ListItem
@@ -47,7 +45,7 @@ import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
 import com.yessorae.presentation.dialogs.OptionListDialog
 import com.yessorae.presentation.ext.BottomNavigationBarHeightDp
 import com.yessorae.presentation.model.GoalModel
-import com.yessorae.presentation.screen.editors.EditTextEditorListItem
+import com.yessorae.presentation.screen.editors.SingleLineEditorListItem
 import com.yessorae.presentation.screen.editors.EditorDialogState
 import com.yessorae.presentation.screen.editors.EditorNumberField
 import com.yessorae.presentation.screen.editors.EditorTextField
@@ -260,7 +258,7 @@ fun TotalScoreListItem(
     title: String?,
     onChangeNumber: (String) -> Unit
 ) {
-    EditTextEditorListItem(
+    SingleLineEditorListItem(
         leadingIcon = Icons.Filled.TableChart
     ) {
         EditorNumberField(

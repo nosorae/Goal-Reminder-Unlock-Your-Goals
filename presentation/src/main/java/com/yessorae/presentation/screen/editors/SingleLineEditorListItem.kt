@@ -1,6 +1,5 @@
 package com.yessorae.presentation.screen.editors
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,7 +16,7 @@ import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.designsystem.util.Margin
 
 @Composable
-fun EditTextEditorListItem(
+fun SingleLineEditorListItem(
     modifier: Modifier = Modifier,
     leadingIcon: ImageVector,
     insidePadding: Dp = 0.dp,
