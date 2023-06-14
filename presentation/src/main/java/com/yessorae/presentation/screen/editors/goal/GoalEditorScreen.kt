@@ -19,6 +19,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FlagCircle
 import androidx.compose.material.icons.filled.Numbers
 import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material.icons.filled.Score
+import androidx.compose.material.icons.filled.TableChart
 import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.LocalTextStyle
@@ -89,11 +91,7 @@ fun GoalEditorScreen(
     Scaffold(
         topBar = {
             EditorTopAppBar(
-                title = if (model.isUpdate) {
-                    stringResource(id = R.string.goal_edit_toolbar_title)
-                } else {
-                    stringResource(id = R.string.goal_add_toolbar_title)
-                },
+                title = model.toolbarTitle.get(context),
                 onClickBack = {
                     viewModel.onClickBack()
                 }
@@ -263,7 +261,7 @@ fun TotalScoreListItem(
     onChangeNumber: (String) -> Unit
 ) {
     EditTextEditorListItem(
-        leadingIcon = Icons.Filled.Numbers
+        leadingIcon = Icons.Filled.TableChart
     ) {
         EditorNumberField(
             title = title ?: "",

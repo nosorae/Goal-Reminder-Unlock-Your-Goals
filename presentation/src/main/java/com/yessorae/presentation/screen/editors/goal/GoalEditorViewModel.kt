@@ -15,6 +15,7 @@ import com.yessorae.presentation.model.asModel
 import com.yessorae.presentation.screen.editors.EditorDialogState
 import com.yessorae.util.ResString
 import com.yessorae.util.StringModel
+import com.yessorae.util.TextString
 import com.yessorae.util.getWeekRange
 import com.yessorae.util.getWeekRangePair
 import com.yessorae.util.now
@@ -178,6 +179,7 @@ class GoalEditorViewModel @Inject constructor(
         when (stateValue.paramGoalType) {
             GoalType.YEARLY -> {
                 if (paramDate.year != date.year) {
+                    Logger.uiDebug("paramDate.year ${paramDate.year}, date.year ${date.year}")
                     _toast.emit(
                         ResString(
                             R.string.goal_toast_out_of_range_year,
@@ -189,7 +191,9 @@ class GoalEditorViewModel @Inject constructor(
             }
 
             GoalType.MONTHLY -> {
-                if (paramDate.monthNumber != date.dayOfMonth) {
+                if (paramDate.monthNumber != date.monthNumber) {
+                    Logger.uiDebug("paramDate.monthNumber ${paramDate.monthNumber}, date.dayOfMonth ${date.monthNumber}")
+
                     _toast.emit(
                         ResString(
                             R.string.goal_toast_out_of_range_month,
@@ -203,9 +207,7 @@ class GoalEditorViewModel @Inject constructor(
 
             GoalType.WEEKLY -> {
                 val range = paramDate.getWeekRangePair()
-                Logger.uiDebug("date.dayOfMonth ${date.dayOfMonth} / stateValue.paramDate.getWeekRange() ${stateValue.paramDate.getWeekRange()} ")
-                Logger.uiDebug("range.first.dayOfMonth ${range.first.dayOfMonth} / range.second.dayOfMonth ${range.second.dayOfMonth}")
-                if (date.dayOfMonth in (range.first.dayOfMonth..range.second.dayOfMonth)) {
+                if (date !in (range.first..range.second)) {
                     _toast.emit(
                         ResString(
                             R.string.goal_toast_out_of_range_week,
@@ -319,6 +321,41 @@ data class GoalEditorScreenState(
     val isUpdate by lazy {
         goal != null
     }
+
+    val toolbarTitle: StringModel by lazy {
+        when (paramGoalType) {
+            GoalType.WEEKLY -> {
+                if (isUpdate) {
+                    ResString(R.string.goal_edit_toolbar_title_weekly)
+                } else {
+                    ResString(R.string.goal_add_toolbar_title_weekly)
+                }
+            }
+
+            GoalType.MONTHLY -> {
+                if (isUpdate) {
+                    ResString(R.string.goal_edit_toolbar_title_monthly)
+                } else {
+                    ResString(R.string.goal_add_toolbar_title_monthly)
+                }
+            }
+
+            GoalType.YEARLY -> {
+                if (isUpdate) {
+                    ResString(R.string.goal_edit_toolbar_title_yearly)
+                } else {
+                    ResString(R.string.goal_add_toolbar_title_yearly)
+                }
+            }
+
+            GoalType.NONE -> {
+                TextString("")
+            }
+        }
+
+    }
+
+
 
     val dayEditorTitle: StringModel? by lazy {
         when (paramGoalType) {
