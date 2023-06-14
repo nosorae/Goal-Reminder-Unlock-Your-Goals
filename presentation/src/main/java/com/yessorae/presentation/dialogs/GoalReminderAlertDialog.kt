@@ -3,6 +3,7 @@ package com.yessorae.presentation.dialogs
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.AlertDialog
@@ -26,7 +27,7 @@ import com.yessorae.presentation.R
 fun GoalReminderAlertDialog(
     showDialog: Boolean,
     text: String,
-    cancelText: String = stringResource(id = R.string.common_confirm),
+    cancelText: String = stringResource(id = R.string.common_cancel),
     confirmText: String = stringResource(id = R.string.common_confirm),
     onClickConfirm: () -> Unit = {},
     onCancel: () -> Unit = {},
@@ -40,7 +41,8 @@ fun GoalReminderAlertDialog(
             Surface(
                 modifier = Modifier
                     .wrapContentWidth()
-                    .wrapContentHeight(),
+                    .wrapContentHeight()
+                    .widthIn(min = Dimen.MinDialogWidth),
                 shape = MaterialTheme.shapes.large,
                 tonalElevation = AlertDialogDefaults.TonalElevation
             ) {
