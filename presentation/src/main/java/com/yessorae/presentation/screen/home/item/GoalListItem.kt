@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -48,7 +49,7 @@ fun GoalListItem(
             headlineContent = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(end = 24.dp)
+                    modifier = Modifier.padding(end = Dimen.ExtraLargeDividePadding)
                 ) {
                     Text(
                         text = goalModel.title,
@@ -92,11 +93,11 @@ fun GoalListItem(
         )
 
         IconButton(
-            modifier = Modifier.align(Alignment.TopEnd),
+            modifier = Modifier.align(Alignment.TopEnd).padding(end = Dimen.SmallDividePadding),
             onClick = { onClickMore() }
         ) {
             Icon(
-                imageVector = Icons.Filled.MoreVert,
+                imageVector = Icons.Filled.Delete,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onBackground
             )

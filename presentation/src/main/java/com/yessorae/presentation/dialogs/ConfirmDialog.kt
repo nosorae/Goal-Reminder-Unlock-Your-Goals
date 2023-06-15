@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.AlertDialogDefaults
@@ -21,10 +23,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.presentation.R
 
 @Composable
 fun ConfirmDialog(
+    showDialog: Boolean = false,
     title: String,
     body: String,
     cancelText: String? = null,
@@ -34,58 +38,61 @@ fun ConfirmDialog(
     dismissOnBackPress: Boolean = true,
     dismissOnClickOutside: Boolean = true
 ) {
-    Dialog(
-        onDismissRequest = {
-            onClickCancel()
-        },
-        properties = DialogProperties(
-            dismissOnBackPress = dismissOnBackPress,
-            dismissOnClickOutside = dismissOnClickOutside
-        )
-    ) {
-        Surface(
-            modifier = Modifier
-                .wrapContentWidth()
-                .wrapContentHeight(),
-            shape = MaterialTheme.shapes.large,
-            tonalElevation = AlertDialogDefaults.TonalElevation
+    if (showDialog) {
+        Dialog(
+            onDismissRequest = {
+                onClickCancel()
+            },
+            properties = DialogProperties(
+                dismissOnBackPress = dismissOnBackPress,
+                dismissOnClickOutside = dismissOnClickOutside
+            )
         ) {
-            Column(
-                modifier = Modifier.padding(
-                    top = 24.dp,
-                    start = 24.dp,
-                    end = 24.dp,
-                    bottom = 16.dp
-                )
+            Surface(
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .wrapContentHeight()
+                    .widthIn(min = Dimen.MinDialogWidth),
+                shape = MaterialTheme.shapes.large,
+                tonalElevation = AlertDialogDefaults.TonalElevation
             ) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = body
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Row(
-                    modifier = Modifier.align(Alignment.End)
+                Column(
+                    modifier = Modifier.padding(
+                        top = 24.dp,
+                        start = 24.dp,
+                        end = 24.dp,
+                        bottom = 16.dp
+                    )
                 ) {
-                    cancelText?.let {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = body
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Row(
+                        modifier = Modifier.align(Alignment.End)
+                    ) {
+                        cancelText?.let {
+                            TextButton(
+                                onClick = {
+                                    onClickCancel()
+                                }
+                            ) {
+                                Text(cancelText)
+                            }
+                        }
                         TextButton(
                             onClick = {
-                                onClickCancel()
+                                onClickConfirm()
                             }
                         ) {
-                            Text(cancelText)
+                            Text(confirmText)
                         }
-                    }
-                    TextButton(
-                        onClick = {
-                            onClickConfirm()
-                        }
-                    ) {
-                        Text(confirmText)
                     }
                 }
             }
@@ -97,6 +104,7 @@ fun ConfirmDialog(
 @Composable
 fun ConfirmDialogPreview() {
     ConfirmDialog(
+        showDialog = true,
         title = stringResource(id = R.string.common_permission_request),
         body = stringResource(id = R.string.dialog_body_overlay_permission_request)
     )

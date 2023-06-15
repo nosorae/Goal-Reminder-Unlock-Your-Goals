@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,7 +30,6 @@ import com.yessorae.presentation.R
 import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.model.mockTodoDatumModels
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodoListItem(
     modifier: Modifier = Modifier,
@@ -48,7 +48,7 @@ fun TodoListItem(
             headlineContent = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(end = 24.dp)
+                    modifier = Modifier.padding(end = Dimen.ExtraLargeDividePadding)
                 ) {
                     Text(
                         text = todoModel.title,
@@ -94,16 +94,16 @@ fun TodoListItem(
             }
         )
 
-//        IconButton(
-//            modifier = Modifier.align(Alignment.CenterEnd),
-//            onClick = { onClickMore() }
-//        ) {
-//            Icon(
-//                imageVector = Icons.Filled.MoreVert,
-//                contentDescription = null,
-//                tint = MaterialTheme.colorScheme.onBackground
-//            )
-//        }
+        IconButton(
+            modifier = Modifier.align(Alignment.CenterEnd).padding(end = Dimen.SmallDividePadding),
+            onClick = { onClickMore() }
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Delete,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onBackground
+            )
+        }
     }
 }
 

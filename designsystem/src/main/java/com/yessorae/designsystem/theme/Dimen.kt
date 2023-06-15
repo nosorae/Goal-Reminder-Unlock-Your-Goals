@@ -5,6 +5,7 @@ import androidx.compose.ui.unit.dp
 object Dimen {
     val SidePadding = 16.dp
     val BottomPadding = 16.dp
+    val ExtraLargeDividePadding = 32.dp
     val LargeDividePadding = 24.dp
     val DefaultDividePadding = 16.dp
     val MediumDividePadding = 12.dp

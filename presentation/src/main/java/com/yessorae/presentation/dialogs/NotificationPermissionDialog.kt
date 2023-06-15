@@ -68,32 +68,31 @@ fun NotificationPermissionDialog(
 
     }
 
-    if (showRationaleDialog) {
-        ConfirmDialog(
-            title = stringResource(id = R.string.common_permission_request),
-            body = stringResource(id = R.string.dialog_body_overlay_permission_request),
-            cancelText = stringResource(id = R.string.common_cancel),
-            onClickCancel = {
-                showRationaleDialog = false
-            },
-            onClickConfirm = {
-                if (context.checkNotificationEnabled().not()) {
-                    val intent = Intent().apply {
-                        action = "android.settings.APP_NOTIFICATION_SETTINGS"
-                        //for Android 5-7
-                        putExtra("app_package", context.packageName)
-                        putExtra("app_uid", context.applicationInfo.uid)
+    ConfirmDialog(
+        showDialog = showRationaleDialog,
+        title = stringResource(id = R.string.common_permission_request),
+        body = stringResource(id = R.string.dialog_body_overlay_permission_request),
+        cancelText = stringResource(id = R.string.common_cancel),
+        onClickCancel = {
+            showRationaleDialog = false
+        },
+        onClickConfirm = {
+            if (context.checkNotificationEnabled().not()) {
+                val intent = Intent().apply {
+                    action = "android.settings.APP_NOTIFICATION_SETTINGS"
+                    //for Android 5-7
+                    putExtra("app_package", context.packageName)
+                    putExtra("app_uid", context.applicationInfo.uid)
 
-                        // for Android 8 and above
-                        putExtra("android.provider.extra.APP_PACKAGE", context.packageName)
-                    }
-                    launcher.launch(intent)
+                    // for Android 8 and above
+                    putExtra("android.provider.extra.APP_PACKAGE", context.packageName)
                 }
-            },
-            dismissOnClickOutside = true,
-            dismissOnBackPress = true
-        )
-    }
+                launcher.launch(intent)
+            }
+        },
+        dismissOnClickOutside = true,
+        dismissOnBackPress = true
+    )
 }
 
 @ExperimentalPermissionsApi

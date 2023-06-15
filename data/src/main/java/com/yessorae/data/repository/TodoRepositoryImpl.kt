@@ -26,4 +26,8 @@ class TodoRepositoryImpl @Inject constructor() : TodoRepository {
     override suspend fun updateTodo(todo: Todo) {
         // todo impl
     }
+
+    override suspend fun deleteTodo(todoId: Int) {
+        // todo impl
+    }
 }

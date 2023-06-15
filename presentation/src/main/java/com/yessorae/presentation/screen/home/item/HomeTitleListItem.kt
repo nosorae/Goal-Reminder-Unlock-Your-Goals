@@ -37,7 +37,7 @@ fun HomeTitleListItem(
             .padding(
                 top = Dimen.MediumDividePadding,
                 start = Dimen.SidePadding,
-                end = Dimen.SidePadding
+                end = Dimen.SmallDividePadding
             ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween

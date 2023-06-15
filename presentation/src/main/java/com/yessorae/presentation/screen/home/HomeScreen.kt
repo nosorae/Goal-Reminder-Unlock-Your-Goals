@@ -34,6 +34,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.domain.model.enum.GoalType
 import com.yessorae.presentation.R
+import com.yessorae.presentation.dialogs.ConfirmDialog
 import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TitleListItemModel
@@ -126,7 +127,7 @@ fun HomeScreen(
                             ),
                             goals = model.yearlyGoalModels,
                             onClickMore = { goal ->
-                                viewModel.onClickGoalMore(goal = goal)
+                                viewModel.onClickGoalDelete(goal = goal)
                             },
                             onClickGoal = { goal ->
                                 viewModel.onClickGoal(goal = goal)
@@ -146,7 +147,7 @@ fun HomeScreen(
                             ),
                             goals = model.monthlyGoalModels,
                             onClickMore = { goal ->
-                                viewModel.onClickGoalMore(goal = goal)
+                                viewModel.onClickGoalDelete(goal = goal)
                             },
                             onClickGoal = { goal ->
                                 viewModel.onClickGoal(goal = goal)
@@ -166,7 +167,7 @@ fun HomeScreen(
                             ),
                             goals = model.weeklyGoalModels,
                             onClickMore = { goal ->
-                                viewModel.onClickGoalMore(goal = goal)
+                                viewModel.onClickGoalDelete(goal = goal)
                             },
                             onClickGoal = { goal ->
                                 viewModel.onClickGoal(goal = goal)
@@ -186,7 +187,7 @@ fun HomeScreen(
                             ),
                             todos = model.daylyTodoModels,
                             onClickMore = { todo ->
-                                viewModel.onClickTodoMore(todo = todo)
+                                viewModel.onClickTodoDelete(todo = todo)
                             },
                             onClickCheckBox = { todo ->
                                 viewModel.onClickTodoCheckBox(todo = todo)
@@ -205,7 +206,7 @@ fun HomeScreen(
     }
 
     OverlayPermissionDialog(
-        showDialog = model.showOverlayConfirmDialog,
+        showDialog = model.dialogState is HomeDialogState.OverlayConfirmDialog,
         onOverlayConfirmed = { confirmed ->
             viewModel.onOverlayConfirmed(confirmed)
         },
@@ -215,13 +216,47 @@ fun HomeScreen(
     )
 
     GoalReminderDatePickerDialog(
-        showDialog = model.showDatePickerDialog,
+        showDialog = model.dialogState is HomeDialogState.DatePickerDialog,
         onClickConfirmButton = { timestamp ->
             viewModel.onSelectDate(timestamp)
         },
         onCancel = {
             viewModel.onCancelDialog()
         }
+    )
+
+    ConfirmDialog(
+        showDialog = model.dialogState is HomeDialogState.DeleteGoalConfirmDialog,
+        title = stringResource(id = R.string.home_confirm_dialog_delete_goal_title),
+        body = stringResource(id = R.string.home_confirm_dialog_delete_body),
+        cancelText = stringResource(id = R.string.common_cancel),
+        onClickCancel = {
+            viewModel.onCancelDialog()
+        },
+        onClickConfirm = {
+            (model.dialogState as? HomeDialogState.DeleteGoalConfirmDialog)?.let { dialogState ->
+                viewModel.onConfirmGoalDelete(dialogState = dialogState)
+            }
+        },
+        dismissOnClickOutside = true,
+        dismissOnBackPress = true
+    )
+
+    ConfirmDialog(
+        showDialog = model.dialogState is HomeDialogState.DeleteTodoConfirmDialog,
+        title = stringResource(id = R.string.home_confirm_dialog_delete_todo_title),
+        body = stringResource(id = R.string.home_confirm_dialog_delete_body),
+        cancelText = stringResource(id = R.string.common_cancel),
+        onClickCancel = {
+            viewModel.onCancelDialog()
+        },
+        onClickConfirm = {
+            (model.dialogState as? HomeDialogState.DeleteTodoConfirmDialog)?.let { dialogState ->
+                viewModel.onConfirmTodoDelete(dialogState = dialogState)
+            }
+        },
+        dismissOnClickOutside = true,
+        dismissOnBackPress = true
     )
 }
 

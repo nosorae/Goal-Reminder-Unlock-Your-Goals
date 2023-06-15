@@ -2,11 +2,13 @@ package com.yessorae.presentation.screen.home
 
 import com.yessorae.base.BaseScreenViewModel
 import com.yessorae.domain.model.enum.GoalType
+import com.yessorae.domain.repository.TodoRepository
 import com.yessorae.domain.usecase.GetHomeUseCase
 import com.yessorae.presentation.GoalEditorDestination
 import com.yessorae.presentation.TodoEditorDestination
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TodoModel
+import com.yessorae.presentation.model.asDomainModel
 import com.yessorae.presentation.model.asModel
 import com.yessorae.util.now
 import com.yessorae.util.toLocalDateTime
@@ -27,7 +29,9 @@ import kotlinx.datetime.LocalDateTime
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getHomeUseCase: GetHomeUseCase
+    private val getHomeUseCase: GetHomeUseCase,
+    private val goalRepository: TodoRepository,
+    private val todoRepository: TodoRepository
 ) : BaseScreenViewModel<HomeScreenState>() {
 
     private val _currentDay = MutableStateFlow(LocalDateTime.now())
@@ -60,11 +64,16 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onOverlayConfirmed(confirmed: Boolean) {
-        updateState {
-            stateValue.copy(
-                showOverlayConfirmDialog = confirmed.not()
-            )
+        if (confirmed) {
+            onCancelDialog()
+        } else {
+            updateState {
+                stateValue.copy(
+                    dialogState = HomeDialogState.OverlayConfirmDialog
+                )
+            }
         }
+
     }
 
     fun onSelectDate(timestamp: Long) {
@@ -75,7 +84,7 @@ class HomeViewModel @Inject constructor(
     fun onClickEditCalendar() {
         updateState {
             stateValue.copy(
-                showDatePickerDialog = true
+                dialogState = HomeDialogState.DatePickerDialog
             )
         }
     }
@@ -84,13 +93,8 @@ class HomeViewModel @Inject constructor(
         _scrollToPageEvent.emit(tab.index)
     }
 
-    fun onClickGoalMore(goal: GoalModel) {
-        // todo impl
-    }
 
     fun onClickGoal(goal: GoalModel) = ioScope.launch {
-        com.yessorae.common.Logger.uiDebug("stateValue.now.toMilliSecond() ${stateValue.now.toMilliSecond()}")
-
         _navigationEvent.emit(
             GoalEditorDestination.getRouteWithArgs(
                 goalId = goal.goalId,
@@ -100,8 +104,23 @@ class HomeViewModel @Inject constructor(
         )
     }
 
+    fun onClickGoalDelete(goal: GoalModel) {
+        updateState {
+            stateValue.copy(
+                dialogState = HomeDialogState.DeleteGoalConfirmDialog(
+                    goalModel = goal
+                )
+            )
+        }
+    }
+
+    fun onConfirmGoalDelete(dialogState: HomeDialogState.DeleteGoalConfirmDialog) = ioScope.launch {
+        goalRepository.deleteTodo(dialogState.goalModel.goalId)
+        onCancelDialog()
+    }
+
+
     fun onClickAddGoal(goalType: GoalType) = ioScope.launch {
-        com.yessorae.common.Logger.uiDebug("stateValue.now.toMilliSecond() ${stateValue.now.toMilliSecond()}")
         _navigationEvent.emit(
             GoalEditorDestination.getRouteWithArgs(
                 goalDay = stateValue.now.toMilliSecond(),
@@ -111,7 +130,6 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onClickTodo(todo: TodoModel) = ioScope.launch {
-        com.yessorae.common.Logger.uiDebug("stateValue.now.toMilliSecond() ${stateValue.now.toMilliSecond()}")
         _navigationEvent.emit(
             TodoEditorDestination.getRouteWithArgs(
                 todoId = todo.todoId,
@@ -121,23 +139,37 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onClickAddTodo() = ioScope.launch {
-        com.yessorae.common.Logger.uiDebug("stateValue.now.toMilliSecond() ${stateValue.now.toMilliSecond()}")
         _navigationEvent.emit(TodoEditorDestination.getRouteWithArgs(todoDay = currentDay.value.toMilliSecond()))
     }
 
-    fun onClickTodoMore(todo: TodoModel) {
-        // todo impl
+
+    fun onClickTodoDelete(todo: TodoModel) {
+        updateState {
+            stateValue.copy(
+                dialogState = HomeDialogState.DeleteTodoConfirmDialog(
+                    todoModel = todo
+                )
+            )
+        }
     }
 
-    fun onClickTodoCheckBox(todo: TodoModel) {
-        // todo impl
+    fun onConfirmTodoDelete(dialogState: HomeDialogState.DeleteTodoConfirmDialog) = ioScope.launch {
+        todoRepository.deleteTodo(dialogState.todoModel.todoId)
+        onCancelDialog()
+    }
+
+    fun onClickTodoCheckBox(todo: TodoModel) = ioScope.launch {
+        todoRepository.updateTodo(
+            todo = todo.copy(
+                completed = todo.completed.not()
+            ).asDomainModel()
+        )
     }
 
     fun onCancelDialog() {
         updateState {
             stateValue.copy(
-                showOverlayConfirmDialog = false,
-                showDatePickerDialog = false
+                dialogState = HomeDialogState.None
             )
         }
     }
@@ -155,6 +187,6 @@ data class HomeScreenState(
     val monthlyGoalModels: List<GoalModel> = listOf(),
     val weeklyGoalModels: List<GoalModel> = listOf(),
     val daylyTodoModels: List<TodoModel> = listOf(),
-    val showOverlayConfirmDialog: Boolean = false,
+    val dialogState: HomeDialogState = HomeDialogState.None,
     val showDatePickerDialog: Boolean = false
 )
