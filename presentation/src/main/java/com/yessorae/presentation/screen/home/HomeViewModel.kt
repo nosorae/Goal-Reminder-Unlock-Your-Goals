@@ -10,6 +10,8 @@ import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.model.asDomainModel
 import com.yessorae.presentation.model.asModel
+import com.yessorae.util.getWeekRangePair
+import com.yessorae.util.getWeekScopeDisplay
 import com.yessorae.util.now
 import com.yessorae.util.toLocalDateTime
 import com.yessorae.util.toMilliSecond
@@ -189,4 +191,8 @@ data class HomeScreenState(
     val daylyTodoModels: List<TodoModel> = listOf(),
     val dialogState: HomeDialogState = HomeDialogState.None,
     val showDatePickerDialog: Boolean = false
-)
+) {
+    val weekPair by lazy {
+        now.date.getWeekRangePair()
+    }
+}

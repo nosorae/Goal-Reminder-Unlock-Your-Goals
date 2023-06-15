@@ -163,7 +163,7 @@ fun HomeScreen(
                             title = TitleListItemModel(
                                 stringResource(
                                     id = R.string.common_weekly_goal
-                                ).format(model.now.getWeekScopeDisplay())
+                                ).format(model.weekPair.first, model.weekPair.second)
                             ),
                             goals = model.weeklyGoalModels,
                             onClickMore = { goal ->
