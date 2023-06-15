@@ -30,25 +30,24 @@ fun OverlayPermissionDialog(
             onOverlayConfirmed(Settings.canDrawOverlays(context))
         }
 
-    if (showDialog) {
-        ConfirmDialog(
-            title = stringResource(id = R.string.common_permission_request),
-            body = stringResource(id = R.string.dialog_body_overlay_permission_request),
-            onClickCancel = {
-                onCancelDialog()
-            },
-            onClickConfirm = {
-                if (!Settings.canDrawOverlays(context)) {
-                    val intent =
-                        Intent(
-                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:${context.packageName}")
-                        )
-                    launcher.launch(intent)
-                }
-            },
-            dismissOnClickOutside = false,
-            dismissOnBackPress = false
-        )
-    }
+    ConfirmDialog(
+        showDialog = showDialog,
+        title = stringResource(id = R.string.common_permission_request),
+        body = stringResource(id = R.string.dialog_body_overlay_permission_request),
+        onClickCancel = {
+            onCancelDialog()
+        },
+        onClickConfirm = {
+            if (!Settings.canDrawOverlays(context)) {
+                val intent =
+                    Intent(
+                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:${context.packageName}")
+                    )
+                launcher.launch(intent)
+            }
+        },
+        dismissOnClickOutside = false,
+        dismissOnBackPress = false
+    )
 }

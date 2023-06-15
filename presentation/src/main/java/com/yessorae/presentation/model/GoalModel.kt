@@ -12,11 +12,15 @@ import kotlin.math.roundToInt
 import kotlinx.datetime.LocalDateTime
 
 data class GoalModel(
+    val goalId: Int = 0,
     val title: String,
     val startTime: LocalDateTime? = null,
     val endTime: LocalDateTime? = null,
     val totalScore: Int,
     val currentScore: Int,
+    val contributeGoalId: Int? = null,
+    val contributeScore: Int? = null,
+    val memo: String? = null,
     val type: GoalType
 ) {
     val subtitle: StringModel? by lazy {
@@ -39,6 +43,10 @@ data class GoalModel(
                 GoalType.WEEKLY -> {
                     TextString("${startTime.getWeekDisplay()}-${endTime.getWeekDisplay()}")
                 }
+
+                else -> {
+                    TextString("")
+                }
             }
         }
     }
@@ -58,12 +66,14 @@ data class GoalModel(
 
 fun Goal.asModel(): GoalModel {
     return GoalModel(
+        goalId = goalId,
         title = title,
         startTime = startTime,
         endTime = endTime,
         totalScore = totalScore,
         currentScore = currentScore,
-        type = type
+        type = type,
+        memo = memo
     )
 }
 
@@ -74,89 +84,50 @@ fun GoalModel.asDomainModel(): Goal {
         endTime = endTime,
         totalScore = totalScore,
         currentScore = currentScore,
-        type = type
+        type = type,
+        memo = memo
     )
 }
 
 val mockGoalDatumModels = listOf(
     GoalModel(
-        "운동하기",
-        LocalDateTime(2023, 1, 1, 0, 0),
-        LocalDateTime(2023, 12, 31, 23, 59),
-        365,
-        150,
-        GoalType.YEARLY
+        title = "운동하기",
+        startTime = LocalDateTime(2023, 1, 1, 0, 0),
+        endTime = LocalDateTime(2023, 12, 31, 23, 59),
+        totalScore = 365,
+        currentScore = 150,
+        type = GoalType.YEARLY
     ),
     GoalModel(
-        "독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기",
-        LocalDateTime(2023, 6, 1, 0, 0),
-        LocalDateTime(2023, 6, 30, 23, 59),
-        30,
-        10,
-        GoalType.MONTHLY
+        title = "독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기",
+        startTime = LocalDateTime(2023, 6, 1, 0, 0),
+        endTime = LocalDateTime(2023, 6, 30, 23, 59),
+        totalScore = 30,
+        currentScore = 10,
+        type = GoalType.MONTHLY
     ),
     GoalModel(
-        "영어공부하기",
-        LocalDateTime(2023, 1, 1, 0, 0),
-        LocalDateTime(2023, 12, 31, 23, 59),
-        365,
-        200,
-        GoalType.YEARLY
+        title = "영어공부하기",
+        startTime = LocalDateTime(2023, 1, 1, 0, 0),
+        endTime = LocalDateTime(2023, 12, 31, 23, 59),
+        totalScore = 365,
+        currentScore = 200,
+        type = GoalType.YEARLY
     ),
     GoalModel(
-        "물 마시기",
-        LocalDateTime(2023, 6, 1, 0, 0),
-        LocalDateTime(2023, 6, 30, 23, 59),
-        30,
-        15,
-        GoalType.MONTHLY
+        title = "물 마시기",
+        startTime = LocalDateTime(2023, 6, 1, 0, 0),
+        endTime = LocalDateTime(2023, 6, 30, 23, 59),
+        totalScore = 30,
+        currentScore = 15,
+        type = GoalType.MONTHLY
     ),
     GoalModel(
-        "걷기",
-        LocalDateTime(2023, 1, 1, 0, 0),
-        LocalDateTime(2023, 12, 31, 23, 59),
-        365,
-        250,
-        GoalType.YEARLY
-    ),
-    GoalModel(
-        "일기쓰기",
-        LocalDateTime(2023, 6, 1, 0, 0),
-        LocalDateTime(2023, 6, 30, 23, 59),
-        30,
-        20,
-        GoalType.MONTHLY
-    ),
-    GoalModel(
-        "조기일어나기",
-        LocalDateTime(2023, 1, 1, 0, 0),
-        LocalDateTime(2023, 12, 31, 23, 59),
-        365,
-        180,
-        GoalType.YEARLY
-    ),
-    GoalModel(
-        "계단오르기",
-        LocalDateTime(2023, 6, 1, 0, 0),
-        LocalDateTime(2023, 6, 30, 23, 59),
-        30,
-        25,
-        GoalType.MONTHLY
-    ),
-    GoalModel(
-        "식사량 줄이기",
-        LocalDateTime(2023, 1, 1, 0, 0),
-        LocalDateTime(2023, 12, 31, 23, 59),
-        365,
-        200,
-        GoalType.YEARLY
-    ),
-    GoalModel(
-        "코드작성하기",
-        LocalDateTime(2023, 6, 1, 0, 0),
-        LocalDateTime(2023, 6, 30, 23, 59),
-        30,
-        30,
-        GoalType.MONTHLY
+        title = "걷기",
+        startTime = LocalDateTime(2023, 1, 1, 0, 0),
+        endTime = LocalDateTime(2023, 12, 31, 23, 59),
+        totalScore = 365,
+        currentScore = 250,
+        type = GoalType.YEARLY
     )
 )

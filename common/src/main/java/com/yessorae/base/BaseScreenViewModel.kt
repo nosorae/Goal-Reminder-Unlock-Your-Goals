@@ -2,6 +2,7 @@ package com.yessorae.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yessorae.util.StringModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,11 +21,8 @@ abstract class BaseScreenViewModel<T> : ViewModel() {
 
     protected val stateValue: T get() = state.value
 
-    protected val _toast = MutableSharedFlow<String>()
-    val toast: SharedFlow<String> = _toast.asSharedFlow()
-
-    protected val _stringResourceToast = MutableSharedFlow<Int>()
-    val stringResourceToast: SharedFlow<Int> = _stringResourceToast.asSharedFlow()
+    protected val _toast = MutableSharedFlow<StringModel>()
+    val toast: SharedFlow<StringModel> = _toast.asSharedFlow()
 
     protected val _navigationEvent = MutableSharedFlow<String?>()
     val navigationEvent: SharedFlow<String?> = _navigationEvent.asSharedFlow()
