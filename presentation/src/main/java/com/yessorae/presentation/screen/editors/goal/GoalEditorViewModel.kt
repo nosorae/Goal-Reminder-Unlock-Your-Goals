@@ -59,15 +59,13 @@ class GoalEditorViewModel @Inject constructor(
                     goal = model,
                     title = model.title,
                     startDate = model.startTime?.date,
-                    endDate = model.endTime?.date
+                    endDate = model.endTime?.date,
+                    memo = model.memo
                 )
             }
         }
 
-        Logger.uiDebug("goalDayMilliSecParam ${goalDayMilliSecParam} /  defaultGoalDayMilliSec ${GoalEditorDestination.defaultGoalDayMilliSec}")
         if (goalDayMilliSecParam != GoalEditorDestination.defaultGoalDayMilliSec) {
-            Logger.uiError("goalDayMilliSecParam ${goalDayMilliSecParam} /  defaultGoalDayMilliSec ${GoalEditorDestination.defaultGoalDayMilliSec}")
-
             val date = goalDayMilliSecParam.toLocalDateTime() // todo fix bug
             updateState {
                 stateValue.copy(
@@ -77,7 +75,6 @@ class GoalEditorViewModel @Inject constructor(
         }
 
         val goalType = goalTypeParam.toGoalType()
-        Logger.uiDebug("goalType ${goalType} /  goalTypeParam ${goalTypeParam}")
 
         updateState {
             stateValue.copy(
@@ -281,6 +278,14 @@ class GoalEditorViewModel @Inject constructor(
         onCancelDialog()
     }
 
+    fun onChangeMemo(memo: String) {
+        updateState {
+            stateValue.copy(
+                memo = memo
+            )
+        }
+    }
+
     fun onClickSave() = ioScope.launch {
         stateValue.getUpdatedGoal()?.asDomainModel()?.let {
             if (isUpdate) {
@@ -289,8 +294,6 @@ class GoalEditorViewModel @Inject constructor(
                 goalRepository.insertGoal(it)
             }
         }
-
-
     }
 
     private suspend fun back() {
@@ -312,6 +315,7 @@ data class GoalEditorScreenState(
     val totalScore: Int? = 100,
     val contributionGoal: GoalModel? = null,
     val contributionScore: Int? = null,
+    val memo: String? = null,
     val editorDialogState: EditorDialogState = EditorDialogState.None
 ) {
     val enableSaveButton by lazy {
@@ -417,7 +421,8 @@ data class GoalEditorScreenState(
                 endTime = endDate,
                 totalScore = goalTotalScore,
                 contributeGoalId = contributionGoal,
-                contributeScore = contributeScore
+                contributeScore = contributeScore,
+                memo = memo
             ) ?: GoalModel(
                 title = goalTitle,
                 startTime = startDate,
@@ -426,7 +431,8 @@ data class GoalEditorScreenState(
                 currentScore = 0,
                 contributeGoalId = contributionGoal,
                 contributeScore = contributeScore,
-                type = paramGoalType
+                type = paramGoalType,
+                memo = memo
             )
         } else {
             null

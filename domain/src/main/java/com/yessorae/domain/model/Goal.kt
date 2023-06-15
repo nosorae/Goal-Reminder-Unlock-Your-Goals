@@ -10,6 +10,7 @@ data class Goal(
     val endTime: LocalDateTime? = null,
     val totalScore: Int,
     val currentScore: Int,
+    val memo: String? = null,
     val type: GoalType
 )
 

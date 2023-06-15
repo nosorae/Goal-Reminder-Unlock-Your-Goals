@@ -20,6 +20,7 @@ data class GoalModel(
     val currentScore: Int,
     val contributeGoalId: Int? = null,
     val contributeScore: Int? = null,
+    val memo: String? = null,
     val type: GoalType,
 ) {
     val subtitle: StringModel? by lazy {
@@ -71,7 +72,8 @@ fun Goal.asModel(): GoalModel {
         endTime = endTime,
         totalScore = totalScore,
         currentScore = currentScore,
-        type = type
+        type = type,
+        memo = memo
     )
 }
 
@@ -82,7 +84,8 @@ fun GoalModel.asDomainModel(): Goal {
         endTime = endTime,
         totalScore = totalScore,
         currentScore = currentScore,
-        type = type
+        type = type,
+        memo = memo
     )
 }
 

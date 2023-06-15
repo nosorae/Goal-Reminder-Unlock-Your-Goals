@@ -2,9 +2,9 @@ package com.yessorae.presentation.screen.editors
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -12,7 +12,6 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -22,7 +21,9 @@ import androidx.constraintlayout.compose.ConstrainedLayoutReference
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.yessorae.designsystem.theme.Dimen
-import com.yessorae.designsystem.util.Margin
+import kotlinx.coroutines.selects.selectUnbiased
+
+
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -81,7 +82,11 @@ fun SelectableEditorListItem(
             modifier = Modifier
                 .constrainAs(contentColumn) {
                     linkTo(start = title.start, end = title.end)
-                    linkTo(top = title.bottom, bottom = parent.bottom, topMargin = Dimen.MediumDividePadding)
+                    linkTo(
+                        top = title.bottom,
+                        bottom = parent.bottom,
+                        topMargin = Dimen.MediumDividePadding
+                    )
                     width = Dimension.fillToConstraints
                 }
         ) {

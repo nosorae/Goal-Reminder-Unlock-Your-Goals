@@ -180,6 +180,14 @@ class TodoEditorViewModel @Inject constructor(
         }
     }
 
+    fun onChangeMemo(memo: String) {
+        updateState {
+            stateValue.copy(
+                memo = memo
+            )
+        }
+    }
+
     fun onClickBack() = ioScope.launch {
         if (stateValue.enableSaveButton) {
             updateState {

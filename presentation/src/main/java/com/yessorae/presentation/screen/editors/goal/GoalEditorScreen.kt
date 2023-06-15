@@ -17,6 +17,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FlagCircle
+import androidx.compose.material.icons.filled.Memory
+import androidx.compose.material.icons.filled.Notes
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.TableChart
 import androidx.compose.material.icons.outlined.Flag
@@ -50,6 +52,7 @@ import com.yessorae.presentation.screen.editors.EditorDialogState
 import com.yessorae.presentation.screen.editors.EditorNumberField
 import com.yessorae.presentation.screen.editors.EditorTextField
 import com.yessorae.presentation.screen.editors.EditorTopAppBar
+import com.yessorae.presentation.screen.editors.MultiLineEditorListItem
 import com.yessorae.presentation.screen.editors.SelectableEditorListItem
 import com.yessorae.util.showToast
 import kotlinx.coroutines.flow.collectLatest
@@ -154,6 +157,15 @@ fun GoalEditorScreen(
                         }
                     )
                 }
+
+                item {
+                    MemoListItem(
+                        memo = model.memo,
+                        onChangeMemo = {
+                            viewModel.onChangeMemo(it)
+                        }
+                    )
+                }
             }
 
             BackgroundTextButton(
@@ -161,7 +173,11 @@ fun GoalEditorScreen(
                 enabled = model.enableSaveButton,
                 modifier = Modifier
                     .padding(horizontal = Dimen.SidePadding)
-                    .padding(bottom = (Dimen.BottomPadding - BottomNavigationBarHeightDp).value.coerceAtLeast(0f).dp)
+                    .padding(
+                        bottom = (Dimen.BottomPadding - BottomNavigationBarHeightDp).value.coerceAtLeast(
+                            0f
+                        ).dp
+                    )
                     .imePadding()
                     .fillMaxWidth(),
                 text = stringResource(id = R.string.common_save)
@@ -366,4 +382,24 @@ private fun GoalListItem(
             onClickContributeGoal()
         }
     )
+}
+
+@Composable
+fun MemoListItem(
+    memo: String?,
+    onChangeMemo: (String) -> Unit
+) {
+    MultiLineEditorListItem(
+        leadingIcon = Icons.Filled.Notes
+    ) {
+        EditorTextField(
+            title = memo ?: "",
+            placeholderText = stringResource(id = R.string.todo_description_placeholder),
+            textStyle = LocalTextStyle.current,
+            onChangeTitle = {
+                onChangeMemo(it)
+            },
+            singleLine = false
+        )
+    }
 }
