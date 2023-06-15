@@ -1,6 +1,5 @@
 package com.yessorae.presentation.screen.editors
 
-import android.content.SharedPreferences.Editor
 import com.yessorae.presentation.model.GoalModel
 
 sealed class EditorDialogState {

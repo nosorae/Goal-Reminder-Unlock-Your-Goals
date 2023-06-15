@@ -2,7 +2,6 @@ package com.yessorae.presentation.screen.editors
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,9 +20,6 @@ import androidx.constraintlayout.compose.ConstrainedLayoutReference
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.yessorae.designsystem.theme.Dimen
-import kotlinx.coroutines.selects.selectUnbiased
-
-
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -94,4 +90,3 @@ fun SelectableEditorListItem(
         }
     }
 }
-

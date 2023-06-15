@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FlagCircle
-import androidx.compose.material.icons.filled.Memory
 import androidx.compose.material.icons.filled.Notes
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.TableChart
@@ -47,18 +46,18 @@ import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
 import com.yessorae.presentation.dialogs.OptionListDialog
 import com.yessorae.presentation.ext.BottomNavigationBarHeightDp
 import com.yessorae.presentation.model.GoalModel
-import com.yessorae.presentation.screen.editors.SingleLineEditorListItem
 import com.yessorae.presentation.screen.editors.EditorDialogState
 import com.yessorae.presentation.screen.editors.EditorNumberField
 import com.yessorae.presentation.screen.editors.EditorTextField
 import com.yessorae.presentation.screen.editors.EditorTopAppBar
 import com.yessorae.presentation.screen.editors.MultiLineEditorListItem
 import com.yessorae.presentation.screen.editors.SelectableEditorListItem
+import com.yessorae.presentation.screen.editors.SingleLineEditorListItem
 import com.yessorae.util.showToast
+import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
-import kotlin.math.roundToInt
 
 @Composable
 fun GoalEditorScreen(
@@ -141,7 +140,7 @@ fun GoalEditorScreen(
                         },
                         onClickEndDay = {
                             viewModel.onClickEndDate()
-                        },
+                        }
                     )
                 }
 
@@ -174,17 +173,16 @@ fun GoalEditorScreen(
                 modifier = Modifier
                     .padding(horizontal = Dimen.SidePadding)
                     .padding(
-                        bottom = (Dimen.BottomPadding - BottomNavigationBarHeightDp).value.coerceAtLeast(
-                            0f
-                        ).dp
+                        bottom = (Dimen.BottomPadding - BottomNavigationBarHeightDp)
+                            .value
+                            .coerceAtLeast(0f)
+                            .dp
                     )
                     .imePadding()
                     .fillMaxWidth(),
                 text = stringResource(id = R.string.common_save)
             )
         }
-
-
     }
 
     GoalReminderDatePickerDialog(
@@ -374,7 +372,6 @@ private fun GoalListItem(
                         modifier = Modifier.padding(top = Dimen.InsideDividePadding)
                     )
                 }
-
             }
         },
         leadingIcon = if (hasContributeGoal.not()) Icons.Outlined.Flag else Icons.Filled.FlagCircle,

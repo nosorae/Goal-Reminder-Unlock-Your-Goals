@@ -21,7 +21,7 @@ data class GoalModel(
     val contributeGoalId: Int? = null,
     val contributeScore: Int? = null,
     val memo: String? = null,
-    val type: GoalType,
+    val type: GoalType
 ) {
     val subtitle: StringModel? by lazy {
         if (startTime == null || endTime == null) {
@@ -107,7 +107,7 @@ val mockGoalDatumModels = listOf(
         type = GoalType.MONTHLY
     ),
     GoalModel(
-        title ="영어공부하기",
+        title = "영어공부하기",
         startTime = LocalDateTime(2023, 1, 1, 0, 0),
         endTime = LocalDateTime(2023, 12, 31, 23, 59),
         totalScore = 365,
@@ -115,7 +115,7 @@ val mockGoalDatumModels = listOf(
         type = GoalType.YEARLY
     ),
     GoalModel(
-        title  ="물 마시기",
+        title = "물 마시기",
         startTime = LocalDateTime(2023, 6, 1, 0, 0),
         endTime = LocalDateTime(2023, 6, 30, 23, 59),
         totalScore = 30,

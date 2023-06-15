@@ -2,7 +2,6 @@ package com.yessorae.presentation.screen.editors.todo
 
 import androidx.lifecycle.SavedStateHandle
 import com.yessorae.base.BaseScreenViewModel
-import com.yessorae.common.Logger
 import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.domain.repository.TodoRepository
 import com.yessorae.presentation.R
@@ -20,12 +19,12 @@ import com.yessorae.util.now
 import com.yessorae.util.toDefaultLocalDateTime
 import com.yessorae.util.toLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.atTime
-import javax.inject.Inject
 
 @HiltViewModel
 class TodoEditorViewModel @Inject constructor(
@@ -62,8 +61,6 @@ class TodoEditorViewModel @Inject constructor(
             }
         }
 
-
-        Logger.uiDebug("todoDayMilliSecParam ${todoDayMilliSecParam},TodoEditorDestination.defaultTodoDayMilliSec ${TodoEditorDestination.defaultTodoDayMilliSec} ")
         if (todoDayMilliSecParam != TodoEditorDestination.defaultTodoDayMilliSec) {
             val date = todoDayMilliSecParam.toLocalDateTime().date
             updateState {
@@ -236,7 +233,6 @@ class TodoEditorViewModel @Inject constructor(
             back()
         }
     }
-
 
     override fun createInitialState(): TodoEditorScreenState {
         return TodoEditorScreenState()

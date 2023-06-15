@@ -1,14 +1,11 @@
 package com.yessorae.presentation.dialogs
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.AlertDialogDefaults
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -20,10 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.yessorae.designsystem.theme.Dimen
-import com.yessorae.designsystem.util.Margin
 import com.yessorae.presentation.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,7 +28,7 @@ fun GoalReminderTimePickerDialog(
     onClickConfirmButton: (hour: Int, minute: Int) -> Unit = { _, _ -> },
     onCancel: () -> Unit = {},
     confirmText: String = stringResource(id = R.string.common_confirm),
-    cancelText: String = stringResource(id = R.string.common_cancel),
+    cancelText: String = stringResource(id = R.string.common_cancel)
 ) {
     val state = rememberTimePickerState()
 
@@ -41,7 +36,6 @@ fun GoalReminderTimePickerDialog(
         Dialog(
             onDismissRequest = { onCancel() }
         ) {
-
             Surface(
                 modifier = Modifier
                     .wrapContentWidth()

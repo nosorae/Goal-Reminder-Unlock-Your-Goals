@@ -4,18 +4,15 @@ import android.Manifest
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
-import android.provider.Settings
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -45,7 +42,6 @@ fun NotificationPermissionDialog(
             onCompleteNotificationPermissionLogic(context.checkNotificationEnabled())
         }
 
-
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         val notificationPermissionState =
             rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS) { result ->
@@ -65,7 +61,6 @@ fun NotificationPermissionDialog(
                 }
             }
         }
-
     }
 
     ConfirmDialog(
@@ -80,7 +75,7 @@ fun NotificationPermissionDialog(
             if (context.checkNotificationEnabled().not()) {
                 val intent = Intent().apply {
                     action = "android.settings.APP_NOTIFICATION_SETTINGS"
-                    //for Android 5-7
+                    // for Android 5-7
                     putExtra("app_package", context.packageName)
                     putExtra("app_uid", context.applicationInfo.uid)
 
@@ -106,7 +101,7 @@ val PermissionStatus.shouldShowRationale: Boolean
         is PermissionStatus.Denied -> shouldShowRationale
     }
 
-
 fun Context.checkNotificationEnabled(): Boolean {
-    return (this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).areNotificationsEnabled()
+    return (this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+        .areNotificationsEnabled()
 }

@@ -32,7 +32,7 @@ val mockGoalModels = listOf(
         type = GoalType.MONTHLY
     ),
     Goal(
-        title ="영어공부하기",
+        title = "영어공부하기",
         startTime = LocalDateTime(2023, 1, 1, 0, 0),
         endTime = LocalDateTime(2023, 12, 31, 23, 59),
         totalScore = 365,
@@ -40,7 +40,7 @@ val mockGoalModels = listOf(
         type = GoalType.YEARLY
     ),
     Goal(
-        title  ="물 마시기",
+        title = "물 마시기",
         startTime = LocalDateTime(2023, 6, 1, 0, 0),
         endTime = LocalDateTime(2023, 6, 30, 23, 59),
         totalScore = 30,

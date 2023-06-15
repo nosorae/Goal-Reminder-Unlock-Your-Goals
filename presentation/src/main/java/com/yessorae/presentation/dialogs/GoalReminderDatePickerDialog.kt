@@ -19,9 +19,8 @@ fun GoalReminderDatePickerDialog(
     onClickConfirmButton: (timestamp: Long) -> Unit = {},
     onCancel: () -> Unit = {},
     confirmText: String = stringResource(id = R.string.common_confirm),
-    cancelText: String = stringResource(id = R.string.common_cancel),
+    cancelText: String = stringResource(id = R.string.common_cancel)
 ) {
-
     val datePickerState = rememberDatePickerState()
 
     if (showDialog) {

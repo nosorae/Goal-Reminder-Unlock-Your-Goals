@@ -14,9 +14,9 @@ fun BackgroundTextButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    text: String,
+    text: String
 
-    ) {
+) {
     Button(
         onClick = onClick,
         modifier = modifier,

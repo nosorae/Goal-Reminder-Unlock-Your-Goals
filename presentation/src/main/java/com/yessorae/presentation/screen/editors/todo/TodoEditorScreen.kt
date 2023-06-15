@@ -59,12 +59,12 @@ import com.yessorae.presentation.screen.editors.SelectableEditorListItem
 import com.yessorae.util.getWeekDisplay
 import com.yessorae.util.now
 import com.yessorae.util.showToast
+import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
-import kotlin.math.roundToInt
 
 @Composable
 fun TodoEditorScreen(
@@ -77,7 +77,6 @@ fun TodoEditorScreen(
     val listState = rememberLazyListState()
 
     LaunchedEffect(key1 = Unit) {
-
         launch {
             viewModel.toast.collectLatest {
                 context.showToast(it)
@@ -180,8 +179,8 @@ fun TodoEditorScreen(
                     .padding(horizontal = Dimen.SidePadding)
                     .padding(
                         bottom = (
-                                Dimen.BottomPadding - BottomNavigationBarHeightDp
-                                )
+                            Dimen.BottomPadding - BottomNavigationBarHeightDp
+                            )
                             .value
                             .coerceAtLeast(0f)
                             .dp
@@ -387,7 +386,6 @@ private fun GoalListItem(
                         modifier = Modifier.padding(top = Dimen.InsideDividePadding)
                     )
                 }
-
             }
         },
         leadingIcon = if (hasContributeGoal.not()) Icons.Outlined.Flag else Icons.Filled.FlagCircle,
@@ -432,7 +430,7 @@ fun ListItemsPreview() {
         TimeListItem(day = LocalDate.now())
         TimeListItem(
             day = LocalDate.now(),
-            startTime = LocalDateTime.now().time,
+            startTime = LocalDateTime.now().time
         )
         TimeListItem(
             day = LocalDate.now(),
@@ -441,4 +439,3 @@ fun ListItemsPreview() {
         )
     }
 }
-

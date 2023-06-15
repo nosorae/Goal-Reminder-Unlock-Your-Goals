@@ -30,7 +30,7 @@ fun GoalReminderAlertDialog(
     cancelText: String = stringResource(id = R.string.common_cancel),
     confirmText: String = stringResource(id = R.string.common_confirm),
     onClickConfirm: () -> Unit = {},
-    onCancel: () -> Unit = {},
+    onCancel: () -> Unit = {}
 ) {
     if (showDialog) {
         AlertDialog(
@@ -66,5 +66,4 @@ fun GoalReminderAlertDialog(
             }
         }
     }
-
 }

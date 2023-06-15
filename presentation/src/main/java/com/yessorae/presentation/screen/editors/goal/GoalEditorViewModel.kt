@@ -16,12 +16,12 @@ import com.yessorae.presentation.screen.editors.EditorDialogState
 import com.yessorae.util.ResString
 import com.yessorae.util.StringModel
 import com.yessorae.util.TextString
-import com.yessorae.util.getWeekRange
 import com.yessorae.util.getWeekRangePair
 import com.yessorae.util.now
 import com.yessorae.util.toDefaultLocalDateTime
 import com.yessorae.util.toLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
@@ -29,7 +29,6 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
-import javax.inject.Inject
 
 @HiltViewModel
 class GoalEditorViewModel @Inject constructor(
@@ -172,7 +171,6 @@ class GoalEditorViewModel @Inject constructor(
         val date = milliSec.toLocalDateTime().date
         val paramDate = stateValue.paramDate
 
-
         when (stateValue.paramGoalType) {
             GoalType.YEARLY -> {
                 if (paramDate.year != date.year) {
@@ -189,8 +187,6 @@ class GoalEditorViewModel @Inject constructor(
 
             GoalType.MONTHLY -> {
                 if (paramDate.monthNumber != date.monthNumber) {
-                    Logger.uiDebug("paramDate.monthNumber ${paramDate.monthNumber}, date.dayOfMonth ${date.monthNumber}")
-
                     _toast.emit(
                         ResString(
                             R.string.goal_toast_out_of_range_month,
@@ -199,7 +195,6 @@ class GoalEditorViewModel @Inject constructor(
                     )
                     return@launch
                 }
-
             }
 
             GoalType.WEEKLY -> {
@@ -356,9 +351,7 @@ data class GoalEditorScreenState(
                 TextString("")
             }
         }
-
     }
-
 
     val dayEditorTitle: StringModel? by lazy {
         when (paramGoalType) {
@@ -438,5 +431,4 @@ data class GoalEditorScreenState(
             null
         }
     }
-
 }

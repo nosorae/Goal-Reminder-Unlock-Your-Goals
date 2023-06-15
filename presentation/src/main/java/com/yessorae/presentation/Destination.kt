@@ -42,7 +42,9 @@ object GoalEditorDestination : Destination {
     const val goalDayMilliSecArg = "goal_day_milli_sec"
     const val goalTypeArg = "goal_type"
     val routeWithArgs =
-        "$route?$goalIdArg={$goalIdArg}&$goalDayMilliSecArg={$goalDayMilliSecArg}&$goalTypeArg={$goalTypeArg}"
+        "$route?$goalIdArg={$goalIdArg}" +
+            "&$goalDayMilliSecArg={$goalDayMilliSecArg}" +
+            "&$goalTypeArg={$goalTypeArg}"
 
     const val defaultGoalId = Int.MAX_VALUE
     const val defaultGoalDayMilliSec = Long.MAX_VALUE

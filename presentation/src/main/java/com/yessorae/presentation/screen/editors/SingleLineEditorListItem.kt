@@ -20,7 +20,7 @@ fun SingleLineEditorListItem(
     modifier: Modifier = Modifier,
     leadingIcon: ImageVector,
     insidePadding: Dp = 0.dp,
-    content: @Composable RowScope.() -> Unit,
+    content: @Composable RowScope.() -> Unit
 ) {
     Row(
         modifier = modifier
@@ -29,7 +29,7 @@ fun SingleLineEditorListItem(
                 vertical = Dimen.MediumDividePadding,
                 horizontal = Dimen.LargeDividePadding
             ),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(imageVector = leadingIcon, contentDescription = null)
         Margin(dp = insidePadding)

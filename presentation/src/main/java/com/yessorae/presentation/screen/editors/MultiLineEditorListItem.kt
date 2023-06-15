@@ -17,7 +17,7 @@ import com.yessorae.designsystem.theme.Dimen
 fun MultiLineEditorListItem(
     modifier: Modifier = Modifier,
     leadingIcon: ImageVector,
-    content: @Composable ColumnScope.() -> Unit,
+    content: @Composable ColumnScope.() -> Unit
 ) {
     Row(
         modifier = modifier

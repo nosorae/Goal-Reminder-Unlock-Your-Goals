@@ -11,7 +11,6 @@ import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.model.asDomainModel
 import com.yessorae.presentation.model.asModel
 import com.yessorae.util.getWeekRangePair
-import com.yessorae.util.getWeekScopeDisplay
 import com.yessorae.util.now
 import com.yessorae.util.toLocalDateTime
 import com.yessorae.util.toMilliSecond
@@ -59,7 +58,7 @@ class HomeViewModel @Inject constructor(
                     yearlyGoalModels = home.yearlyGoal.map { it.asModel() },
                     monthlyGoalModels = home.monthlyGoal.map { it.asModel() },
                     weeklyGoalModels = home.weeklyGoal.map { it.asModel() },
-                    daylyTodoModels = home.dailyTodo.map { it.asModel() }
+                    dailyTodoModels = home.dailyTodo.map { it.asModel() }
                 )
             }
         }
@@ -75,7 +74,6 @@ class HomeViewModel @Inject constructor(
                 )
             }
         }
-
     }
 
     fun onSelectDate(timestamp: Long) {
@@ -94,7 +92,6 @@ class HomeViewModel @Inject constructor(
     fun onClickTab(tab: HomeTabPage) = ioScope.launch {
         _scrollToPageEvent.emit(tab.index)
     }
-
 
     fun onClickGoal(goal: GoalModel) = ioScope.launch {
         _navigationEvent.emit(
@@ -121,7 +118,6 @@ class HomeViewModel @Inject constructor(
         onCancelDialog()
     }
 
-
     fun onClickAddGoal(goalType: GoalType) = ioScope.launch {
         _navigationEvent.emit(
             GoalEditorDestination.getRouteWithArgs(
@@ -141,9 +137,10 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onClickAddTodo() = ioScope.launch {
-        _navigationEvent.emit(TodoEditorDestination.getRouteWithArgs(todoDay = currentDay.value.toMilliSecond()))
+        _navigationEvent.emit(
+            TodoEditorDestination.getRouteWithArgs(todoDay = currentDay.value.toMilliSecond())
+        )
     }
-
 
     fun onClickTodoDelete(todo: TodoModel) {
         updateState {
@@ -188,7 +185,7 @@ data class HomeScreenState(
     val yearlyGoalModels: List<GoalModel> = listOf(),
     val monthlyGoalModels: List<GoalModel> = listOf(),
     val weeklyGoalModels: List<GoalModel> = listOf(),
-    val daylyTodoModels: List<TodoModel> = listOf(),
+    val dailyTodoModels: List<TodoModel> = listOf(),
     val dialogState: HomeDialogState = HomeDialogState.None,
     val showDatePickerDialog: Boolean = false
 ) {

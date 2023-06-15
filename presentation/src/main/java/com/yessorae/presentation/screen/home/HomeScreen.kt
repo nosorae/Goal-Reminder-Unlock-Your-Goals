@@ -40,11 +40,10 @@ import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TitleListItemModel
 import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.screen.home.item.GoalListItem
+import com.yessorae.presentation.screen.home.item.HomeTitleListItem
 import com.yessorae.presentation.screen.home.item.HomeTopAppBar
 import com.yessorae.presentation.screen.home.item.OverlayPermissionDialog
-import com.yessorae.presentation.screen.home.item.HomeTitleListItem
 import com.yessorae.presentation.screen.home.item.TodoListItem
-import com.yessorae.util.getWeekScopeDisplay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -185,7 +184,7 @@ fun HomeScreen(
                                     model.now.dayOfMonth
                                 )
                             ),
-                            todos = model.daylyTodoModels,
+                            todos = model.dailyTodoModels,
                             onClickMore = { todo ->
                                 viewModel.onClickTodoDelete(todo = todo)
                             },
