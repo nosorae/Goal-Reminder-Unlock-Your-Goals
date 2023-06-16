@@ -5,13 +5,14 @@ buildscript {
     }
 
     ext {
-        compose_bom = 'androidx.compose:compose-bom:2023.04.01'
+        compose_bom = 'androidx.compose:compose-bom:2023.05.01' // 23.5.1 부터 데이트피커다이얼로그 있다.
         compose_ui_version = '1.4.6'
         accmopanist_version = '0.25.1'
         nav_version = "2.5.3"
         compose_accompanist = "0.30.1"
         room_version = "2.5.1"
         hilt_version = "2.44.2"
+        timber_version = "5.0.1"
         hilt_compose_navigation = "1.0.0"
         coroutine_core_version = "1.6.4"
         coroutine_android_version = "1.3.9"

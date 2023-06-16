@@ -71,6 +71,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
 
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
+
 
     // hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"

@@ -1,11 +1,19 @@
 package com.yessorae.presentation.screen.home
 
 import com.yessorae.base.BaseScreenViewModel
+import com.yessorae.domain.model.enum.GoalType
+import com.yessorae.domain.repository.TodoRepository
 import com.yessorae.domain.usecase.GetHomeUseCase
+import com.yessorae.presentation.GoalEditorDestination
+import com.yessorae.presentation.TodoEditorDestination
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TodoModel
+import com.yessorae.presentation.model.asDomainModel
 import com.yessorae.presentation.model.asModel
+import com.yessorae.util.getWeekRangePair
 import com.yessorae.util.now
+import com.yessorae.util.toLocalDateTime
+import com.yessorae.util.toMilliSecond
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,7 +30,9 @@ import kotlinx.datetime.LocalDateTime
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getHomeUseCase: GetHomeUseCase
+    private val getHomeUseCase: GetHomeUseCase,
+    private val goalRepository: TodoRepository,
+    private val todoRepository: TodoRepository
 ) : BaseScreenViewModel<HomeScreenState>() {
 
     private val _currentDay = MutableStateFlow(LocalDateTime.now())
@@ -48,18 +58,27 @@ class HomeViewModel @Inject constructor(
                     yearlyGoalModels = home.yearlyGoal.map { it.asModel() },
                     monthlyGoalModels = home.monthlyGoal.map { it.asModel() },
                     weeklyGoalModels = home.weeklyGoal.map { it.asModel() },
-                    daylyTodoModels = home.dailyTodo.map { it.asModel() }
+                    dailyTodoModels = home.dailyTodo.map { it.asModel() }
                 )
             }
         }
     }
 
     fun onOverlayConfirmed(confirmed: Boolean) {
-        updateState {
-            stateValue.copy(
-                showOverlayConfirmDialog = confirmed.not()
-            )
+        if (confirmed) {
+            onCancelDialog()
+        } else {
+            updateState {
+                stateValue.copy(
+                    dialogState = HomeDialogState.OverlayConfirmDialog
+                )
+            }
         }
+    }
+
+    fun onSelectDate(timestamp: Long) {
+        _currentDay.value = timestamp.toLocalDateTime()
+        onCancelDialog()
     }
 
     fun onClickToolbarTitle() {
@@ -69,7 +88,7 @@ class HomeViewModel @Inject constructor(
     fun onClickEditCalendar() {
         updateState {
             stateValue.copy(
-                showDatePickerDialog = true
+                dialogState = HomeDialogState.DatePickerDialog
             )
         }
     }
@@ -78,31 +97,82 @@ class HomeViewModel @Inject constructor(
         _scrollToPageEvent.emit(tab.index)
     }
 
-    fun onClickGoalMore(goal: GoalModel) {
-        // todo impl
+    fun onClickGoal(goal: GoalModel) = ioScope.launch {
+        _navigationEvent.emit(
+            GoalEditorDestination.getRouteWithArgs(
+                goalId = goal.goalId,
+                goalDay = goal.startTime?.toMilliSecond() ?: currentDay.value.toMilliSecond(),
+                goalType = goal.type
+            )
+        )
     }
 
-    fun onClickGoal(goal: GoalModel) {
-        // todo impl
+    fun onClickGoalDelete(goal: GoalModel) {
+        updateState {
+            stateValue.copy(
+                dialogState = HomeDialogState.DeleteGoalConfirmDialog(
+                    goalModel = goal
+                )
+            )
+        }
     }
 
-    fun onClickTodo(todo: TodoModel) {
-        // todo impl
+    fun onConfirmGoalDelete(dialogState: HomeDialogState.DeleteGoalConfirmDialog) = ioScope.launch {
+        goalRepository.deleteTodo(dialogState.goalModel.goalId)
+        onCancelDialog()
     }
 
-    fun onClickTodoMore(todo: TodoModel) {
-        // todo impl
+    fun onClickAddGoal(goalType: GoalType) = ioScope.launch {
+        _navigationEvent.emit(
+            GoalEditorDestination.getRouteWithArgs(
+                goalDay = stateValue.now.toMilliSecond(),
+                goalType = goalType
+            )
+        )
     }
 
-    fun onClickTodoCheckBox(todo: TodoModel) {
-        // todo impl
+    fun onClickTodo(todo: TodoModel) = ioScope.launch {
+        _navigationEvent.emit(
+            TodoEditorDestination.getRouteWithArgs(
+                todoId = todo.todoId,
+                todoDay = todo.startTime?.toMilliSecond() ?: currentDay.value.toMilliSecond()
+            )
+        )
+    }
+
+    fun onClickAddTodo() = ioScope.launch {
+        _navigationEvent.emit(
+            TodoEditorDestination.getRouteWithArgs(todoDay = currentDay.value.toMilliSecond())
+        )
+    }
+
+    fun onClickTodoDelete(todo: TodoModel) {
+        updateState {
+            stateValue.copy(
+                dialogState = HomeDialogState.DeleteTodoConfirmDialog(
+                    todoModel = todo
+                )
+            )
+        }
+    }
+
+    fun onConfirmTodoDelete(dialogState: HomeDialogState.DeleteTodoConfirmDialog) = ioScope.launch {
+        todoRepository.deleteTodo(dialogState.todoModel.todoId)
+        onCancelDialog()
+    }
+
+    fun onClickTodoCheckBox(todo: TodoModel) = ioScope.launch {
+        todoRepository.updateTodo(
+            todo = todo.copy(
+                completed = todo.completed.not()
+            ).asDomainModel()
+        )
     }
 
     fun onCancelDialog() {
         updateState {
             stateValue.copy(
-                showOverlayConfirmDialog = false,
-                showDatePickerDialog = false
+                dialogState = HomeDialogState.None
             )
         }
     }
@@ -119,7 +189,11 @@ data class HomeScreenState(
     val yearlyGoalModels: List<GoalModel> = listOf(),
     val monthlyGoalModels: List<GoalModel> = listOf(),
     val weeklyGoalModels: List<GoalModel> = listOf(),
-    val daylyTodoModels: List<TodoModel> = listOf(),
-    val showOverlayConfirmDialog: Boolean = false,
+    val dailyTodoModels: List<TodoModel> = listOf(),
+    val dialogState: HomeDialogState = HomeDialogState.None,
     val showDatePickerDialog: Boolean = false
-)
+) {
+    val weekPair by lazy {
+        now.date.getWeekRangePair()
+    }
+}

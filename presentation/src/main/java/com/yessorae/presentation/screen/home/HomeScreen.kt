@@ -32,16 +32,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.yessorae.designsystem.theme.Dimen
+import com.yessorae.domain.model.enum.GoalType
 import com.yessorae.presentation.R
+import com.yessorae.presentation.dialogs.ConfirmDialog
+import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TitleListItemModel
 import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.screen.home.item.GoalListItem
+import com.yessorae.presentation.screen.home.item.HomeTitleListItem
 import com.yessorae.presentation.screen.home.item.HomeTopAppBar
 import com.yessorae.presentation.screen.home.item.OverlayPermissionDialog
-import com.yessorae.presentation.screen.home.item.TitleListItem
 import com.yessorae.presentation.screen.home.item.TodoListItem
-import com.yessorae.util.getWeekScopeDisplay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -127,10 +129,13 @@ fun HomeScreen(
                             ),
                             goals = model.yearlyGoalModels,
                             onClickMore = { goal ->
-                                viewModel.onClickGoalMore(goal = goal)
+                                viewModel.onClickGoalDelete(goal = goal)
                             },
                             onClickGoal = { goal ->
                                 viewModel.onClickGoal(goal = goal)
+                            },
+                            onClickAdd = {
+                                viewModel.onClickAddGoal(GoalType.YEARLY)
                             }
                         )
                     }
@@ -144,10 +149,13 @@ fun HomeScreen(
                             ),
                             goals = model.monthlyGoalModels,
                             onClickMore = { goal ->
-                                viewModel.onClickGoalMore(goal = goal)
+                                viewModel.onClickGoalDelete(goal = goal)
                             },
                             onClickGoal = { goal ->
                                 viewModel.onClickGoal(goal = goal)
+                            },
+                            onClickAdd = {
+                                viewModel.onClickAddGoal(GoalType.MONTHLY)
                             }
                         )
                     }
@@ -157,14 +165,17 @@ fun HomeScreen(
                             title = TitleListItemModel(
                                 stringResource(
                                     id = R.string.common_weekly_goal
-                                ).format(model.now.getWeekScopeDisplay())
+                                ).format(model.weekPair.first, model.weekPair.second)
                             ),
                             goals = model.weeklyGoalModels,
                             onClickMore = { goal ->
-                                viewModel.onClickGoalMore(goal = goal)
+                                viewModel.onClickGoalDelete(goal = goal)
                             },
                             onClickGoal = { goal ->
                                 viewModel.onClickGoal(goal = goal)
+                            },
+                            onClickAdd = {
+                                viewModel.onClickAddGoal(GoalType.WEEKLY)
                             }
                         )
                     }
@@ -176,15 +187,18 @@ fun HomeScreen(
                                     model.now.dayOfMonth
                                 )
                             ),
-                            todos = model.daylyTodoModels,
+                            todos = model.dailyTodoModels,
                             onClickMore = { todo ->
-                                viewModel.onClickTodoMore(todo = todo)
+                                viewModel.onClickTodoDelete(todo = todo)
                             },
                             onClickCheckBox = { todo ->
                                 viewModel.onClickTodoCheckBox(todo = todo)
                             },
                             onClickTodo = { todo ->
                                 viewModel.onClickTodo(todo = todo)
+                            },
+                            onClickAddTodo = {
+                                viewModel.onClickAddTodo()
                             }
                         )
                     }
@@ -194,13 +208,57 @@ fun HomeScreen(
     }
 
     OverlayPermissionDialog(
-        showDialog = model.showOverlayConfirmDialog,
+        showDialog = model.dialogState is HomeDialogState.OverlayConfirmDialog,
         onOverlayConfirmed = { confirmed ->
             viewModel.onOverlayConfirmed(confirmed)
         },
         onCancelDialog = {
             viewModel.onCancelDialog()
         }
+    )
+
+    GoalReminderDatePickerDialog(
+        showDialog = model.dialogState is HomeDialogState.DatePickerDialog,
+        onClickConfirmButton = { timestamp ->
+            viewModel.onSelectDate(timestamp)
+        },
+        onCancel = {
+            viewModel.onCancelDialog()
+        }
+    )
+
+    ConfirmDialog(
+        showDialog = model.dialogState is HomeDialogState.DeleteGoalConfirmDialog,
+        title = stringResource(id = R.string.home_confirm_dialog_delete_goal_title),
+        body = stringResource(id = R.string.home_confirm_dialog_delete_body),
+        cancelText = stringResource(id = R.string.common_cancel),
+        onClickCancel = {
+            viewModel.onCancelDialog()
+        },
+        onClickConfirm = {
+            (model.dialogState as? HomeDialogState.DeleteGoalConfirmDialog)?.let { dialogState ->
+                viewModel.onConfirmGoalDelete(dialogState = dialogState)
+            }
+        },
+        dismissOnClickOutside = true,
+        dismissOnBackPress = true
+    )
+
+    ConfirmDialog(
+        showDialog = model.dialogState is HomeDialogState.DeleteTodoConfirmDialog,
+        title = stringResource(id = R.string.home_confirm_dialog_delete_todo_title),
+        body = stringResource(id = R.string.home_confirm_dialog_delete_body),
+        cancelText = stringResource(id = R.string.common_cancel),
+        onClickCancel = {
+            viewModel.onCancelDialog()
+        },
+        onClickConfirm = {
+            (model.dialogState as? HomeDialogState.DeleteTodoConfirmDialog)?.let { dialogState ->
+                viewModel.onConfirmTodoDelete(dialogState = dialogState)
+            }
+        },
+        dismissOnClickOutside = true,
+        dismissOnBackPress = true
     )
 }
 
@@ -264,8 +322,8 @@ fun LabelTab(
                 MaterialTheme.colorScheme.onBackground
             },
             modifier = Modifier.padding(
-                top = Dimen.MediumDividePadding,
-                bottom = Dimen.MediumDividePadding
+                top = Dimen.DefaultDividePadding,
+                bottom = Dimen.DefaultDividePadding
             )
         )
     }
@@ -277,7 +335,8 @@ private fun GoalPage(
     title: TitleListItemModel,
     goals: List<GoalModel>,
     onClickGoal: (GoalModel) -> Unit = {},
-    onClickMore: (GoalModel) -> Unit = {}
+    onClickMore: (GoalModel) -> Unit = {},
+    onClickAdd: () -> Unit = {}
 ) {
     val listState = rememberLazyListState()
 
@@ -288,8 +347,11 @@ private fun GoalPage(
         item(
             contentType = TitleListItemModel::class
         ) {
-            TitleListItem(
-                model = title
+            HomeTitleListItem(
+                model = title,
+                onClickAdd = {
+                    onClickAdd()
+                }
             )
         }
         itemsIndexed(
@@ -318,7 +380,8 @@ private fun TodoPage(
     todos: List<TodoModel>,
     onClickTodo: (TodoModel) -> Unit = {},
     onClickMore: (TodoModel) -> Unit = {},
-    onClickCheckBox: (TodoModel) -> Unit = {}
+    onClickCheckBox: (TodoModel) -> Unit = {},
+    onClickAddTodo: () -> Unit = {}
 ) {
     val listState = rememberLazyListState()
 
@@ -329,8 +392,11 @@ private fun TodoPage(
         item(
             contentType = TitleListItemModel::class
         ) {
-            TitleListItem(
-                model = title
+            HomeTitleListItem(
+                model = title,
+                onClickAdd = {
+                    onClickAddTodo()
+                }
             )
         }
         itemsIndexed(
