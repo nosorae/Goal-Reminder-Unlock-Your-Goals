@@ -62,6 +62,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun onClickToolbarTitle() {
+        // todo 온보딩화면으로 이동
+    }
+
     fun onClickEditCalendar() {
         updateState {
             stateValue.copy(

@@ -10,7 +10,8 @@
     <string name="home_tab_daily_todo">일일 할일</string>
 
 
-    <!-- 온보딩 -->
+    <!-- 최종목표 입력 -->
+    <string name="final_goal_input_your_final_goal">당신의 최종 목표를 입력해 주세요.</string>
 
     <!-- 목표 추가/수정 -->
 

@@ -91,6 +91,9 @@ fun HomeScreen(
                 onClickEditCalendar = {
                     viewModel.onClickEditCalendar()
                 },
+                onClickTitle = {
+                    viewModel.onClickToolbarTitle()
+                },
                 scrollBehavior = scrollBehavior
             )
         }
