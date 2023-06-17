@@ -12,6 +12,10 @@ object MainDestination : Destination {
     override val route = "main"
 }
 
+object FinalGoalDestination : Destination {
+    override val route: String  = "final_goal"
+}
+
 object TodoEditorDestination : Destination {
     override val route: String = "todo_editor"
     const val todoIdArg = "todo_id"

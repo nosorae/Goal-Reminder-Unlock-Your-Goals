@@ -4,6 +4,7 @@ import com.yessorae.base.BaseScreenViewModel
 import com.yessorae.domain.model.enum.GoalType
 import com.yessorae.domain.repository.TodoRepository
 import com.yessorae.domain.usecase.GetHomeUseCase
+import com.yessorae.presentation.FinalGoalDestination
 import com.yessorae.presentation.GoalEditorDestination
 import com.yessorae.presentation.TodoEditorDestination
 import com.yessorae.presentation.model.GoalModel
@@ -81,8 +82,8 @@ class HomeViewModel @Inject constructor(
         onCancelDialog()
     }
 
-    fun onClickToolbarTitle() {
-        // todo 온보딩화면으로 이동
+    fun onClickToolbarTitle() = ioScope.launch {
+        _navigationEvent.emit(FinalGoalDestination.route)
     }
 
     fun onClickEditCalendar() {
