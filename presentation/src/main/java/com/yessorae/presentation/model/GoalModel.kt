@@ -18,9 +18,10 @@ data class GoalModel(
     val endTime: LocalDateTime? = null,
     val totalScore: Int,
     val currentScore: Int,
-    val contributeGoalId: Int? = null,
-    val contributeScore: Int? = null,
+    val upperGoalId: Int? = null,
+    val upperGoalContributionScore: Int? = null,
     val memo: String? = null,
+    val notification: Boolean = false,
     val type: GoalType
 ) {
     val subtitle: StringModel? by lazy {

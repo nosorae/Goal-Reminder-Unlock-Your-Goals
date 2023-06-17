@@ -403,9 +403,9 @@ data class GoalEditorScreenState(
 
         val goalTotalScore = totalScore ?: goal?.totalScore
 
-        val contributionGoal = contributionGoal?.contributeGoalId ?: goal?.contributeGoalId
+        val contributionGoal = contributionGoal?.upperGoalId ?: goal?.upperGoalId
 
-        val contributeScore = contributionScore ?: goal?.contributeScore
+        val contributeScore = contributionScore ?: goal?.upperGoalContributionScore
 
         return if (goalTitle != null && goalTotalScore != null) {
             goal?.copy(
@@ -413,8 +413,8 @@ data class GoalEditorScreenState(
                 startTime = startDate,
                 endTime = endDate,
                 totalScore = goalTotalScore,
-                contributeGoalId = contributionGoal,
-                contributeScore = contributeScore,
+                upperGoalId = contributionGoal,
+                upperGoalContributionScore = contributeScore,
                 memo = memo
             ) ?: GoalModel(
                 title = goalTitle,
@@ -422,8 +422,8 @@ data class GoalEditorScreenState(
                 endTime = endDate,
                 totalScore = goalTotalScore,
                 currentScore = 0,
-                contributeGoalId = contributionGoal,
-                contributeScore = contributeScore,
+                upperGoalId = contributionGoal,
+                upperGoalContributionScore = contributeScore,
                 type = paramGoalType,
                 memo = memo
             )

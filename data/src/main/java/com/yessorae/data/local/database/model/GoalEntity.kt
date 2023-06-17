@@ -19,6 +19,12 @@ data class GoalEntity(
     val totalScore: Int,
     @ColumnInfo(name = Constants.COL_CURRENT_SCORE)
     val currentScore: Int = 0,
+    @ColumnInfo(name = Constants.COL_UPPER_GOAL_ID)
+    val upperGoalId: Int? = null,
+    @ColumnInfo(name = Constants.COL_UPPER_GOAL_CONTRIBUTION_SCORE)
+    val upperGoalContributionScore: Int? = null,
     val memo: String? = null,
+    val notification: Boolean = false,
     val type: GoalType
 )
+
