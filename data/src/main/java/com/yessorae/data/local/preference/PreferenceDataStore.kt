@@ -1,16 +1,20 @@
 package com.yessorae.data.local.preference
 
+import android.provider.Settings.Global
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.yessorae.common.GlobalConstants
 import com.yessorae.data.Constants
+import com.yessorae.util.now
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.datetime.LocalDateTime
 
 @Singleton
 class PreferenceDataStore @Inject constructor(
@@ -46,7 +50,7 @@ class PreferenceDataStore @Inject constructor(
 
     fun getFinalGoalYear(): Flow<Int> {
         return preferences.data.map { preferences ->
-            preferences[finalGoalYearKey] ?: 0
+            preferences[finalGoalYearKey] ?: (LocalDateTime.now().year + GlobalConstants.DEFAULT_FINAL_GOAL_OFFSET)
         }
     }
 
