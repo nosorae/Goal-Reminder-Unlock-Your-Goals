@@ -1,6 +1,5 @@
 package com.yessorae.presentation.screen.onboarding
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,7 +31,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.yessorae.common.Logger
 import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.designsystem.util.Margin
 import com.yessorae.presentation.R
@@ -81,7 +79,9 @@ fun FinalGoalScreen(
     Scaffold(
         topBar = {
             FinalGoalTopAppBar(
-                modifier = Modifier.padding(start = if (onBoarding) Dimen.SmallDividePadding else 0.dp),
+                modifier = Modifier.padding(
+                    start = if (onBoarding) Dimen.SmallDividePadding else 0.dp
+                ),
                 title = stringResource(id = R.string.final_goal_top_app_bar_title),
                 showBack = onBoarding.not(),
                 onClickBack = {

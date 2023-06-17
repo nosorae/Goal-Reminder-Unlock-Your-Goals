@@ -3,7 +3,6 @@ package com.yessorae.domain.usecase
 import com.yessorae.domain.model.FinalGoal
 import com.yessorae.domain.repository.PreferencesDatastoreRepository
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map

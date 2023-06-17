@@ -1,7 +1,6 @@
 package com.yessorae.presentation.screen.home
 
 import com.yessorae.base.BaseScreenViewModel
-import com.yessorae.common.Logger
 import com.yessorae.domain.model.enum.GoalType
 import com.yessorae.domain.repository.PreferencesDatastoreRepository
 import com.yessorae.domain.repository.TodoRepository
@@ -65,9 +64,7 @@ class HomeViewModel @Inject constructor(
                     dailyTodoModels = home.dailyTodo.map { it.asModel() }
                 )
             }
-
         }
-
     }
 
     fun processOnBoarding() = ioScope.launch {

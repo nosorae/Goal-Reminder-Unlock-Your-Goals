@@ -7,7 +7,6 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.yessorae.common.GlobalConstants
-import com.yessorae.common.Logger
 import com.yessorae.data.Constants
 import com.yessorae.util.now
 import javax.inject.Inject
