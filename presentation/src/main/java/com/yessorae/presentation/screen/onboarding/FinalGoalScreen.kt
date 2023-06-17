@@ -82,7 +82,13 @@ fun FinalGoalScreen(
                 modifier = Modifier.padding(
                     start = if (onBoarding) Dimen.SmallDividePadding else 0.dp
                 ),
-                title = stringResource(id = R.string.final_goal_top_app_bar_title),
+                title = stringResource(
+                    id = if (onBoarding) {
+                        R.string.final_goal_top_app_bar_title
+                    } else {
+                        R.string.final_goal_top_app_bar_title_on_boarding
+                    }
+                ),
                 showBack = onBoarding.not(),
                 onClickBack = {
                     viewModel.onClickBack(onBoarding = onBoarding)
