@@ -36,7 +36,7 @@ fun Todo.asModel(): TodoModel {
     return TodoModel(
         todoId = todoId,
         title = title,
-        completed = completed,
+        completed = done,
         startTime = startTime,
         endTime = endTime,
         goalModel = null,
@@ -61,7 +61,7 @@ fun TodoModel.asDomainModel(): Todo {
     return Todo(
         todoId = todoId,
         title = title,
-        completed = completed,
+        done = completed,
         startTime = startTime,
         endTime = endTime,
         goalId = goalId,
