@@ -7,12 +7,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.yessorae.presentation.Destination
+import com.yessorae.presentation.FinalGoalDestination
 import com.yessorae.presentation.GoalEditorDestination
 import com.yessorae.presentation.MainDestination
 import com.yessorae.presentation.TodoEditorDestination
 import com.yessorae.presentation.screen.editors.goal.GoalEditorScreen
 import com.yessorae.presentation.screen.editors.todo.TodoEditorScreen
 import com.yessorae.presentation.screen.home.HomeScreen
+import com.yessorae.presentation.screen.onboarding.FinalGoalScreen
 
 @Composable
 fun GoalReminderNavHost(
@@ -32,6 +34,22 @@ fun GoalReminderNavHost(
                 onNavOutEvent = { route ->
                     navController.navigateSingleTopTo(route)
                 }
+            )
+        }
+
+        composable(
+            route = FinalGoalDestination.routeWithArgs,
+            arguments = FinalGoalDestination.arguments
+        ) { backStackEntry ->
+            val onBoarding = backStackEntry
+                .arguments
+                ?.getBoolean(FinalGoalDestination.onBoardingArg)
+                ?: false
+            FinalGoalScreen(
+                onBackEvent = {
+                    navController.popBackStack()
+                },
+                onBoarding = onBoarding
             )
         }
 

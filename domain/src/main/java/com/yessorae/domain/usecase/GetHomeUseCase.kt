@@ -6,11 +6,9 @@ import com.yessorae.domain.repository.PreferencesDatastoreRepository
 import com.yessorae.domain.repository.TodoRepository
 import com.yessorae.domain.util.combine
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDateTime
 
-@Singleton
 class GetHomeUseCase @Inject constructor(
     private val goalRepository: GoalRepository,
     private val todoRepository: TodoRepository,

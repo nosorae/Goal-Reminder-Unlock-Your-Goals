@@ -3,6 +3,10 @@ package com.yessorae.domain.repository
 import kotlinx.coroutines.flow.Flow
 
 interface PreferencesDatastoreRepository {
+
+    suspend fun getCompleteOnBoarding(): Boolean
+    suspend fun setCompleteOnBoarding()
+
     fun getServiceOnOff(): Flow<Boolean>
     suspend fun setServiceOnOff(on: Boolean)
 

@@ -12,6 +12,7 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import java.text.NumberFormat
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -75,4 +76,10 @@ fun LocalTime.Companion.fromHourMinute(hour: Int, minute: Int): LocalTime {
 
 fun LocalDate.toDefaultLocalDateTime(hour: Int? = null, minute: Int? = null): LocalDateTime {
     return this.atTime(LocalTime.fromHourMinute(hour = hour ?: 0, minute = minute ?: 0))
+}
+
+fun Int.toLocalString(): String {
+    val formatter = NumberFormat.getIntegerInstance()
+    formatter.isGroupingUsed = false
+    return formatter.format(this)
 }
