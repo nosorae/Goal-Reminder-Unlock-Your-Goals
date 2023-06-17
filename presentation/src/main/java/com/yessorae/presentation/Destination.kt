@@ -14,6 +14,16 @@ object MainDestination : Destination {
 
 object FinalGoalDestination : Destination {
     override val route: String = "final_goal"
+    const val onBoardingArg = "on_boarding"
+    val routeWithArgs = "$route/{$onBoardingArg}"
+
+    val arguments = listOf(
+        navArgument(onBoardingArg) {
+            type = NavType.BoolType
+        }
+    )
+
+    fun getRouteWithArgs(onBoarding: Boolean = false) = "$route/$onBoarding"
 }
 
 object TodoEditorDestination : Destination {

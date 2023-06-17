@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 
-@Singleton
 class GetFinalGoalUseCase @Inject constructor(
     private val preferencesDatastoreRepository: PreferencesDatastoreRepository
 ) {

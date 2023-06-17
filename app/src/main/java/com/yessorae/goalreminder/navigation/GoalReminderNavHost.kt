@@ -38,12 +38,18 @@ fun GoalReminderNavHost(
         }
 
         composable(
-            route = FinalGoalDestination.route
-        ) {
+            route = FinalGoalDestination.routeWithArgs,
+            arguments = FinalGoalDestination.arguments
+        ) { backStackEntry ->
+            val onBoarding = backStackEntry
+                .arguments
+                ?.getBoolean(FinalGoalDestination.onBoardingArg)
+                ?: false
             FinalGoalScreen(
                 onBackEvent = {
                     navController.popBackStack()
-                }
+                },
+                onBoarding = onBoarding
             )
         }
 

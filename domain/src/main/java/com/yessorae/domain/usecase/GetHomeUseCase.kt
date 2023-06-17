@@ -10,7 +10,6 @@ import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDateTime
 
-@Singleton
 class GetHomeUseCase @Inject constructor(
     private val goalRepository: GoalRepository,
     private val todoRepository: TodoRepository,

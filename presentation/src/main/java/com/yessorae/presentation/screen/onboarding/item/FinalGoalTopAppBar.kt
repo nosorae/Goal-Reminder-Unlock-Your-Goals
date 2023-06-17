@@ -8,20 +8,26 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FinalGoalTopAppBar(
+    modifier: Modifier = Modifier,
     title: String,
+    showBack: Boolean,
     onClickBack: () -> Unit = {}
 ) {
     TopAppBar(
+        modifier = modifier,
         title = {
             Text(text = title)
         },
         navigationIcon = {
-            IconButton(onClick = { onClickBack() }) {
-                Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
+            if (showBack) {
+                IconButton(onClick = { onClickBack() }) {
+                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
+                }
             }
         }
     )

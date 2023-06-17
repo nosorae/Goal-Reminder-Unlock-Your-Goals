@@ -80,6 +80,10 @@ fun HomeScreen(
                 }
             }
         }
+
+        launch {
+            viewModel.processOnBoarding()
+        }
     }
 
     Scaffold(

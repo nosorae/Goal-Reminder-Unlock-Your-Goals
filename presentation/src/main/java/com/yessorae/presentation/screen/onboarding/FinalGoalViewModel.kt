@@ -3,6 +3,7 @@ package com.yessorae.presentation.screen.onboarding
 import com.yessorae.base.BaseScreenViewModel
 import com.yessorae.common.GlobalConstants
 import com.yessorae.domain.model.FinalGoal
+import com.yessorae.domain.repository.PreferencesDatastoreRepository
 import com.yessorae.domain.usecase.GetFinalGoalUseCase
 import com.yessorae.domain.usecase.UpdateFinalGoalUseCase
 import com.yessorae.util.now
@@ -15,7 +16,8 @@ import kotlinx.datetime.LocalDate
 @HiltViewModel
 class FinalGoalViewModel @Inject constructor(
     private val getFinalGoalUseCase: GetFinalGoalUseCase,
-    private val updateFinalGoalUseCase: UpdateFinalGoalUseCase
+    private val updateFinalGoalUseCase: UpdateFinalGoalUseCase,
+    private val preferencesDatastoreRepository: PreferencesDatastoreRepository
 ) : BaseScreenViewModel<FinalGoalScreenState>() {
 
     init {
@@ -33,8 +35,10 @@ class FinalGoalViewModel @Inject constructor(
         }
     }
 
-    fun onClickBack() = ioScope.launch {
-        if (stateValue.finalGoalText.isEmpty()) {
+    fun onClickBack(onBoarding: Boolean) = ioScope.launch {
+        if (onBoarding) return@launch
+
+        if (stateValue.isChange) {
             updateState {
                 stateValue.copy(
                     dialogState = FinalGoalDialogState.ExitConfirm
@@ -56,7 +60,8 @@ class FinalGoalViewModel @Inject constructor(
     fun onChangeYearText(text: String) {
         updateState {
             stateValue.copy(
-                finalGoalText = text
+                finalGoalText = text,
+                isChange = true
             )
         }
     }
@@ -64,7 +69,8 @@ class FinalGoalViewModel @Inject constructor(
     fun onSelectYear(year: Int) = ioScope.launch {
         updateState {
             stateValue.copy(
-                finalGoalYear = year
+                finalGoalYear = year,
+                isChange = true
             )
         }
 
@@ -73,10 +79,13 @@ class FinalGoalViewModel @Inject constructor(
 
     fun onClickSave() = ioScope.launch {
         updateFinalGoalUseCase(stateValue.getFinalGoal())
+        preferencesDatastoreRepository.setCompleteOnBoarding()
+        onCancelDialog()
         _navigationEvent.emit(null)
     }
 
     fun onConfirmBack() = ioScope.launch {
+        onCancelDialog()
         _navigationEvent.emit(null)
     }
 
@@ -96,6 +105,7 @@ class FinalGoalViewModel @Inject constructor(
 data class FinalGoalScreenState(
     val finalGoalYear: Int = LocalDate.now().year + GlobalConstants.DEFAULT_FINAL_GOAL_OFFSET,
     val finalGoalText: String = "",
+    val isChange: Boolean = false,
     val dialogState: FinalGoalDialogState = FinalGoalDialogState.None
 ) {
     val enableSaveButton = finalGoalText.isNotEmpty()

@@ -1,7 +1,9 @@
 package com.yessorae.presentation.screen.home
 
 import com.yessorae.base.BaseScreenViewModel
+import com.yessorae.common.Logger
 import com.yessorae.domain.model.enum.GoalType
+import com.yessorae.domain.repository.PreferencesDatastoreRepository
 import com.yessorae.domain.repository.TodoRepository
 import com.yessorae.domain.usecase.GetHomeUseCase
 import com.yessorae.presentation.FinalGoalDestination
@@ -33,7 +35,8 @@ import kotlinx.datetime.LocalDateTime
 class HomeViewModel @Inject constructor(
     private val getHomeUseCase: GetHomeUseCase,
     private val goalRepository: TodoRepository,
-    private val todoRepository: TodoRepository
+    private val todoRepository: TodoRepository,
+    private val preferencesDatastoreRepository: PreferencesDatastoreRepository
 ) : BaseScreenViewModel<HomeScreenState>() {
 
     private val _currentDay = MutableStateFlow(LocalDateTime.now())
@@ -62,6 +65,14 @@ class HomeViewModel @Inject constructor(
                     dailyTodoModels = home.dailyTodo.map { it.asModel() }
                 )
             }
+
+        }
+
+    }
+
+    fun processOnBoarding() = ioScope.launch {
+        if (preferencesDatastoreRepository.getCompleteOnBoarding().not()) {
+            _navigationEvent.emit(FinalGoalDestination.getRouteWithArgs(onBoarding = true))
         }
     }
 
@@ -83,7 +94,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onClickToolbarTitle() = ioScope.launch {
-        _navigationEvent.emit(FinalGoalDestination.route)
+        _navigationEvent.emit(FinalGoalDestination.getRouteWithArgs())
     }
 
     fun onClickEditCalendar() {
