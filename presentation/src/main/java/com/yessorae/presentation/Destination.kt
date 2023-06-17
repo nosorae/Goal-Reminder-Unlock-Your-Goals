@@ -13,7 +13,7 @@ object MainDestination : Destination {
 }
 
 object FinalGoalDestination : Destination {
-    override val route: String  = "final_goal"
+    override val route: String = "final_goal"
 }
 
 object TodoEditorDestination : Destination {

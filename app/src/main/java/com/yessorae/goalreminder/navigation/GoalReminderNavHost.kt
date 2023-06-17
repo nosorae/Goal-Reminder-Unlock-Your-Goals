@@ -36,7 +36,7 @@ fun GoalReminderNavHost(
                 }
             )
         }
-        
+
         composable(
             route = FinalGoalDestination.route
         ) {

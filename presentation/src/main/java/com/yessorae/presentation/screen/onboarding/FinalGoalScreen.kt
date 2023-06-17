@@ -50,7 +50,6 @@ fun FinalGoalScreen(
     viewModel: FinalGoalViewModel = hiltViewModel(),
     onBackEvent: () -> Unit
 ) {
-
     val model by viewModel.state.collectAsState()
     val context = LocalContext.current
 
@@ -74,7 +73,6 @@ fun FinalGoalScreen(
     BackHandler {
         viewModel.onClickBack()
     }
-
 
     Scaffold(
         topBar = {
@@ -150,11 +148,12 @@ fun FinalGoalScreen(
                     Text(
                         text = stringResource(id = R.string.final_goal_text_word_part),
                         style = partTextStyle,
-                        modifier = Modifier.padding(bottom = Dimen.DefaultDividePadding).wrapContentWidth(),
+                        modifier = Modifier
+                            .padding(bottom = Dimen.DefaultDividePadding)
+                            .wrapContentWidth(),
                         maxLines = 1
                     )
                 }
-
             }
 
             BackgroundTextButton(

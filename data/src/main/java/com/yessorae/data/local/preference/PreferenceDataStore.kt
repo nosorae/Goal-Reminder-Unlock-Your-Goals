@@ -1,6 +1,5 @@
 package com.yessorae.data.local.preference
 
-import android.provider.Settings.Global
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -50,7 +49,8 @@ class PreferenceDataStore @Inject constructor(
 
     fun getFinalGoalYear(): Flow<Int> {
         return preferences.data.map { preferences ->
-            preferences[finalGoalYearKey] ?: (LocalDateTime.now().year + GlobalConstants.DEFAULT_FINAL_GOAL_OFFSET)
+            preferences[finalGoalYearKey]
+                ?: (LocalDateTime.now().year + GlobalConstants.DEFAULT_FINAL_GOAL_OFFSET)
         }
     }
 

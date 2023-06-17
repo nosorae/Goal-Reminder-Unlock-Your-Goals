@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.widthIn
@@ -47,7 +46,6 @@ import androidx.compose.ui.window.Dialog
 import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.presentation.R
 import com.yessorae.util.toLocalString
-import java.text.NumberFormat
 
 const val YearsInRow = 3
 
@@ -58,7 +56,6 @@ fun YearPickerDialog(
     onSelectYear: (year: Int) -> Unit,
     onCancel: () -> Unit
 ) {
-
     var currentSelectedYear: Int by remember {
         mutableStateOf(currentYear)
     }
@@ -99,7 +96,6 @@ fun YearPickerDialog(
                         }
                     )
 
-
                     Spacer(modifier = Modifier.height(Dimen.LargeDividePadding))
 
                     Row(
@@ -124,10 +120,8 @@ fun YearPickerDialog(
                     }
                 }
             }
-
         }
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -142,7 +136,8 @@ private fun YearPickerScreen(
     val lazyGridState =
         rememberLazyGridState(
             initialFirstVisibleItemIndex = Integer.max(
-                0, currentYear - yearRange.first - YearsInRow
+                0,
+                currentYear - yearRange.first - YearsInRow
             )
         )
     LazyVerticalGrid(
@@ -172,7 +167,6 @@ private fun YearPickerScreen(
     }
 }
 
-
 @Composable
 private fun Year(
     modifier: Modifier = Modifier,
@@ -194,15 +188,15 @@ private fun Year(
     ) {
         Text(
             text = yearText,
-            style = LocalTextStyle.current.copy(fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal),
+            style = LocalTextStyle.current.copy(
+                fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal
+            ),
             textAlign = TextAlign.Center,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
     }
-
 }
-
 
 @Composable
 fun yearContainerColor(selected: Boolean): State<Color> {

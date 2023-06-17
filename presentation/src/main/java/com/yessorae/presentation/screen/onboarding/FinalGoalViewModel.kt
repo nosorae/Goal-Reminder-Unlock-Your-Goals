@@ -3,18 +3,14 @@ package com.yessorae.presentation.screen.onboarding
 import com.yessorae.base.BaseScreenViewModel
 import com.yessorae.common.GlobalConstants
 import com.yessorae.domain.model.FinalGoal
-import com.yessorae.domain.repository.PreferencesDatastoreRepository
 import com.yessorae.domain.usecase.GetFinalGoalUseCase
 import com.yessorae.domain.usecase.UpdateFinalGoalUseCase
-import com.yessorae.presentation.FinalGoalDestination
-import com.yessorae.presentation.R
-import com.yessorae.util.ResString
 import com.yessorae.util.now
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
-import javax.inject.Inject
 
 @HiltViewModel
 class FinalGoalViewModel @Inject constructor(
@@ -117,4 +113,3 @@ sealed class FinalGoalDialogState {
     object ExitConfirm : FinalGoalDialogState()
     data class YearPickerDialog(val year: Int = LocalDate.now().year) : FinalGoalDialogState()
 }
-
