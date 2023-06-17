@@ -11,10 +11,14 @@ object Dimen {
     val MediumDividePadding = 12.dp
     val SmallDividePadding = 8.dp
     val InsideDividePadding = 4.dp
+    val ExtraSmallPadding = 2.dp
 
     val TextFieldPadding = 16.dp
 
     val MinDialogWidth = 360.dp
     val MinListDialogHeight = 280.dp
     val MaxListDialogHeight = 560.dp
+
+    val SelectionYearContainerHeight = 36.0.dp
+    val SelectionYearContainerWidth = 72.0.dp
 }

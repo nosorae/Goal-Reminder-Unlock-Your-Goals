@@ -65,7 +65,8 @@ fun FinalGoalTextField(
                 unfocusedContainerColor = Color.Transparent,
                 cursorColor = cursorColor
             ),
-            textColor = MaterialTheme.colorScheme.onBackground
+            textColor = MaterialTheme.colorScheme.onBackground,
+            cursorColor = cursorColor
         )
 
     }
