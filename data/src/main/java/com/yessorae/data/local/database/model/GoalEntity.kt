@@ -1,11 +1,14 @@
 package com.yessorae.data.local.database.model
 
 import androidx.room.ColumnInfo
+import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.yessorae.data.Constants
+import com.yessorae.domain.model.Goal
 import com.yessorae.domain.model.enum.GoalType
 import kotlinx.datetime.LocalDateTime
 
+@Entity(tableName = Constants.TABLE_GOAL)
 data class GoalEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = Constants.COL_GOAL_ID)
@@ -27,4 +30,36 @@ data class GoalEntity(
     val notification: Boolean = false,
     val type: GoalType
 )
+
+fun GoalEntity.asDomainModel(): Goal {
+    return Goal(
+        goalId = goalId,
+        title = title,
+        startTime = startTime,
+        endTime = endTime,
+        totalScore = totalScore,
+        currentScore = currentScore,
+        upperGoalId = upperGoalId,
+        upperGoalContributionScore = upperGoalContributionScore,
+        memo = memo,
+        notification = notification,
+        type = type
+    )
+}
+
+fun Goal.asEntity(): GoalEntity {
+    return GoalEntity(
+        goalId = goalId,
+        title = title,
+        startTime = startTime,
+        endTime = endTime,
+        totalScore = totalScore,
+        currentScore = currentScore,
+        upperGoalId = upperGoalId,
+        upperGoalContributionScore = upperGoalContributionScore,
+        memo = memo,
+        notification = notification,
+        type = type
+    )
+}
 

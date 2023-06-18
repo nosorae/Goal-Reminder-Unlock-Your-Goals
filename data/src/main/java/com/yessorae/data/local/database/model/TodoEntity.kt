@@ -7,7 +7,7 @@ import com.yessorae.data.Constants
 import com.yessorae.domain.model.Todo
 import kotlinx.datetime.LocalDateTime
 
-@Entity
+@Entity(tableName = Constants.TABLE_TODO)
 data class TodoEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = Constants.COL_TODO_ID)
