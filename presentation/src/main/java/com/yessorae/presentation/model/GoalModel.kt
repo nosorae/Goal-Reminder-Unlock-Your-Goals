@@ -73,20 +73,27 @@ fun Goal.asModel(): GoalModel {
         endTime = endTime,
         totalScore = totalScore,
         currentScore = currentScore,
-        type = type,
-        memo = memo
+        upperGoalId = upperGoalId,
+        upperGoalContributionScore = upperGoalContributionScore,
+        memo = memo,
+        notification = notification,
+        type = type
     )
 }
 
 fun GoalModel.asDomainModel(): Goal {
     return Goal(
+        goalId = goalId,
         title = title,
         startTime = startTime,
         endTime = endTime,
         totalScore = totalScore,
         currentScore = currentScore,
-        type = type,
-        memo = memo
+        upperGoalId = upperGoalId,
+        upperGoalContributionScore = upperGoalContributionScore,
+        memo = memo,
+        notification = notification,
+        type = type
     )
 }
 

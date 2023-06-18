@@ -173,7 +173,7 @@ class HomeViewModel @Inject constructor(
     fun onClickTodoCheckBox(todo: TodoModel) = ioScope.launch {
         todoRepository.updateTodo(
             todo = todo.copy(
-                completed = todo.completed.not()
+                done = todo.done.not()
             ).asDomainModel()
         )
     }

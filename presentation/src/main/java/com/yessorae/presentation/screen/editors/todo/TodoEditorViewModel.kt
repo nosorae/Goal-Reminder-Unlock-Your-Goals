@@ -55,7 +55,7 @@ class TodoEditorViewModel @Inject constructor(
                     startTime = model.startTime?.time,
                     endTime = model.endTime?.time,
                     contributeGoal = model.goalModel,
-                    contributionScore = model.goalContributionScore ?: 0,
+                    contributionScore = model.upperGoalContributionScore ?: 0,
                     memo = model.memo
                 )
             }
@@ -272,7 +272,7 @@ data class TodoEditorScreenState(
                     startTime = paramDate.atTime(startTime ?: LocalTime.getStartOfDay()),
                     endTime = paramDate.atTime(endTime ?: LocalTime.getStartOfDay()),
                     goalModel = contributeGoal,
-                    goalContributionScore = contributionScore,
+                    upperGoalContributionScore = contributionScore,
                     memo = memo
                 )
             }
@@ -283,7 +283,7 @@ data class TodoEditorScreenState(
                     startTime = paramDate.atTime(startTime ?: LocalTime.getStartOfDay()),
                     endTime = paramDate.atTime(endTime ?: LocalTime.getStartOfDay()),
                     goalModel = contributeGoal,
-                    goalContributionScore = contributionScore,
+                    upperGoalContributionScore = contributionScore,
                     memo = memo
                 )
             }

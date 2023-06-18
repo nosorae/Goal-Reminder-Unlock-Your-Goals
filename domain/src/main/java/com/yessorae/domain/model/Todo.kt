@@ -6,52 +6,57 @@ data class Todo(
     val todoId: Int,
     val title: String,
     val done: Boolean = false,
+    val date: LocalDateTime,
     val startTime: LocalDateTime? = null,
     val endTime: LocalDateTime? = null,
-    val goalId: Int? = null,
-    val goalContributionScore: Int? = null,
+    val upperGoalId: Int? = null,
+    val upperGoalContributionScore: Int? = null,
     val memo: String? = null
 )
 
 data class TodoWithGoal(
     val todoId: Int,
     val title: String,
-    val completed: Boolean = false,
+    val done: Boolean = false,
+    val date: LocalDateTime,
     val startTime: LocalDateTime? = null,
     val endTime: LocalDateTime? = null,
     val goal: Goal? = null,
-    val goalContributionScore: Int? = null,
+    val upperGoalContributionScore: Int? = null,
     val memo: String? = null
 )
 val mockTodoWithGoalData = listOf(
     TodoWithGoal(
         todoId = 1,
         goal = null,
-        goalContributionScore = null,
+        upperGoalContributionScore = null,
         title = "Morning Jogging",
+        date = LocalDateTime(2023, 6, 7, 6, 0),
         startTime = LocalDateTime(2023, 6, 7, 6, 0),
         endTime = LocalDateTime(2023, 6, 7, 7, 0),
-        completed = false,
+        done = false,
         memo = "Jog around the local park for one hour"
     ),
     TodoWithGoal(
         todoId = 2,
         goal = null,
-        goalContributionScore = null,
+        upperGoalContributionScore = null,
         title = "Python Learning",
+        date = LocalDateTime(2023, 6, 7, 8, 0),
         startTime = LocalDateTime(2023, 6, 7, 8, 0),
         endTime = LocalDateTime(2023, 6, 7, 10, 0),
-        completed = false,
+        done = false,
         memo = "Complete the exercises from chapter 7 to 9 in the Python book"
     ),
     TodoWithGoal(
         todoId = 3,
         goal = null,
-        goalContributionScore = null,
+        upperGoalContributionScore = null,
         title = "Grocery Shopping",
+        date = LocalDateTime(2023, 6, 7, 12, 0),
         startTime = LocalDateTime(2023, 6, 7, 12, 0),
         endTime = LocalDateTime(2023, 6, 7, 13, 30),
-        completed = false,
+        done = false,
         memo = "Buy fresh fruits, vegetables, milk, bread, and eggs"
     )
 )
@@ -59,9 +64,10 @@ val mockTodoWithGoalData = listOf(
 val mockTodoData = listOf(
     Todo(
         todoId = 1,
-        goalId = 101,
-        goalContributionScore = 5,
+        upperGoalId = 101,
+        upperGoalContributionScore = 5,
         title = "Morning Jogging",
+        date = LocalDateTime(2023, 6, 7, 6, 0),
         startTime = LocalDateTime(2023, 6, 7, 6, 0),
         endTime = LocalDateTime(2023, 6, 7, 7, 0),
         done = false,
@@ -69,9 +75,10 @@ val mockTodoData = listOf(
     ),
     Todo(
         todoId = 2,
-        goalId = 102,
-        goalContributionScore = 8,
+        upperGoalId = 102,
+        upperGoalContributionScore = 8,
         title = "Python Learning",
+        date = LocalDateTime(2023, 6, 7, 8, 0),
         startTime = LocalDateTime(2023, 6, 7, 8, 0),
         endTime = LocalDateTime(2023, 6, 7, 10, 0),
         done = false,
@@ -79,9 +86,10 @@ val mockTodoData = listOf(
     ),
     Todo(
         todoId = 3,
-        goalId = null,
-        goalContributionScore = null,
+        upperGoalId = null,
+        upperGoalContributionScore = null,
         title = "Grocery Shopping",
+        date = LocalDateTime(2023, 6, 7, 12, 0),
         startTime = LocalDateTime(2023, 6, 7, 12, 0),
         endTime = LocalDateTime(2023, 6, 7, 13, 30),
         done = false,
