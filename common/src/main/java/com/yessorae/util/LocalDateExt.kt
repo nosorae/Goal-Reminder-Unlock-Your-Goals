@@ -21,7 +21,7 @@ fun Long.toLocalDateTime(): LocalDateTime {
 }
 
 fun LocalDateTime.toMilliSecond(): Long {
-    return this.toInstant(TimeZone.UTC).epochSeconds * 1000
+    return this.toInstant(TimeZone.currentSystemDefault()).epochSeconds * 1000
 }
 
 fun LocalDateTime.getMonthDisplay(): String =
