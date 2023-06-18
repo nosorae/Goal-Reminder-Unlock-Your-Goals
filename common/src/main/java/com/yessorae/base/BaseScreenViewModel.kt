@@ -2,6 +2,7 @@ package com.yessorae.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yessorae.common.Logger
 import com.yessorae.util.StringModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -34,7 +35,9 @@ abstract class BaseScreenViewModel<T> : ViewModel() {
 
     open fun updateState(newState: () -> T) = viewModelScope.launch {
         _state.update {
-            newState.invoke()
+            val new = newState.invoke()
+            Logger.uiDebug("message $new")
+            new
         }
     }
 
