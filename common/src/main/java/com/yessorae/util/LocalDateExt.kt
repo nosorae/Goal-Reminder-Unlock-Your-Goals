@@ -70,12 +70,12 @@ fun LocalTime.Companion.getStartOfDay(): LocalTime {
 fun LocalDate.toDefaultLocalDateTime(): LocalDateTime {
     return atTime(LocalTime.getStartOfDay())
 }
-fun LocalTime.Companion.fromHourMinute(hour: Int, minute: Int): LocalTime {
-    return fromSecondOfDay((hour * 60 * 60) + (minute * 60))
+fun LocalTime.Companion.fromHourMinute(hour: Int, minute: Int, second: Int = 0): LocalTime {
+    return fromSecondOfDay((hour * 60 * 60) + (minute * 60) + second)
 }
 
-fun LocalDate.toDefaultLocalDateTime(hour: Int? = null, minute: Int? = null): LocalDateTime {
-    return this.atTime(LocalTime.fromHourMinute(hour = hour ?: 0, minute = minute ?: 0))
+fun LocalDate.toDefaultLocalDateTime(hour: Int? = null, minute: Int? = null, second: Int? = null): LocalDateTime {
+    return this.atTime(LocalTime.fromHourMinute(hour = hour ?: 0, minute = minute ?: 0, second = second ?: 0))
 }
 
 fun Int.toLocalString(): String {

@@ -4,8 +4,9 @@ import com.yessorae.domain.model.enum.GoalType
 import kotlinx.datetime.LocalDateTime
 
 data class Goal(
-    val goalId: Int = 0,
+    var goalId: Int = 0,
     val title: String,
+    val dateFrom: LocalDateTime,
     val startTime: LocalDateTime? = null,
     val endTime: LocalDateTime? = null,
     val totalScore: Int,
@@ -20,6 +21,7 @@ data class Goal(
 val mockGoalModels = listOf(
     Goal(
         title = "운동하기",
+        dateFrom = LocalDateTime(2023, 1, 1, 0, 0),
         startTime = LocalDateTime(2023, 1, 1, 0, 0),
         endTime = LocalDateTime(2023, 12, 31, 23, 59),
         totalScore = 365,
@@ -28,6 +30,7 @@ val mockGoalModels = listOf(
     ),
     Goal(
         title = "독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기",
+        dateFrom = LocalDateTime(2023, 6, 1, 0, 0),
         startTime = LocalDateTime(2023, 6, 1, 0, 0),
         endTime = LocalDateTime(2023, 6, 30, 23, 59),
         totalScore = 30,
@@ -36,6 +39,7 @@ val mockGoalModels = listOf(
     ),
     Goal(
         title = "영어공부하기",
+        dateFrom = LocalDateTime(2023, 1, 1, 0, 0),
         startTime = LocalDateTime(2023, 1, 1, 0, 0),
         endTime = LocalDateTime(2023, 12, 31, 23, 59),
         totalScore = 365,
@@ -44,6 +48,7 @@ val mockGoalModels = listOf(
     ),
     Goal(
         title = "물 마시기",
+        dateFrom = LocalDateTime(2023, 6, 1, 0, 0),
         startTime = LocalDateTime(2023, 6, 1, 0, 0),
         endTime = LocalDateTime(2023, 6, 30, 23, 59),
         totalScore = 30,
@@ -52,6 +57,7 @@ val mockGoalModels = listOf(
     ),
     Goal(
         title = "걷기",
+        dateFrom = LocalDateTime(2023, 1, 1, 0, 0),
         startTime = LocalDateTime(2023, 1, 1, 0, 0),
         endTime = LocalDateTime(2023, 12, 31, 23, 59),
         totalScore = 365,

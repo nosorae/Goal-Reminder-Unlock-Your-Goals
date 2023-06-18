@@ -10,7 +10,7 @@ buildscript {
         accmopanist_version = '0.25.1'
         nav_version = "2.5.3"
         compose_accompanist = "0.30.1"
-        room_version = "2.5.1"
+        room_version = "2.5.0"
         hilt_version = "2.44.2"
         timber_version = "5.0.1"
         hilt_compose_navigation = "1.0.0"

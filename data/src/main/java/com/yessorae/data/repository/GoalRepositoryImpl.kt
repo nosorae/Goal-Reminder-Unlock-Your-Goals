@@ -1,35 +1,127 @@
 package com.yessorae.data.repository
 
+import com.yessorae.common.Logger
+import com.yessorae.data.local.database.dao.GoalDao
+import com.yessorae.data.local.database.model.asDomainModel
+import com.yessorae.data.local.database.model.asEntity
 import com.yessorae.domain.model.Goal
+import com.yessorae.domain.model.enum.GoalType
 import com.yessorae.domain.model.mockGoalModels
 import com.yessorae.domain.repository.GoalRepository
+import com.yessorae.util.getWeekRangePair
+import com.yessorae.util.getWeekScopeDisplay
+import com.yessorae.util.toDefaultLocalDateTime
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.toKotlinLocalDate
+import java.time.YearMonth
+import kotlin.math.min
 
-class GoalRepositoryImpl @Inject constructor() : GoalRepository {
+class GoalRepositoryImpl @Inject constructor(
+    private val goalDao: GoalDao
+) : GoalRepository {
     override fun getYearlyGoalsFlow(day: LocalDateTime): Flow<List<Goal>> { // todo impl
-        return flowOf(mockGoalModels.take(3)) // todo impl
+        Logger.dataDebug("getYearlyGoalsFlow : $day")
+        val year = day.year
+        val startDateTime = LocalDateTime(
+            year = year,
+            monthNumber = 1,
+            dayOfMonth = 1,
+            hour = 0,
+            minute = 0,
+            second = 0
+        )
+        val endDateTime = LocalDateTime(
+            year = year,
+            monthNumber = 12,
+            dayOfMonth = 31,
+            hour = 23,
+            minute = 59,
+            second = 59
+        )
+
+        return goalDao.loadGoalsFlow(
+            start = startDateTime,
+            end = endDateTime,
+//            goalType = GoalType.YEARLY.name
+        ).map { list ->
+            list.map {
+                it.asDomainModel()
+            }
+        }
     }
 
     override fun getMonthlyGoalsFlow(day: LocalDateTime): Flow<List<Goal>> { // todo impl
-        return flowOf(mockGoalModels.take(5)) // todo impl
+        Logger.dataDebug("getMonthlyGoalsFlow : $day")
+
+        val year = day.year
+        val monthNumber = day.monthNumber
+        val endDayOfMonth = YearMonth.of(year, monthNumber)
+            .atEndOfMonth().toKotlinLocalDate().dayOfMonth
+        Logger.dataDebug("getMonthlyGoalsFlow : year $year / monthNumber $monthNumber / endDayOfMonth $endDayOfMonth")
+
+        val startDateTime = LocalDateTime(
+            year = year,
+            monthNumber = monthNumber,
+            dayOfMonth = 1,
+            hour = 0,
+            minute = 0,
+            second = 0
+        )
+        val endDateTime = LocalDateTime(
+            year = year,
+            monthNumber = monthNumber,
+            dayOfMonth = endDayOfMonth,
+            hour = 23,
+            minute = 59,
+            second = 59
+        )
+
+        return goalDao.loadGoalsFlow(
+            start = startDateTime,
+            end = endDateTime,
+//            goalType = GoalType.MONTHLY.name
+        ).map { list ->
+            list.map {
+                it.asDomainModel()
+            }
+        }
     }
 
     override fun getWeekdayGoalsFlow(day: LocalDateTime): Flow<List<Goal>> { // todo impl
-        return flowOf(mockGoalModels.take(5)) // todo impl
+        Logger.dataDebug("getWeekdayGoalsFlow : $day")
+
+        val weekRangePair = day.date.getWeekRangePair()
+        val startDateTime = weekRangePair.first.toDefaultLocalDateTime()
+        val endDateTime = weekRangePair.second
+            .toDefaultLocalDateTime(hour = 23, minute = 59, second = 59)
+
+        Logger.dataDebug("getWeekdayGoalsFlow : startDateTime $startDateTime / endDateTime $endDateTime")
+
+
+        return goalDao.loadGoalsFlow(
+            start = startDateTime,
+            end = endDateTime,
+//            goalType = GoalType.WEEKLY.name
+        ).map { list ->
+            list.map {
+                it.asDomainModel()
+            }
+        }
     }
 
     override suspend fun getGoalById(goalId: Int): Goal {
-        return mockGoalModels[0] // todo impl
+        return goalDao.loadGoalById(goalId).asDomainModel()
     }
 
     override suspend fun insertGoal(goal: Goal): Int {
-        return 0 // todo impl
+        return goalDao.insert(goal.asEntity()).toInt()
     }
 
     override suspend fun updateGoal(goal: Goal) {
-        // todo impl
+        return goalDao.update(goal.asEntity())
     }
 }

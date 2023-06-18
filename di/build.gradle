@@ -46,15 +46,16 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
-    // room
-    implementation "androidx.room:room-runtime:$room_version"
-    implementation 'androidx.test.ext:junit-ktx:1.1.5'
-    testImplementation "androidx.room:room-testing:$room_version"
-    implementation "androidx.room:room-paging:$room_version"
-    // Kotlin은 kotlinc로 컴파일되기 때문에 기존에 Java로 작성된 Annotation Process로는 Kotlin의 Annotation이 제대로 처리되지 않습니다.
-    kapt "androidx.room:room-compiler:$room_version"
-    // Kotlin Coroutine/Flow 와 함께 사용하기 위해 추가
-    implementation "androidx.room:room-ktx:$room_version"
+//    // room
+//    implementation "androidx.room:room-runtime:$room_version"
+//    annotationProcessor "androidx.room:room-compiler:$room_version"
+//    implementation 'androidx.test.ext:junit-ktx:1.1.5'
+//    testImplementation "androidx.room:room-testing:$room_version"
+//    implementation "androidx.room:room-paging:$room_version"
+//    // Kotlin은 kotlinc로 컴파일되기 때문에 기존에 Java로 작성된 Annotation Process로는 Kotlin의 Annotation이 제대로 처리되지 않습니다.
+//    kapt "androidx.room:room-compiler:$room_version"
+//    // Kotlin Coroutine/Flow 와 함께 사용하기 위해 추가
+//    implementation "androidx.room:room-ktx:$room_version"
 
     // delete candidate
     implementation 'androidx.core:core-ktx:1.7.0'

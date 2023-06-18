@@ -130,6 +130,7 @@ class GoalEditorViewModel @Inject constructor(
     }
 
     fun onClickContributeGoal() = ioScope.launch {
+        // todo 수정
         goalRepository
             .getWeekdayGoalsFlow(stateValue.paramDate.toDefaultLocalDateTime())
             .collectLatest { goals ->
@@ -386,6 +387,7 @@ data class GoalEditorScreenState(
         }
     }
 
+    // todo check
     fun getUpdatedGoal(): GoalModel? {
         val goal = goal
 
@@ -410,6 +412,7 @@ data class GoalEditorScreenState(
         return if (goalTitle != null && goalTotalScore != null) {
             goal?.copy(
                 title = goalTitle,
+                dateFrom = paramDate.toDefaultLocalDateTime(),
                 startTime = startDate,
                 endTime = endDate,
                 totalScore = goalTotalScore,
@@ -418,6 +421,7 @@ data class GoalEditorScreenState(
                 memo = memo
             ) ?: GoalModel(
                 title = goalTitle,
+                dateFrom = paramDate.toDefaultLocalDateTime(),
                 startTime = startDate,
                 endTime = endDate,
                 totalScore = goalTotalScore,

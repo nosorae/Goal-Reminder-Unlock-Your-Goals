@@ -15,6 +15,7 @@ object Constants {
 
     const val TABLE_GOAL = "goal"
     const val COL_GOAL_ID = "goal_id"
+    const val COL_DATE_FROM = "date_from"
     const val COL_TOTAL_SCORE = "total_score"
     const val COL_CURRENT_SCORE = "current_score"
     const val COL_UPPER_GOAL_ID = "upper_goal_id"

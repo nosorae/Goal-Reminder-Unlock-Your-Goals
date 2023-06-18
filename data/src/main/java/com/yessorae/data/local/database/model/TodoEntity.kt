@@ -11,7 +11,7 @@ import kotlinx.datetime.LocalDateTime
 data class TodoEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = Constants.COL_TODO_ID)
-    val todoId: Int = 0,
+    var todoId: Int = 0,
     val title: String,
     val done: Boolean,
     val date: LocalDateTime,

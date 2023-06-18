@@ -12,8 +12,10 @@ import kotlinx.datetime.LocalDateTime
 data class GoalEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = Constants.COL_GOAL_ID)
-    val goalId: Int = 0,
+    var goalId: Int = 0,
     val title: String,
+    @ColumnInfo(name = Constants.COL_DATE_FROM)
+    var dateFrom: LocalDateTime,
     @ColumnInfo(name = Constants.COL_START_TIME)
     val startTime: LocalDateTime? = null,
     @ColumnInfo(name = Constants.COL_END_TIME)
@@ -28,13 +30,14 @@ data class GoalEntity(
     val upperGoalContributionScore: Int? = null,
     val memo: String? = null,
     val notification: Boolean = false,
-    val type: GoalType
+    val type: GoalType = GoalType.NONE
 )
 
 fun GoalEntity.asDomainModel(): Goal {
     return Goal(
         goalId = goalId,
         title = title,
+        dateFrom = dateFrom,
         startTime = startTime,
         endTime = endTime,
         totalScore = totalScore,
@@ -51,6 +54,7 @@ fun Goal.asEntity(): GoalEntity {
     return GoalEntity(
         goalId = goalId,
         title = title,
+        dateFrom = dateFrom,
         startTime = startTime,
         endTime = endTime,
         totalScore = totalScore,
