@@ -88,4 +88,5 @@
     <string name="common_select_date">날짜를 선택해주세요</string>
     <string name="common_select_year">연도 선택</string>
     <string name="common_contribution_score_title">기여도 <b>%d</b> / %d</string>
+    <string name="common_no_upper_goal">상위목표가 없어요, 먼저 상위목표를 만들어주세요 🙏</string>
 </resources>

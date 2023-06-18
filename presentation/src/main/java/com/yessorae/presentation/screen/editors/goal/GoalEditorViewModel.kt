@@ -90,7 +90,8 @@ class GoalEditorViewModel @Inject constructor(
     fun onChangeTitle(title: String) {
         updateState {
             stateValue.copy(
-                title = title
+                title = title,
+                changed = true
             )
         }
     }
@@ -144,11 +145,15 @@ class GoalEditorViewModel @Inject constructor(
                 goalRepository
                     .getYearlyGoalsFlow(stateValue.paramDate.toDefaultLocalDateTime())
                     .collectLatest { goals ->
-                       val goalModels = goals.map { it.asModel() }
-                        updateState {
-                            stateValue.copy(
-                                editorDialogState = EditorDialogState.ContributeGoal(goalModels)
-                            )
+                        if (goals.isEmpty()) {
+                            _toast.emit(ResString(R.string.common_no_upper_goal))
+                        } else {
+                            val goalModels = goals.map { it.asModel() }
+                            updateState {
+                                stateValue.copy(
+                                    editorDialogState = EditorDialogState.ContributeGoal(goalModels)
+                                )
+                            }
                         }
                     }
             }
@@ -157,11 +162,15 @@ class GoalEditorViewModel @Inject constructor(
                 goalRepository
                     .getMonthlyGoalsFlow(stateValue.paramDate.toDefaultLocalDateTime())
                     .collectLatest { goals ->
-                        val goalModels = goals.map { it.asModel() }
-                        updateState {
-                            stateValue.copy(
-                                editorDialogState = EditorDialogState.ContributeGoal(goalModels)
-                            )
+                        if (goals.isEmpty()) {
+                            _toast.emit(ResString(R.string.common_no_upper_goal))
+                        } else {
+                            val goalModels = goals.map { it.asModel() }
+                            updateState {
+                                stateValue.copy(
+                                    editorDialogState = EditorDialogState.ContributeGoal(goalModels)
+                                )
+                            }
                         }
                     }
             }
@@ -322,6 +331,7 @@ class GoalEditorViewModel @Inject constructor(
             } else {
                 goalRepository.insertGoal(it)
             }
+            onCancelDialog()
             back()
         }
     }
