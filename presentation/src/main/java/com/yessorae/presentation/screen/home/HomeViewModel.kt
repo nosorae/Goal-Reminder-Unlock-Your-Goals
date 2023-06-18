@@ -1,7 +1,7 @@
 package com.yessorae.presentation.screen.home
 
 import com.yessorae.base.BaseScreenViewModel
-import com.yessorae.domain.model.enum.GoalType
+import com.yessorae.domain.model.type.GoalType
 import com.yessorae.domain.repository.PreferencesDatastoreRepository
 import com.yessorae.domain.repository.TodoRepository
 import com.yessorae.domain.usecase.GetHomeUseCase

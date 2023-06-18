@@ -3,8 +3,8 @@ package com.yessorae.presentation.screen.editors.goal
 import androidx.lifecycle.SavedStateHandle
 import com.yessorae.base.BaseScreenViewModel
 import com.yessorae.common.Logger
-import com.yessorae.domain.model.enum.GoalType
-import com.yessorae.domain.model.enum.toGoalType
+import com.yessorae.domain.model.type.GoalType
+import com.yessorae.domain.model.type.toGoalType
 import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.domain.repository.TodoRepository
 import com.yessorae.presentation.GoalEditorDestination

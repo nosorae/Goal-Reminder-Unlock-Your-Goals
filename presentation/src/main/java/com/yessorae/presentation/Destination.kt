@@ -2,7 +2,7 @@ package com.yessorae.presentation
 
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.yessorae.domain.model.enum.GoalType
+import com.yessorae.domain.model.type.GoalType
 
 interface Destination {
     val route: String

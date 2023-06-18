@@ -5,20 +5,16 @@ import com.yessorae.data.local.database.dao.GoalDao
 import com.yessorae.data.local.database.model.asDomainModel
 import com.yessorae.data.local.database.model.asEntity
 import com.yessorae.domain.model.Goal
-import com.yessorae.domain.model.enum.GoalType
-import com.yessorae.domain.model.mockGoalModels
+import com.yessorae.domain.model.type.GoalType
 import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.util.getWeekRangePair
-import com.yessorae.util.getWeekScopeDisplay
 import com.yessorae.util.toDefaultLocalDateTime
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toKotlinLocalDate
 import java.time.YearMonth
-import kotlin.math.min
 
 class GoalRepositoryImpl @Inject constructor(
     private val goalDao: GoalDao
@@ -46,7 +42,7 @@ class GoalRepositoryImpl @Inject constructor(
         return goalDao.loadGoalsFlow(
             start = startDateTime,
             end = endDateTime,
-//            goalType = GoalType.YEARLY.name
+            goalType = GoalType.YEARLY.name
         ).map { list ->
             list.map {
                 it.asDomainModel()
@@ -83,7 +79,7 @@ class GoalRepositoryImpl @Inject constructor(
         return goalDao.loadGoalsFlow(
             start = startDateTime,
             end = endDateTime,
-//            goalType = GoalType.MONTHLY.name
+            goalType = GoalType.MONTHLY.name
         ).map { list ->
             list.map {
                 it.asDomainModel()
@@ -105,7 +101,7 @@ class GoalRepositoryImpl @Inject constructor(
         return goalDao.loadGoalsFlow(
             start = startDateTime,
             end = endDateTime,
-//            goalType = GoalType.WEEKLY.name
+            goalType = GoalType.WEEKLY.name
         ).map { list ->
             list.map {
                 it.asDomainModel()

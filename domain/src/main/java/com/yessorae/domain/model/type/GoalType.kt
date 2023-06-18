@@ -1,4 +1,4 @@
-package com.yessorae.domain.model.enum
+package com.yessorae.domain.model.type
 
 enum class GoalType {
     YEARLY,

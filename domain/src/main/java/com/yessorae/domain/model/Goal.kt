@@ -1,6 +1,6 @@
 package com.yessorae.domain.model
 
-import com.yessorae.domain.model.enum.GoalType
+import com.yessorae.domain.model.type.GoalType
 import kotlinx.datetime.LocalDateTime
 
 data class Goal(
