@@ -53,6 +53,21 @@ class GoalEditorViewModel @Inject constructor(
     }
 
     private fun initStateValue() = ioScope.launch {
+        if (goalDayMilliSecParam != GoalEditorDestination.defaultGoalDayMilliSec) {
+            val date = goalDayMilliSecParam.toLocalDateTime()
+            updateState {
+                stateValue.copy(
+                    paramDate = date.date
+                )
+            }
+        }
+
+        updateState {
+            stateValue.copy(
+                paramGoalType = goalTypeParam.toGoalType()
+            )
+        }
+
         if (isUpdate) {
             val goalWithUpperGoal = getGoalWithUpperGoalUseCase(goalIdParam)
             val goal = goalWithUpperGoal.goal.asModel()
@@ -66,26 +81,9 @@ class GoalEditorViewModel @Inject constructor(
                     memo = goal.memo,
                     totalScore = goal.totalScore,
                     upperGoal = upperGoal,
-                    upperGoalContributionScore = goal.upperGoalContributionScore,
+                    upperGoalContributionScore = goal.upperGoalContributionScore
                 )
             }
-        }
-
-        if (goalDayMilliSecParam != GoalEditorDestination.defaultGoalDayMilliSec) {
-            val date = goalDayMilliSecParam.toLocalDateTime() // todo fix bug
-            updateState {
-                stateValue.copy(
-                    paramDate = date.date
-                )
-            }
-        }
-
-        val goalType = goalTypeParam.toGoalType()
-
-        updateState {
-            stateValue.copy(
-                paramGoalType = goalType
-            )
         }
     }
 
@@ -107,15 +105,17 @@ class GoalEditorViewModel @Inject constructor(
                 } catch (e: Exception) {
                     null
                     // crashlytics
-                }
+                },
+                changed = true
             )
         }
     }
 
-    fun onChangeContributionScore(score: Int) {
+    fun onChangeUpperGoalContributionScore(score: Int) {
         updateState {
             stateValue.copy(
-                upperGoalContributionScore = score
+                upperGoalContributionScore = score,
+                changed = true
             )
         }
     }
@@ -137,21 +137,43 @@ class GoalEditorViewModel @Inject constructor(
     }
 
     fun onClickContributeGoal() = ioScope.launch {
-        // todo 수정
-        goalRepository
-            .getWeekdayGoalsFlow(stateValue.paramDate.toDefaultLocalDateTime())
-            .collectLatest { goals ->
-                val goalModels = goals.map { it.asModel() }
-                updateState {
-                    stateValue.copy(
-                        editorDialogState = EditorDialogState.ContributeGoal(goalModels)
-                    )
-                }
+        if (stateValue.paramGoalType == GoalType.YEARLY) return@launch
+
+        when (stateValue.paramGoalType) {
+            GoalType.MONTHLY -> {
+                goalRepository
+                    .getYearlyGoalsFlow(stateValue.paramDate.toDefaultLocalDateTime())
+                    .collectLatest { goals ->
+                       val goalModels = goals.map { it.asModel() }
+                        updateState {
+                            stateValue.copy(
+                                editorDialogState = EditorDialogState.ContributeGoal(goalModels)
+                            )
+                        }
+                    }
             }
+
+            GoalType.WEEKLY -> {
+                goalRepository
+                    .getMonthlyGoalsFlow(stateValue.paramDate.toDefaultLocalDateTime())
+                    .collectLatest { goals ->
+                        val goalModels = goals.map { it.asModel() }
+                        updateState {
+                            stateValue.copy(
+                                editorDialogState = EditorDialogState.ContributeGoal(goalModels)
+                            )
+                        }
+                    }
+            }
+
+            else -> {
+                // do nothing
+            }
+        }
     }
 
     fun onClickBack() = ioScope.launch {
-        if (stateValue.enableSaveButton) {
+        if (stateValue.changed) {
             updateState {
                 stateValue.copy(
                     editorDialogState = EditorDialogState.ExitConfirm
@@ -182,7 +204,6 @@ class GoalEditorViewModel @Inject constructor(
         when (stateValue.paramGoalType) {
             GoalType.YEARLY -> {
                 if (paramDate.year != date.year) {
-                    Logger.uiDebug("paramDate.year ${paramDate.year}, date.year ${date.year}")
                     _toast.emit(
                         ResString(
                             R.string.goal_toast_out_of_range_year,
@@ -235,7 +256,8 @@ class GoalEditorViewModel @Inject constructor(
                 }
                 updateState {
                     stateValue.copy(
-                        startDate = date
+                        startDate = date,
+                        changed = true
                     )
                 }
             }
@@ -248,7 +270,8 @@ class GoalEditorViewModel @Inject constructor(
                 }
                 updateState {
                     stateValue.copy(
-                        endDate = date
+                        endDate = date,
+                        changed = true
                     )
                 }
             }
@@ -265,7 +288,8 @@ class GoalEditorViewModel @Inject constructor(
         updateState {
             stateValue.copy(
                 upperGoal = goal,
-                upperGoalContributionScore = 0
+                upperGoalContributionScore = 0,
+                changed = true
             )
         }
         onCancelDialog()
@@ -275,7 +299,8 @@ class GoalEditorViewModel @Inject constructor(
         updateState {
             stateValue.copy(
                 upperGoal = null,
-                upperGoalContributionScore = 0
+                upperGoalContributionScore = null,
+                changed = true
             )
         }
         onCancelDialog()
@@ -284,7 +309,8 @@ class GoalEditorViewModel @Inject constructor(
     fun onChangeMemo(memo: String) {
         updateState {
             stateValue.copy(
-                memo = memo
+                memo = memo,
+                changed = true
             )
         }
     }
@@ -296,8 +322,8 @@ class GoalEditorViewModel @Inject constructor(
             } else {
                 goalRepository.insertGoal(it)
             }
+            back()
         }
-        _navigationEvent.emit(null)
     }
 
     private suspend fun back() {
@@ -320,6 +346,7 @@ data class GoalEditorScreenState(
     val upperGoal: GoalModel? = null,
     val upperGoalContributionScore: Int? = null,
     val memo: String? = null,
+    val changed: Boolean = false,
     val editorDialogState: EditorDialogState = EditorDialogState.None
 ) {
     val enableSaveButton by lazy {
@@ -328,6 +355,10 @@ data class GoalEditorScreenState(
 
     val isUpdate by lazy {
         goal != null
+    }
+
+    val showGoalListItem by lazy {
+        paramGoalType != GoalType.YEARLY
     }
 
     val toolbarTitle: StringModel by lazy {
@@ -395,49 +426,33 @@ data class GoalEditorScreenState(
         }
     }
 
-    // todo check
     fun getUpdatedGoal(): GoalModel? {
-        val goal = goal
+        if (enableSaveButton.not()) return null
 
-        val goalTitle = title ?: goal?.title
-
-        val startDate = startDate?.let { startDay ->
-            paramDate.minus(paramDate.dayOfMonth - startDay.dayOfMonth, DateTimeUnit.DAY)
-                .toDefaultLocalDateTime()
-        } ?: goal?.startTime
-
-        val endDate = endDate?.let { endDay ->
-            paramDate.plus(endDay.dayOfMonth - paramDate.dayOfMonth, DateTimeUnit.DAY)
-                .toDefaultLocalDateTime()
-        } ?: goal?.endTime
-
+        val goalTitle = title
         val goalTotalScore = totalScore ?: goal?.totalScore
-
-        val contributionGoal = upperGoal?.upperGoalId ?: goal?.upperGoalId
-
-        val contributeScore = upperGoalContributionScore ?: goal?.upperGoalContributionScore
 
         return if (goalTitle != null && goalTotalScore != null) {
             goal?.copy(
                 title = goalTitle,
                 dateFrom = paramDate.toDefaultLocalDateTime(),
-                startTime = startDate,
-                endTime = endDate,
+                startTime = startDate?.toDefaultLocalDateTime(),
+                endTime = endDate?.toDefaultLocalDateTime(),
                 totalScore = goalTotalScore,
-                upperGoalId = contributionGoal,
-                upperGoalContributionScore = contributeScore,
+                upperGoalId = upperGoal?.upperGoalId,
+                upperGoalContributionScore = upperGoalContributionScore,
                 memo = memo
             ) ?: GoalModel(
                 title = goalTitle,
                 dateFrom = paramDate.toDefaultLocalDateTime(),
-                startTime = startDate,
-                endTime = endDate,
+                startTime = startDate?.toDefaultLocalDateTime(),
+                endTime = endDate?.toDefaultLocalDateTime(),
                 totalScore = goalTotalScore,
                 currentScore = 0,
-                upperGoalId = contributionGoal,
-                upperGoalContributionScore = contributeScore,
-                type = paramGoalType,
-                memo = memo
+                upperGoalId = upperGoal?.upperGoalId,
+                upperGoalContributionScore = upperGoalContributionScore,
+                memo = memo,
+                type = paramGoalType
             )
         } else {
             null
