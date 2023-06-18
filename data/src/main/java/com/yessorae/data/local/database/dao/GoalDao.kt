@@ -2,6 +2,7 @@ package com.yessorae.data.local.database.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import com.yessorae.data.Constants.COL_DATE_FROM
 import com.yessorae.data.Constants.COL_GOAL_ID
 import com.yessorae.data.Constants.TABLE_GOAL

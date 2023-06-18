@@ -18,6 +18,11 @@ data class Goal(
     val type: GoalType
 )
 
+data class GoalWithUpperGoal(
+    val goal: Goal,
+    val upperGoal: Goal? = null
+)
+
 val mockGoalModels = listOf(
     Goal(
         title = "운동하기",

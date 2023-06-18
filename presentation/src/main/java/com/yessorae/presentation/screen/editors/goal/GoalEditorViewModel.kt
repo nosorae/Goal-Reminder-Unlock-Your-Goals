@@ -7,6 +7,7 @@ import com.yessorae.domain.model.type.GoalType
 import com.yessorae.domain.model.type.toGoalType
 import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.domain.repository.TodoRepository
+import com.yessorae.domain.usecase.GetGoalWithUpperGoalUseCase
 import com.yessorae.presentation.GoalEditorDestination
 import com.yessorae.presentation.R
 import com.yessorae.presentation.model.GoalModel
@@ -34,7 +35,8 @@ import kotlinx.datetime.plus
 class GoalEditorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val goalRepository: GoalRepository,
-    private val todoRepository: TodoRepository
+    private val todoRepository: TodoRepository,
+    private val getGoalWithUpperGoalUseCase: GetGoalWithUpperGoalUseCase
 ) : BaseScreenViewModel<GoalEditorScreenState>() {
     private val goalIdParam: Int =
         checkNotNull(savedStateHandle[GoalEditorDestination.goalIdArg])
@@ -52,14 +54,19 @@ class GoalEditorViewModel @Inject constructor(
 
     private fun initStateValue() = ioScope.launch {
         if (isUpdate) {
-            val model = goalRepository.getGoalById(goalIdParam).asModel()
+            val goalWithUpperGoal = getGoalWithUpperGoalUseCase(goalIdParam)
+            val goal = goalWithUpperGoal.goal.asModel()
+            val upperGoal = goalWithUpperGoal.upperGoal?.asModel()
             updateState {
                 stateValue.copy(
-                    goal = model,
-                    title = model.title,
-                    startDate = model.startTime?.date,
-                    endDate = model.endTime?.date,
-                    memo = model.memo
+                    goal = goal,
+                    title = goal.title,
+                    startDate = goal.startTime?.date,
+                    endDate = goal.endTime?.date,
+                    memo = goal.memo,
+                    totalScore = goal.totalScore,
+                    upperGoal = upperGoal,
+                    upperGoalContributionScore = goal.upperGoalContributionScore,
                 )
             }
         }
@@ -108,7 +115,7 @@ class GoalEditorViewModel @Inject constructor(
     fun onChangeContributionScore(score: Int) {
         updateState {
             stateValue.copy(
-                contributionScore = score
+                upperGoalContributionScore = score
             )
         }
     }
@@ -257,8 +264,8 @@ class GoalEditorViewModel @Inject constructor(
     fun onSelectContributeGoal(goal: GoalModel) {
         updateState {
             stateValue.copy(
-                contributionGoal = goal,
-                contributionScore = 0
+                upperGoal = goal,
+                upperGoalContributionScore = 0
             )
         }
         onCancelDialog()
@@ -267,8 +274,8 @@ class GoalEditorViewModel @Inject constructor(
     fun onSelectNoneGoal() {
         updateState {
             stateValue.copy(
-                contributionGoal = null,
-                contributionScore = 0
+                upperGoal = null,
+                upperGoalContributionScore = 0
             )
         }
         onCancelDialog()
@@ -290,6 +297,7 @@ class GoalEditorViewModel @Inject constructor(
                 goalRepository.insertGoal(it)
             }
         }
+        _navigationEvent.emit(null)
     }
 
     private suspend fun back() {
@@ -309,8 +317,8 @@ data class GoalEditorScreenState(
     val startDate: LocalDate? = null,
     val endDate: LocalDate? = null,
     val totalScore: Int? = 100,
-    val contributionGoal: GoalModel? = null,
-    val contributionScore: Int? = null,
+    val upperGoal: GoalModel? = null,
+    val upperGoalContributionScore: Int? = null,
     val memo: String? = null,
     val editorDialogState: EditorDialogState = EditorDialogState.None
 ) {
@@ -405,9 +413,9 @@ data class GoalEditorScreenState(
 
         val goalTotalScore = totalScore ?: goal?.totalScore
 
-        val contributionGoal = contributionGoal?.upperGoalId ?: goal?.upperGoalId
+        val contributionGoal = upperGoal?.upperGoalId ?: goal?.upperGoalId
 
-        val contributeScore = contributionScore ?: goal?.upperGoalContributionScore
+        val contributeScore = upperGoalContributionScore ?: goal?.upperGoalContributionScore
 
         return if (goalTitle != null && goalTotalScore != null) {
             goal?.copy(

@@ -146,8 +146,8 @@ fun GoalEditorScreen(
 
                 item {
                     GoalListItem(
-                        contributeGoal = model.contributionGoal,
-                        contributeScore = model.contributionScore ?: 0,
+                        contributeGoal = model.upperGoal,
+                        contributeScore = model.upperGoalContributionScore ?: 0,
                         onClickContributeGoal = {
                             viewModel.onClickContributeGoal()
                         },
