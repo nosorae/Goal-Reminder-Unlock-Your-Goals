@@ -17,7 +17,7 @@ object Dimen {
 
     val MinDialogWidth = 360.dp
     val MinListDialogHeight = 280.dp
-    val MaxListDialogHeight = 560.dp
+    val MaxListDialogHeight = 360.dp
 
     val SelectionYearContainerHeight = 36.0.dp
     val SelectionYearContainerWidth = 72.0.dp
