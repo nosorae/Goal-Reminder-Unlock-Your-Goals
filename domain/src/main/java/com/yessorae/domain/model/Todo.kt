@@ -11,6 +11,7 @@ data class Todo(
     val endTime: LocalDateTime? = null,
     val upperGoalId: Int? = null,
     val upperGoalContributionScore: Int? = null,
+    val notification: Boolean = false,
     val memo: String? = null
 )
 
@@ -23,6 +24,7 @@ data class TodoWithGoal(
     val endTime: LocalDateTime? = null,
     val goal: Goal? = null,
     val upperGoalContributionScore: Int? = null,
+    val notification: Boolean = false,
     val memo: String? = null
 )
 val mockTodoWithGoalData = listOf(

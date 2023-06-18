@@ -23,6 +23,7 @@ data class TodoEntity(
     val upperGoalId: Int? = null,
     @ColumnInfo(name = Constants.COL_UPPER_GOAL_CONTRIBUTION_SCORE)
     val upperGoalContributionScore: Int? = null,
+    val notification: Boolean = false,
     val memo: String? = null
 )
 
@@ -36,6 +37,7 @@ fun TodoEntity.asDomainModel(): Todo {
         endTime = endTime,
         upperGoalId = upperGoalId,
         upperGoalContributionScore = upperGoalContributionScore,
+        notification = notification,
         memo = memo
     )
 }
@@ -50,6 +52,7 @@ fun Todo.asEntity(): TodoEntity {
         endTime = endTime,
         upperGoalId = upperGoalId,
         upperGoalContributionScore = upperGoalContributionScore,
+        notification = notification,
         memo = memo
     )
 }

@@ -19,6 +19,7 @@ data class TodoModel(
     val endTime: LocalDateTime? = null,
     val goalModel: GoalModel? = null,
     val upperGoalContributionScore: Int? = null,
+    val notification: Boolean = false,
     val memo: String? = null
 ) {
     val subtitle: StringModel? by lazy {
@@ -43,6 +44,7 @@ fun Todo.asModel(): TodoModel {
         endTime = endTime,
         goalModel = null,
         upperGoalContributionScore = upperGoalContributionScore,
+        notification = notification,
         memo = memo
     )
 }
@@ -56,6 +58,7 @@ fun TodoWithGoal.asModel(): TodoModel {
         endTime = endTime,
         goalModel = goal?.asModel(),
         upperGoalContributionScore = upperGoalContributionScore,
+        notification = notification,
         memo = memo
     )
 }
@@ -70,6 +73,7 @@ fun TodoModel.asDomainModel(): Todo {
         endTime = endTime,
         upperGoalId = goalId,
         upperGoalContributionScore = upperGoalContributionScore,
+        notification = notification,
         memo = memo
     )
 }
@@ -84,6 +88,7 @@ fun TodoModel.asDomainModelWithGoal(): TodoWithGoal {
         endTime = endTime,
         goal = goalModel?.asDomainModel(),
         upperGoalContributionScore = upperGoalContributionScore,
+        notification = notification,
         memo = memo
     )
 }
