@@ -2,6 +2,7 @@ package com.yessorae.presentation.screen.home
 
 import com.yessorae.base.BaseScreenViewModel
 import com.yessorae.domain.model.type.GoalType
+import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.domain.repository.PreferencesDatastoreRepository
 import com.yessorae.domain.repository.TodoRepository
 import com.yessorae.domain.usecase.GetHomeUseCase
@@ -33,7 +34,7 @@ import kotlinx.datetime.LocalDateTime
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getHomeUseCase: GetHomeUseCase,
-    private val goalRepository: TodoRepository,
+    private val goalRepository: GoalRepository,
     private val todoRepository: TodoRepository,
     private val preferencesDatastoreRepository: PreferencesDatastoreRepository
 ) : BaseScreenViewModel<HomeScreenState>() {
@@ -127,7 +128,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onConfirmGoalDelete(dialogState: HomeDialogState.DeleteGoalConfirmDialog) = ioScope.launch {
-        goalRepository.deleteTodo(dialogState.goalModel.goalId)
+        goalRepository.deleteGoal(dialogState.goalModel.asDomainModel())
         onCancelDialog()
     }
 
@@ -166,7 +167,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onConfirmTodoDelete(dialogState: HomeDialogState.DeleteTodoConfirmDialog) = ioScope.launch {
-        todoRepository.deleteTodo(dialogState.todoModel.todoId)
+        todoRepository.deleteTodo(dialogState.todoModel.asDomainModel())
         onCancelDialog()
     }
 

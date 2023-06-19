@@ -2,6 +2,7 @@ package com.yessorae.presentation.screen.editors.todo
 
 import androidx.lifecycle.SavedStateHandle
 import com.yessorae.base.BaseScreenViewModel
+import com.yessorae.common.Logger
 import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.domain.repository.TodoRepository
 import com.yessorae.domain.usecase.GetTodoWithUpperGoalUseCase
@@ -17,7 +18,7 @@ import com.yessorae.util.StringModel
 import com.yessorae.util.fromHourMinute
 import com.yessorae.util.getStartOfDay
 import com.yessorae.util.now
-import com.yessorae.util.toDefaultLocalDateTime
+import com.yessorae.util.toStartLocalDateTime
 import com.yessorae.util.toLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -37,7 +38,7 @@ class TodoEditorViewModel @Inject constructor(
     private val paramTodoId: Int =
         checkNotNull(savedStateHandle[TodoEditorDestination.todoIdArg])
     private val isUpdate: Boolean by lazy {
-        paramTodoId == TodoEditorDestination.defaultTodoId
+        paramTodoId != TodoEditorDestination.defaultTodoId
     }
     private val todoDayMilliSecParam: Long =
         checkNotNull(savedStateHandle[TodoEditorDestination.todoDayMilliSecArg])
@@ -56,7 +57,7 @@ class TodoEditorViewModel @Inject constructor(
                     todoTitle = model.title,
                     startTime = model.startTime?.time,
                     endTime = model.endTime?.time,
-                    contributeGoal = model.goalModel,
+                    contributeGoal = model.upperGoalModel,
                     contributionScore = model.upperGoalContributionScore ?: 0,
                     memo = model.memo
                 )
@@ -142,7 +143,7 @@ class TodoEditorViewModel @Inject constructor(
 
     fun onClickContributeGoal() = ioScope.launch {
         goalRepository
-            .getWeekdayGoalsFlow(stateValue.paramDate.toDefaultLocalDateTime())
+            .getWeekdayGoalsFlow(stateValue.paramDate.toStartLocalDateTime())
             .firstOrNull()
             ?.let { goals ->
                 if (goals.isEmpty()) {
@@ -269,7 +270,7 @@ data class TodoEditorScreenState(
         todoTitle.isNullOrEmpty().not()
     }
 
-    val paramIsUpdate: Boolean by lazy {
+    private val paramIsUpdate: Boolean by lazy {
         paramTodoId != null
     }
 
@@ -282,29 +283,27 @@ data class TodoEditorScreenState(
     }
 
     fun getTodo(): TodoModel? {
+        val title = todoTitle ?: return null
         return paramTodo?.let {
-            todoTitle?.let {
                 paramTodo.copy(
-                    title = todoTitle,
+                    title = title,
                     date = paramDate,
                     startTime = paramDate.atTime(startTime ?: LocalTime.getStartOfDay()),
                     endTime = paramDate.atTime(endTime ?: LocalTime.getStartOfDay()),
-                    goalModel = contributeGoal,
+                    upperGoalModel = contributeGoal,
                     upperGoalContributionScore = contributionScore,
                     memo = memo
                 )
-            }
         } ?: run {
-            todoTitle?.let {
                 TodoModel(
-                    title = todoTitle,
+                    title = title,
+                    date = paramDate,
                     startTime = paramDate.atTime(startTime ?: LocalTime.getStartOfDay()),
                     endTime = paramDate.atTime(endTime ?: LocalTime.getStartOfDay()),
-                    goalModel = contributeGoal,
+                    upperGoalModel = contributeGoal,
                     upperGoalContributionScore = contributionScore,
                     memo = memo
                 )
-            }
         }
     }
 }

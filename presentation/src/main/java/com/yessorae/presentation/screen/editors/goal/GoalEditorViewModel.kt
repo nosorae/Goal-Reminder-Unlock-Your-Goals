@@ -2,7 +2,6 @@ package com.yessorae.presentation.screen.editors.goal
 
 import androidx.lifecycle.SavedStateHandle
 import com.yessorae.base.BaseScreenViewModel
-import com.yessorae.common.Logger
 import com.yessorae.domain.model.type.GoalType
 import com.yessorae.domain.model.type.toGoalType
 import com.yessorae.domain.repository.GoalRepository
@@ -19,24 +18,19 @@ import com.yessorae.util.StringModel
 import com.yessorae.util.TextString
 import com.yessorae.util.getWeekRangePair
 import com.yessorae.util.now
-import com.yessorae.util.toDefaultLocalDateTime
+import com.yessorae.util.toStartLocalDateTime
 import com.yessorae.util.toLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
-import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.minus
-import kotlinx.datetime.plus
 
 @HiltViewModel
 class GoalEditorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val goalRepository: GoalRepository,
-    private val todoRepository: TodoRepository,
     private val getGoalWithUpperGoalUseCase: GetGoalWithUpperGoalUseCase
 ) : BaseScreenViewModel<GoalEditorScreenState>() {
     private val goalIdParam: Int =
@@ -143,7 +137,7 @@ class GoalEditorViewModel @Inject constructor(
 
         when (stateValue.paramGoalType) {
             GoalType.MONTHLY -> {
-                goalRepository.getYearlyGoalsFlow(stateValue.paramDate.toDefaultLocalDateTime())
+                goalRepository.getYearlyGoalsFlow(stateValue.paramDate.toStartLocalDateTime())
                     .firstOrNull()?.let { goals ->
                         if (goals.isEmpty()) {
                             _toast.emit(ResString(R.string.common_no_upper_goal))
@@ -160,7 +154,7 @@ class GoalEditorViewModel @Inject constructor(
 
             GoalType.WEEKLY -> {
                 goalRepository
-                    .getMonthlyGoalsFlow(stateValue.paramDate.toDefaultLocalDateTime())
+                    .getMonthlyGoalsFlow(stateValue.paramDate.toStartLocalDateTime())
                     .firstOrNull()?.let { goals ->
                         if (goals.isEmpty()) {
                             _toast.emit(ResString(R.string.common_no_upper_goal))
@@ -445,18 +439,18 @@ data class GoalEditorScreenState(
         return if (goalTitle != null && goalTotalScore != null) {
             goal?.copy(
                 title = goalTitle,
-                dateFrom = paramDate.toDefaultLocalDateTime(),
-                startTime = startDate?.toDefaultLocalDateTime(),
-                endTime = endDate?.toDefaultLocalDateTime(),
+                dateFrom = paramDate.toStartLocalDateTime(),
+                startTime = startDate?.toStartLocalDateTime(),
+                endTime = endDate?.toStartLocalDateTime(),
                 totalScore = goalTotalScore,
                 upperGoalId = upperGoal?.upperGoalId,
                 upperGoalContributionScore = upperGoalContributionScore,
                 memo = memo
             ) ?: GoalModel(
                 title = goalTitle,
-                dateFrom = paramDate.toDefaultLocalDateTime(),
-                startTime = startDate?.toDefaultLocalDateTime(),
-                endTime = endDate?.toDefaultLocalDateTime(),
+                dateFrom = paramDate.toStartLocalDateTime(),
+                startTime = startDate?.toStartLocalDateTime(),
+                endTime = endDate?.toStartLocalDateTime(),
                 totalScore = goalTotalScore,
                 currentScore = 0,
                 upperGoalId = upperGoal?.upperGoalId,

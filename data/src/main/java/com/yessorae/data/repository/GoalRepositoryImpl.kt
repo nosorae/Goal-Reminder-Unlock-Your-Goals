@@ -8,7 +8,8 @@ import com.yessorae.domain.model.Goal
 import com.yessorae.domain.model.type.GoalType
 import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.util.getWeekRangePair
-import com.yessorae.util.toDefaultLocalDateTime
+import com.yessorae.util.toLocalDateTime
+import com.yessorae.util.toStartLocalDateTime
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -91,9 +92,9 @@ class GoalRepositoryImpl @Inject constructor(
         Logger.dataDebug("getWeekdayGoalsFlow : $day")
 
         val weekRangePair = day.date.getWeekRangePair()
-        val startDateTime = weekRangePair.first.toDefaultLocalDateTime()
+        val startDateTime = weekRangePair.first.toStartLocalDateTime()
         val endDateTime = weekRangePair.second
-            .toDefaultLocalDateTime(hour = 23, minute = 59, second = 59)
+            .toLocalDateTime(hour = 23, minute = 59, second = 59)
 
         Logger.dataDebug("getWeekdayGoalsFlow : startDateTime $startDateTime / endDateTime $endDateTime")
 

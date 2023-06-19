@@ -1,24 +1,23 @@
 package com.yessorae.presentation.model
 
-import com.yessorae.domain.model.Goal
 import com.yessorae.domain.model.Todo
 import com.yessorae.domain.model.TodoWithGoal
 import com.yessorae.presentation.R
 import com.yessorae.util.ResString
 import com.yessorae.util.StringModel
 import com.yessorae.util.now
-import com.yessorae.util.toDefaultLocalDateTime
+import com.yessorae.util.toStartLocalDateTime
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
 data class TodoModel(
-    val todoId: Int = 0,
+    var todoId: Int = 0,
     val title: String = "",
     val done: Boolean = false,
     val date: LocalDate = LocalDate.now(),
     val startTime: LocalDateTime? = null,
     val endTime: LocalDateTime? = null,
-    val goalModel: GoalModel? = null,
+    val upperGoalModel: GoalModel? = null,
     val upperGoalContributionScore: Int? = null,
     val notification: Boolean = false,
     val memo: String? = null
@@ -31,8 +30,8 @@ data class TodoModel(
         }
     }
 
-    val goalId: Int? = goalModel?.goalId
-    val goalTitle: String? = goalModel?.title
+    val goalId: Int? = upperGoalModel?.goalId
+    val goalTitle: String? = upperGoalModel?.title
 }
 
 fun Todo.asModel(): TodoModel {
@@ -43,7 +42,7 @@ fun Todo.asModel(): TodoModel {
         date = date.date,
         startTime = startTime,
         endTime = endTime,
-        goalModel = null,
+        upperGoalModel = null,
         upperGoalContributionScore = upperGoalContributionScore,
         notification = notification,
         memo = memo
@@ -58,7 +57,7 @@ fun TodoWithGoal.asModel(): TodoModel {
         date = todo.date.date,
         startTime = todo.startTime,
         endTime = todo.endTime,
-        goalModel = upperGoal?.asModel(),
+        upperGoalModel = upperGoal?.asModel(),
         upperGoalContributionScore = todo.upperGoalContributionScore,
         notification = todo.notification,
         memo = todo.memo
@@ -70,7 +69,7 @@ fun TodoModel.asDomainModel(): Todo {
         todoId = todoId,
         title = title,
         done = done,
-        date = date.toDefaultLocalDateTime(),
+        date = date.toStartLocalDateTime(),
         startTime = startTime,
         endTime = endTime,
         upperGoalId = goalId,
