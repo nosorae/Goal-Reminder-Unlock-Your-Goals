@@ -3,7 +3,7 @@ package com.yessorae.domain.model
 import kotlinx.datetime.LocalDateTime
 
 data class Todo(
-    val todoId: Int,
+    var todoId: Int = 0,
     val title: String,
     val done: Boolean = false,
     val date: LocalDateTime,
@@ -17,58 +17,5 @@ data class Todo(
 
 data class TodoWithGoal(
     val todo: Todo,
-    val upperGoal: Goal?
-)
-
-val mockTodoWithGoalData = listOf(
-    TodoWithGoal(
-        todo = Todo(
-            todoId = 1,
-            upperGoalId = null,
-            upperGoalContributionScore = null,
-            title = "Morning Jogging",
-            date = LocalDateTime(2023, 6, 7, 6, 0),
-            startTime = LocalDateTime(2023, 6, 7, 6, 0),
-            endTime = LocalDateTime(2023, 6, 7, 7, 0),
-            done = false,
-            memo = "Jog around the local park for one hour"
-        ),
-        upperGoal = null
-    )
-)
-
-val mockTodoData = listOf(
-    Todo(
-        todoId = 1,
-        upperGoalId = 101,
-        upperGoalContributionScore = 5,
-        title = "Morning Jogging",
-        date = LocalDateTime(2023, 6, 7, 6, 0),
-        startTime = LocalDateTime(2023, 6, 7, 6, 0),
-        endTime = LocalDateTime(2023, 6, 7, 7, 0),
-        done = false,
-        memo = "Jog around the local park for one hour"
-    ),
-    Todo(
-        todoId = 2,
-        upperGoalId = 102,
-        upperGoalContributionScore = 8,
-        title = "Python Learning",
-        date = LocalDateTime(2023, 6, 7, 8, 0),
-        startTime = LocalDateTime(2023, 6, 7, 8, 0),
-        endTime = LocalDateTime(2023, 6, 7, 10, 0),
-        done = false,
-        memo = "Complete the exercises from chapter 7 to 9 in the Python book"
-    ),
-    Todo(
-        todoId = 3,
-        upperGoalId = null,
-        upperGoalContributionScore = null,
-        title = "Grocery Shopping",
-        date = LocalDateTime(2023, 6, 7, 12, 0),
-        startTime = LocalDateTime(2023, 6, 7, 12, 0),
-        endTime = LocalDateTime(2023, 6, 7, 13, 30),
-        done = false,
-        memo = "Buy fresh fruits, vegetables, milk, bread, and eggs"
-    )
+    val upperGoal: Goal? = null
 )
