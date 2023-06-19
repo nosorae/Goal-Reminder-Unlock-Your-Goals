@@ -1,5 +1,6 @@
 package com.yessorae.presentation.model
 
+import com.yessorae.domain.model.Goal
 import com.yessorae.domain.model.Todo
 import com.yessorae.domain.model.TodoWithGoal
 import com.yessorae.presentation.R
@@ -48,18 +49,19 @@ fun Todo.asModel(): TodoModel {
         memo = memo
     )
 }
+
 fun TodoWithGoal.asModel(): TodoModel {
     return TodoModel(
-        todoId = todoId,
-        title = title,
-        done = done,
-        date = date.date,
-        startTime = startTime,
-        endTime = endTime,
-        goalModel = goal?.asModel(),
-        upperGoalContributionScore = upperGoalContributionScore,
-        notification = notification,
-        memo = memo
+        todoId = todo.todoId,
+        title = todo.title,
+        done = todo.done,
+        date = todo.date.date,
+        startTime = todo.startTime,
+        endTime = todo.endTime,
+        goalModel = upperGoal?.asModel(),
+        upperGoalContributionScore = todo.upperGoalContributionScore,
+        notification = todo.notification,
+        memo = todo.memo
     )
 }
 
@@ -72,21 +74,6 @@ fun TodoModel.asDomainModel(): Todo {
         startTime = startTime,
         endTime = endTime,
         upperGoalId = goalId,
-        upperGoalContributionScore = upperGoalContributionScore,
-        notification = notification,
-        memo = memo
-    )
-}
-
-fun TodoModel.asDomainModelWithGoal(): TodoWithGoal {
-    return TodoWithGoal(
-        todoId = todoId,
-        title = title,
-        done = done,
-        date = date.toDefaultLocalDateTime(),
-        startTime = startTime,
-        endTime = endTime,
-        goal = goalModel?.asDomainModel(),
         upperGoalContributionScore = upperGoalContributionScore,
         notification = notification,
         memo = memo

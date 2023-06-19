@@ -16,50 +16,24 @@ data class Todo(
 )
 
 data class TodoWithGoal(
-    val todoId: Int,
-    val title: String,
-    val done: Boolean = false,
-    val date: LocalDateTime,
-    val startTime: LocalDateTime? = null,
-    val endTime: LocalDateTime? = null,
-    val goal: Goal? = null,
-    val upperGoalContributionScore: Int? = null,
-    val notification: Boolean = false,
-    val memo: String? = null
+    val todo: Todo,
+    val upperGoal: Goal?
 )
+
 val mockTodoWithGoalData = listOf(
     TodoWithGoal(
-        todoId = 1,
-        goal = null,
-        upperGoalContributionScore = null,
-        title = "Morning Jogging",
-        date = LocalDateTime(2023, 6, 7, 6, 0),
-        startTime = LocalDateTime(2023, 6, 7, 6, 0),
-        endTime = LocalDateTime(2023, 6, 7, 7, 0),
-        done = false,
-        memo = "Jog around the local park for one hour"
-    ),
-    TodoWithGoal(
-        todoId = 2,
-        goal = null,
-        upperGoalContributionScore = null,
-        title = "Python Learning",
-        date = LocalDateTime(2023, 6, 7, 8, 0),
-        startTime = LocalDateTime(2023, 6, 7, 8, 0),
-        endTime = LocalDateTime(2023, 6, 7, 10, 0),
-        done = false,
-        memo = "Complete the exercises from chapter 7 to 9 in the Python book"
-    ),
-    TodoWithGoal(
-        todoId = 3,
-        goal = null,
-        upperGoalContributionScore = null,
-        title = "Grocery Shopping",
-        date = LocalDateTime(2023, 6, 7, 12, 0),
-        startTime = LocalDateTime(2023, 6, 7, 12, 0),
-        endTime = LocalDateTime(2023, 6, 7, 13, 30),
-        done = false,
-        memo = "Buy fresh fruits, vegetables, milk, bread, and eggs"
+        todo = Todo(
+            todoId = 1,
+            upperGoalId = null,
+            upperGoalContributionScore = null,
+            title = "Morning Jogging",
+            date = LocalDateTime(2023, 6, 7, 6, 0),
+            startTime = LocalDateTime(2023, 6, 7, 6, 0),
+            endTime = LocalDateTime(2023, 6, 7, 7, 0),
+            done = false,
+            memo = "Jog around the local park for one hour"
+        ),
+        upperGoal = null
     )
 )
 
