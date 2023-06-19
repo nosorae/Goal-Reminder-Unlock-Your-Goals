@@ -15,8 +15,8 @@ class TodoRepositoryImpl @Inject constructor() : TodoRepository {
         return flowOf(mockTodoData) // todo replace
     }
 
-    override suspend fun getTodo(todoId: Int): TodoWithGoal {
-        return mockTodoWithGoalData[0] // todo replace
+    override suspend fun getTodo(todoId: Int): Todo {
+        return mockTodoData[0] // todo replace
     }
 
     override suspend fun insertTodo(todo: Todo): Int {
