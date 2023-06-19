@@ -24,6 +24,7 @@ import com.yessorae.util.toLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
@@ -142,9 +143,8 @@ class GoalEditorViewModel @Inject constructor(
 
         when (stateValue.paramGoalType) {
             GoalType.MONTHLY -> {
-                goalRepository
-                    .getYearlyGoalsFlow(stateValue.paramDate.toDefaultLocalDateTime())
-                    .collectLatest { goals ->
+                goalRepository.getYearlyGoalsFlow(stateValue.paramDate.toDefaultLocalDateTime())
+                    .firstOrNull()?.let { goals ->
                         if (goals.isEmpty()) {
                             _toast.emit(ResString(R.string.common_no_upper_goal))
                         } else {
@@ -161,7 +161,7 @@ class GoalEditorViewModel @Inject constructor(
             GoalType.WEEKLY -> {
                 goalRepository
                     .getMonthlyGoalsFlow(stateValue.paramDate.toDefaultLocalDateTime())
-                    .collectLatest { goals ->
+                    .firstOrNull()?.let { goals ->
                         if (goals.isEmpty()) {
                             _toast.emit(ResString(R.string.common_no_upper_goal))
                         } else {
