@@ -21,6 +21,7 @@ import com.yessorae.util.toLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -139,12 +140,16 @@ class TodoEditorViewModel @Inject constructor(
     fun onClickContributeGoal() = ioScope.launch {
         goalRepository
             .getWeekdayGoalsFlow(stateValue.paramDate.toDefaultLocalDateTime())
-            .collectLatest { goals ->
-                val goalModels = goals.map { it.asModel() }
-                updateState {
-                    stateValue.copy(
-                        editorDialogState = EditorDialogState.ContributeGoal(goalModels)
-                    )
+            .firstOrNull()?.let { goals ->
+                if (goals.isEmpty()) {
+                    _toast.emit(ResString(R.string.common_no_upper_goal))
+                } else {
+                    val goalModels = goals.map { it.asModel() }
+                    updateState {
+                        stateValue.copy(
+                            editorDialogState = EditorDialogState.ContributeGoal(goalModels)
+                        )
+                    }
                 }
             }
     }
