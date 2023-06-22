@@ -5,6 +5,7 @@ import com.yessorae.domain.model.type.GoalType
 import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.domain.repository.PreferencesDatastoreRepository
 import com.yessorae.domain.repository.TodoRepository
+import com.yessorae.domain.usecase.CheckTodoUseCase
 import com.yessorae.domain.usecase.GetHomeUseCase
 import com.yessorae.presentation.FinalGoalDestination
 import com.yessorae.presentation.GoalEditorDestination
@@ -12,6 +13,7 @@ import com.yessorae.presentation.TodoEditorDestination
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.model.asDomainModel
+import com.yessorae.presentation.model.asDomainWithGoalModel
 import com.yessorae.presentation.model.asModel
 import com.yessorae.util.getWeekRangePair
 import com.yessorae.util.now
@@ -36,6 +38,7 @@ class HomeViewModel @Inject constructor(
     private val getHomeUseCase: GetHomeUseCase,
     private val goalRepository: GoalRepository,
     private val todoRepository: TodoRepository,
+    private val checkTodoUseCase: CheckTodoUseCase,
     private val preferencesDatastoreRepository: PreferencesDatastoreRepository
 ) : BaseScreenViewModel<HomeScreenState>() {
 
@@ -172,11 +175,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onClickTodoCheckBox(todo: TodoModel) = ioScope.launch {
-        todoRepository.updateTodo(
-            todo = todo.copy(
-                done = todo.done.not()
-            ).asDomainModel()
-        )
+        checkTodoUseCase.invoke(todo.asDomainWithGoalModel())
     }
 
     fun onCancelDialog() {
