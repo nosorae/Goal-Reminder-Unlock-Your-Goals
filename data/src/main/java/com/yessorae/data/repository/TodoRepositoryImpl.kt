@@ -4,6 +4,7 @@ import com.yessorae.data.local.database.dao.TodoDao
 import com.yessorae.data.local.database.model.asDomainModel
 import com.yessorae.data.local.database.model.asEntity
 import com.yessorae.domain.model.Todo
+import com.yessorae.domain.model.TodoWithGoal
 import com.yessorae.domain.repository.TodoRepository
 import com.yessorae.util.toEndLocalDateTime
 import com.yessorae.util.toStartLocalDateTime
@@ -26,6 +27,13 @@ class TodoRepositoryImpl @Inject constructor(
                 todo.asDomainModel()
             }
         }
+    }
+
+    override suspend fun checkTodo(todoWithGoal: TodoWithGoal) {
+        todoDao.checkTodo(
+            todoEntity = todoWithGoal.todo.asEntity(),
+            goalEntity = todoWithGoal.upperGoal?.asEntity()
+        )
     }
 
     override suspend fun getTodo(todoId: Int): Todo {
