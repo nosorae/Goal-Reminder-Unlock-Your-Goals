@@ -15,19 +15,19 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDateTime
 
 @Dao
-abstract class TodoDao : BaseDao<TodoEntity> {
+interface TodoDao : BaseDao<TodoEntity> {
     @Query("SELECT * FROM $TABLE_TODO WHERE $COL_TODO_ID = :id")
-    abstract suspend fun loadTodoById(id: Int): TodoEntity
+    suspend fun loadTodoById(id: Int): TodoEntity
 
     @Query("SELECT * FROM $TABLE_TODO WHERE date BETWEEN :start AND :end")
-    abstract fun loadTodoFlow(
+    fun loadTodoFlow(
         start: LocalDateTime,
         end: LocalDateTime
     ): Flow<List<TodoEntity>>
 
 
     @Update
-    abstract fun updateUpperGoal(upperGoal: GoalEntity)
+    suspend fun updateUpperGoal(upperGoal: GoalEntity)
 
     @Transaction
     suspend fun checkTodo(todoEntity: TodoEntity, goalEntity: GoalEntity?) {
