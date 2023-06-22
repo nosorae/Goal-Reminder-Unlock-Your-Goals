@@ -79,6 +79,13 @@ fun TodoModel.asDomainModel(): Todo {
     )
 }
 
+fun TodoModel.asDomainWithGoalModel(): TodoWithGoal {
+    return TodoWithGoal(
+        todo = this.asDomainModel(),
+        upperGoal = upperGoalModel?.asDomainModel()
+    )
+}
+
 val mockTodoDatumModels = listOf(
     TodoModel(
         todoId = 1,
