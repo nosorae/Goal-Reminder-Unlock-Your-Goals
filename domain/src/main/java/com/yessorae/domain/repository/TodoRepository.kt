@@ -1,6 +1,5 @@
 package com.yessorae.domain.repository
 
-import com.yessorae.domain.model.Goal
 import com.yessorae.domain.model.Todo
 import com.yessorae.domain.model.TodoWithGoal
 import kotlinx.coroutines.flow.Flow
@@ -11,7 +10,7 @@ interface TodoRepository {
 
     suspend fun getTodo(todoId: Int): Todo
 
-    suspend fun checkTodo(todoWithGoal: TodoWithGoal)
+    suspend fun checkTodoTransaction(todoWithGoal: TodoWithGoal)
 
     suspend fun insertTodo(todo: Todo): Int
 

@@ -29,7 +29,7 @@ class TodoRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun checkTodo(todoWithGoal: TodoWithGoal) {
+    override suspend fun checkTodoTransaction(todoWithGoal: TodoWithGoal) {
         todoDao.checkTodo(
             todoEntity = todoWithGoal.todo.asEntity(),
             goalEntity = todoWithGoal.upperGoal?.asEntity()

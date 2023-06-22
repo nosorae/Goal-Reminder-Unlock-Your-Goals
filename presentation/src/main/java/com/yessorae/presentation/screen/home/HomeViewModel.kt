@@ -5,7 +5,7 @@ import com.yessorae.domain.model.type.GoalType
 import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.domain.repository.PreferencesDatastoreRepository
 import com.yessorae.domain.repository.TodoRepository
-import com.yessorae.domain.usecase.CheckTodoUseCase
+import com.yessorae.domain.usecase.CheckTodoTransactionUseCase
 import com.yessorae.domain.usecase.GetHomeUseCase
 import com.yessorae.presentation.FinalGoalDestination
 import com.yessorae.presentation.GoalEditorDestination
@@ -38,7 +38,7 @@ class HomeViewModel @Inject constructor(
     private val getHomeUseCase: GetHomeUseCase,
     private val goalRepository: GoalRepository,
     private val todoRepository: TodoRepository,
-    private val checkTodoUseCase: CheckTodoUseCase,
+    private val checkTodoTransactionUseCase: CheckTodoTransactionUseCase,
     private val preferencesDatastoreRepository: PreferencesDatastoreRepository
 ) : BaseScreenViewModel<HomeScreenState>() {
 
@@ -131,7 +131,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onConfirmGoalDelete(dialogState: HomeDialogState.DeleteGoalConfirmDialog) = ioScope.launch {
-        goalRepository.deleteGoal(dialogState.goalModel.asDomainModel())
+        goalRepository.deleteGoalTransaction(dialogState.goalModel.asDomainModel())
         onCancelDialog()
     }
 
@@ -175,7 +175,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onClickTodoCheckBox(todo: TodoModel) = ioScope.launch {
-        checkTodoUseCase.invoke(todo.asDomainWithGoalModel())
+        checkTodoTransactionUseCase.invoke(todo.asDomainWithGoalModel())
     }
 
     fun onCancelDialog() {

@@ -88,16 +88,11 @@ class GoalRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getWeekdayGoalsFlow(day: LocalDateTime): Flow<List<Goal>> { // todo impl
-        Logger.dataDebug("getWeekdayGoalsFlow : $day")
-
+    override fun getWeekdayGoalsFlow(day: LocalDateTime): Flow<List<Goal>> {
         val weekRangePair = day.date.getWeekRangePair()
         val startDateTime = weekRangePair.first.toStartLocalDateTime()
         val endDateTime = weekRangePair.second
             .toLocalDateTime(hour = 23, minute = 59, second = 59)
-
-        Logger.dataDebug("getWeekdayGoalsFlow : startDateTime $startDateTime / endDateTime $endDateTime")
-
 
         return goalDao.loadGoalsFlow(
             start = startDateTime,
@@ -122,7 +117,7 @@ class GoalRepositoryImpl @Inject constructor(
         goalDao.update(goal.asEntity())
     }
 
-    override suspend fun deleteGoal(goal: Goal) {
+    override suspend fun deleteGoalTransaction(goal: Goal) {
         goalDao.delete(goal.asEntity())
     }
 }
