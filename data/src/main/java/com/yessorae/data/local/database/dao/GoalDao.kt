@@ -53,7 +53,7 @@ interface GoalDao : BaseDao<GoalEntity> {
 
     // todo async 고려
     @Transaction
-    suspend fun deleteGoal(goal: GoalEntity) {
+    suspend fun deleteGoalTransaction(goal: GoalEntity) {
         val goalId = goal.goalId
 
         val todoEntities = loadTodosByUpperGoalId(goalId)
