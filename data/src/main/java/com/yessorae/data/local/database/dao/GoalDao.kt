@@ -74,6 +74,33 @@ interface GoalDao : BaseDao<GoalEntity> {
                 )
             )
         }
+
+        processUpperGoal(goal)
+
         delete(goal)
+    }
+
+    // todo need test
+    @Transaction
+    suspend fun processUpperGoal(goal: GoalEntity) {
+        goal.upperGoalId?.let { upperGoalId ->
+            val upperGoal = loadGoalById(upperGoalId)
+            if (goal.done) {
+                // 이 때 상위목표가 미달성되었다가 달성되는 경우는 없음
+                val newUpperCurrentScore =
+                    upperGoal.currentScore - (goal.upperGoalContributionScore ?: 0)
+
+                update(
+                    upperGoal.copy(
+                        currentScore = newUpperCurrentScore
+                    )
+                )
+
+                // 달성되었다가 미달성된 경우
+                if (upperGoal.done && upperGoal.totalScore > newUpperCurrentScore) {
+                    processUpperGoal(upperGoal)
+                }
+            }
+        }
     }
 }

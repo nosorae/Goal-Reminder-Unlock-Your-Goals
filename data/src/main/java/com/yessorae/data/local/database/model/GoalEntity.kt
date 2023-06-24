@@ -2,6 +2,7 @@ package com.yessorae.data.local.database.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.yessorae.data.Constants
 import com.yessorae.domain.model.Goal
@@ -31,7 +32,10 @@ data class GoalEntity(
     var memo: String? = null,
     var notification: Boolean = false,
     var type: GoalType = GoalType.NONE
-)
+) {
+    @Ignore
+    val done = totalScore <= currentScore
+}
 
 fun GoalEntity.asDomainModel(): Goal {
     return Goal(
