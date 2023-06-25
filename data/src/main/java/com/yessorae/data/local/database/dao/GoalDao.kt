@@ -53,8 +53,29 @@ interface GoalDao : BaseDao<GoalEntity> {
 
     // todo async 고려
     @Transaction
-    suspend fun deleteGoalTransaction(goal: GoalEntity) {
-        val goalId = goal.goalId
+    suspend fun updateGoalTransaction(new: GoalEntity) {
+        val old = loadGoalById(new.goalId)
+
+        // 하위 목표 먼저 업데이트 후
+        update(new)
+
+        // 예전 상위 목표 업데이트
+        if (new.upperGoalId != old.upperGoalId) {
+            old.upperGoalId?.let { oldUpperGoalId ->
+                updateUpperGoalScoreTransaction(upperGoalId = oldUpperGoalId)
+            }
+        }
+
+        // 새로운 상위 목표 업데이트
+        new.upperGoalId?.let { newUpperGoalId ->
+            updateUpperGoalScoreTransaction(upperGoalId = newUpperGoalId)
+        }
+    }
+
+    // todo async 고려
+    @Transaction
+    suspend fun deleteGoalTransaction(deletedGoal: GoalEntity) {
+        val goalId = deletedGoal.goalId
 
         val todoEntities = loadTodosByUpperGoalId(goalId)
         val goalEntities = loadGoalsByUpperGoalId(goalId)
@@ -75,32 +96,46 @@ interface GoalDao : BaseDao<GoalEntity> {
             )
         }
 
-        processUpperGoal(goal)
+        // 상위 목표 업데이트
+        deletedGoal.upperGoalId?.let { upperGoalId ->
+            updateUpperGoalScoreTransaction(upperGoalId = upperGoalId)
+        }
 
-        delete(goal)
+        delete(deletedGoal)
     }
 
-    // todo need test
+    // todo async 고려
     @Transaction
-    suspend fun processUpperGoal(goal: GoalEntity) {
-        goal.upperGoalId?.let { upperGoalId ->
-            val upperGoal = loadGoalById(upperGoalId)
-            if (goal.done) {
-                // 이 때 상위목표가 미달성되었다가 달성되는 경우는 없음
-                val newUpperCurrentScore =
-                    upperGoal.currentScore - (goal.upperGoalContributionScore ?: 0)
+    suspend fun updateUpperGoalScoreTransaction(upperGoalId: Int) {
+        val upperGoal = loadGoalById(upperGoalId)
 
-                update(
-                    upperGoal.copy(
-                        currentScore = newUpperCurrentScore
-                    )
-                )
-
-                // 달성되었다가 미달성된 경우
-                if (upperGoal.done && upperGoal.totalScore > newUpperCurrentScore) {
-                    processUpperGoal(upperGoal)
-                }
+        val contributionTodos = loadTodosByUpperGoalId(upperGoalId)
+        val contributionGoals = loadGoalsByUpperGoalId(upperGoalId)
+        val todosScore = contributionTodos.sumOf {
+            if (it.done) {
+                it.upperGoalContributionScore ?: 0
+            } else {
+                0
             }
+        }
+        val goalsScore = contributionGoals.sumOf {
+            if (it.done) {
+                it.upperGoalContributionScore ?: 0
+            } else {
+                0
+            }
+        }
+
+        // 하위 먼저 업데이트 후
+        update(
+            upperGoal.copy(
+                currentScore = todosScore + goalsScore
+            )
+        )
+
+        // 상위 업데이트
+        upperGoal.upperGoalId?.let {
+            updateUpperGoalScoreTransaction(upperGoalId = it)
         }
     }
 }
