@@ -14,24 +14,24 @@ data class GoalEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = Constants.COL_GOAL_ID)
     var goalId: Int = 0,
-    var title: String = "",
+    val title: String = "",
     @ColumnInfo(name = Constants.COL_DATE_FROM)
-    var dateFrom: LocalDateTime = LocalDateTime(0, 1, 1, 0, 0),
+    val dateFrom: LocalDateTime = LocalDateTime(0, 1, 1, 0, 0),
     @ColumnInfo(name = Constants.COL_START_TIME)
-    var startTime: LocalDateTime? = null,
+    val startTime: LocalDateTime? = null,
     @ColumnInfo(name = Constants.COL_END_TIME)
-    var endTime: LocalDateTime? = null,
+    val endTime: LocalDateTime? = null,
     @ColumnInfo(name = Constants.COL_TOTAL_SCORE)
-    var totalScore: Int = 0,
+    val totalScore: Int = 0,
     @ColumnInfo(name = Constants.COL_CURRENT_SCORE)
-    var currentScore: Int = 0,
+    val currentScore: Int = 0,
     @ColumnInfo(name = Constants.COL_UPPER_GOAL_ID)
-    var upperGoalId: Int? = null,
+    val upperGoalId: Int? = null,
     @ColumnInfo(name = Constants.COL_UPPER_GOAL_CONTRIBUTION_SCORE)
-    var upperGoalContributionScore: Int? = null,
-    var memo: String? = null,
-    var notification: Boolean = false,
-    var type: GoalType = GoalType.NONE
+    val upperGoalContributionScore: Int? = null,
+    val memo: String? = null,
+    val notification: Boolean = false,
+    val type: GoalType = GoalType.NONE
 ) {
     @Ignore
     val done = totalScore <= currentScore
