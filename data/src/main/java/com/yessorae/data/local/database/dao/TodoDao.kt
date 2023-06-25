@@ -59,13 +59,13 @@ interface TodoDao : BaseDao<TodoEntity> {
         // 예전 상위 업데이트
         if (new.upperGoalId != old.upperGoalId) {
             old.upperGoalId?.let { oldUpperGoalId ->
-                updateUpperGoalTransaction(oldUpperGoalId)
+                updateUpperGoalScoreTransaction(oldUpperGoalId)
             }
         }
 
         // 새로운 상위 업데이트
         new.upperGoalId?.let { upperGoalId ->
-            updateUpperGoalTransaction(upperGoalId = upperGoalId)
+            updateUpperGoalScoreTransaction(upperGoalId = upperGoalId)
         }
     }
 
@@ -75,12 +75,12 @@ interface TodoDao : BaseDao<TodoEntity> {
 
         // 기존 상위 목표 삭제
         deletedTodo.upperGoalId?.let { upperGoalId ->
-            updateUpperGoalTransaction(upperGoalId = upperGoalId)
+            updateUpperGoalScoreTransaction(upperGoalId = upperGoalId)
         }
     }
 
     @Transaction
-    suspend fun updateUpperGoalTransaction(upperGoalId: Int) {
+    suspend fun updateUpperGoalScoreTransaction(upperGoalId: Int) {
         val upperGoal = loadGoalById(upperGoalId)
         val contributionTodos = loadTodosByUpperGoalId(upperGoalId)
         val contributionGoals = loadGoalsByUpperGoalId(upperGoalId)
@@ -108,7 +108,7 @@ interface TodoDao : BaseDao<TodoEntity> {
 
         // 상위 업데이트
         upperGoal.upperGoalId?.let {
-            updateUpperGoalTransaction(upperGoalId = it)
+            updateUpperGoalScoreTransaction(upperGoalId = it)
         }
     }
 
@@ -130,12 +130,12 @@ interface TodoDao : BaseDao<TodoEntity> {
                 )
             )
 
-            processUpperGoalByTodoCheckTransaction(goal = upperGoal, newScore = newScore)
+            updateUpperGoalScoreByTodoCheckTransaction(goal = upperGoal, newScore = newScore)
         }
     }
 
     @Transaction
-    suspend fun processUpperGoalByTodoCheckTransaction(goal: GoalEntity, newScore: Int) {
+    suspend fun updateUpperGoalScoreByTodoCheckTransaction(goal: GoalEntity, newScore: Int) {
         // 상위 목표 있는지부터 체크
         goal.upperGoalId?.let { upperGoalId ->
             val upperGoal = loadGoalById(id = upperGoalId)
@@ -150,7 +150,7 @@ interface TodoDao : BaseDao<TodoEntity> {
                     )
                 )
 
-                processUpperGoalByTodoCheckTransaction(
+                updateUpperGoalScoreByTodoCheckTransaction(
                     goal = upperGoal,
                     newScore = newUpperGoalScore
                 )
@@ -166,7 +166,7 @@ interface TodoDao : BaseDao<TodoEntity> {
                     )
                 )
 
-                processUpperGoalByTodoCheckTransaction(
+                updateUpperGoalScoreByTodoCheckTransaction(
                     goal = upperGoal,
                     newScore = newUpperGoalScore
                 )
