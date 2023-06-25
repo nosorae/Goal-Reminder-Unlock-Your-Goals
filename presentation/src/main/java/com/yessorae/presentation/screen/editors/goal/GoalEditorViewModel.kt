@@ -2,6 +2,7 @@ package com.yessorae.presentation.screen.editors.goal
 
 import androidx.lifecycle.SavedStateHandle
 import com.yessorae.base.BaseScreenViewModel
+import com.yessorae.common.Logger
 import com.yessorae.domain.model.type.GoalType
 import com.yessorae.domain.model.type.toGoalType
 import com.yessorae.domain.repository.GoalRepository
@@ -320,12 +321,12 @@ class GoalEditorViewModel @Inject constructor(
 
     fun onClickSave() = ioScope.launch {
         stateValue.getUpdatedGoal()?.asDomainModel()?.let {
+            Logger.uiDebug("onClickSave isUpdate $isUpdate / goal : $it")
             if (isUpdate) {
                 goalRepository.updateGoal(it)
             } else {
                 goalRepository.insertGoal(it)
             }
-            onCancelDialog()
             back()
         }
     }
@@ -443,7 +444,7 @@ data class GoalEditorScreenState(
                 startTime = startDate?.toStartLocalDateTime(),
                 endTime = endDate?.toStartLocalDateTime(),
                 totalScore = goalTotalScore,
-                upperGoalId = upperGoal?.upperGoalId,
+                upperGoalId = upperGoal?.goalId,
                 upperGoalContributionScore = upperGoalContributionScore,
                 memo = memo
             ) ?: GoalModel(
@@ -453,7 +454,7 @@ data class GoalEditorScreenState(
                 endTime = endDate?.toStartLocalDateTime(),
                 totalScore = goalTotalScore,
                 currentScore = 0,
-                upperGoalId = upperGoal?.upperGoalId,
+                upperGoalId = upperGoal?.goalId,
                 upperGoalContributionScore = upperGoalContributionScore,
                 memo = memo,
                 type = paramGoalType
