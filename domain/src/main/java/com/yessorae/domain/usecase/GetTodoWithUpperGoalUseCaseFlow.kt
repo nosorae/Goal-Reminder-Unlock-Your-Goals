@@ -3,12 +3,12 @@ package com.yessorae.domain.usecase
 import com.yessorae.domain.model.TodoWithGoal
 import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.domain.repository.TodoRepository
+import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.datetime.LocalDateTime
-import javax.inject.Inject
 
 class GetTodoWithUpperGoalUseCaseFlow @Inject constructor(
     private val todoRepository: TodoRepository,

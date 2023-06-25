@@ -6,7 +6,6 @@ import com.yessorae.common.Logger
 import com.yessorae.domain.model.type.GoalType
 import com.yessorae.domain.model.type.toGoalType
 import com.yessorae.domain.repository.GoalRepository
-import com.yessorae.domain.repository.TodoRepository
 import com.yessorae.domain.usecase.GetGoalWithUpperGoalUseCase
 import com.yessorae.presentation.GoalEditorDestination
 import com.yessorae.presentation.R
@@ -19,8 +18,8 @@ import com.yessorae.util.StringModel
 import com.yessorae.util.TextString
 import com.yessorae.util.getWeekRangePair
 import com.yessorae.util.now
-import com.yessorae.util.toStartLocalDateTime
 import com.yessorae.util.toLocalDateTime
+import com.yessorae.util.toStartLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.firstOrNull

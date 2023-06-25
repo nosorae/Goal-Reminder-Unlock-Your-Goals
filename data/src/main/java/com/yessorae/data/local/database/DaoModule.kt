@@ -1,6 +1,5 @@
 package com.yessorae.data.local.database
 
-import com.yessorae.data.local.database.GoalReminderDatabase
 import com.yessorae.data.local.database.dao.GoalDao
 import com.yessorae.data.local.database.dao.TodoDao
 import dagger.Module

@@ -3,7 +3,6 @@ package com.yessorae.data.local.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.yessorae.data.local.database.converter.GoalTypeConverter
 import com.yessorae.data.local.database.converter.LocalDateTimeConverter
 import com.yessorae.data.local.database.dao.GoalDao
 import com.yessorae.data.local.database.dao.TodoDao

@@ -70,4 +70,3 @@ fun Goal.asEntity(): GoalEntity {
         type = type
     )
 }
-

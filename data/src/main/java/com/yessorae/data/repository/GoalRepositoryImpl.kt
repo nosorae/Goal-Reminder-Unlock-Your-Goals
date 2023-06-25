@@ -1,6 +1,5 @@
 package com.yessorae.data.repository
 
-import com.yessorae.common.Logger
 import com.yessorae.data.local.database.dao.GoalDao
 import com.yessorae.data.local.database.model.asDomainModel
 import com.yessorae.data.local.database.model.asEntity
@@ -10,18 +9,17 @@ import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.util.getWeekRangePair
 import com.yessorae.util.toLocalDateTime
 import com.yessorae.util.toStartLocalDateTime
+import java.time.YearMonth
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toKotlinLocalDate
-import java.time.YearMonth
 
 class GoalRepositoryImpl @Inject constructor(
     private val goalDao: GoalDao
 ) : GoalRepository {
     override fun getYearlyGoalsFlow(day: LocalDateTime): Flow<List<Goal>> { // todo impl
-        Logger.dataDebug("getYearlyGoalsFlow : $day")
         val year = day.year
         val startDateTime = LocalDateTime(
             year = year,
@@ -52,13 +50,10 @@ class GoalRepositoryImpl @Inject constructor(
     }
 
     override fun getMonthlyGoalsFlow(day: LocalDateTime): Flow<List<Goal>> { // todo impl
-        Logger.dataDebug("getMonthlyGoalsFlow : $day")
-
         val year = day.year
         val monthNumber = day.monthNumber
         val endDayOfMonth = YearMonth.of(year, monthNumber)
             .atEndOfMonth().toKotlinLocalDate().dayOfMonth
-        Logger.dataDebug("getMonthlyGoalsFlow : year $year / monthNumber $monthNumber / endDayOfMonth $endDayOfMonth")
 
         val startDateTime = LocalDateTime(
             year = year,

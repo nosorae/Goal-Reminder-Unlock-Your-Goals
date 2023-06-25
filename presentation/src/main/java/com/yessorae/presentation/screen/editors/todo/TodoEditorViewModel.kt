@@ -2,7 +2,6 @@ package com.yessorae.presentation.screen.editors.todo
 
 import androidx.lifecycle.SavedStateHandle
 import com.yessorae.base.BaseScreenViewModel
-import com.yessorae.common.Logger
 import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.domain.repository.TodoRepository
 import com.yessorae.domain.usecase.GetTodoWithUpperGoalUseCase
@@ -18,8 +17,8 @@ import com.yessorae.util.StringModel
 import com.yessorae.util.fromHourMinute
 import com.yessorae.util.getStartOfDay
 import com.yessorae.util.now
-import com.yessorae.util.toStartLocalDateTime
 import com.yessorae.util.toLocalDateTime
+import com.yessorae.util.toStartLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.firstOrNull
@@ -285,25 +284,25 @@ data class TodoEditorScreenState(
     fun getTodo(): TodoModel? {
         val title = todoTitle ?: return null
         return paramTodo?.let {
-                paramTodo.copy(
-                    title = title,
-                    date = paramDate,
-                    startTime = paramDate.atTime(startTime ?: LocalTime.getStartOfDay()),
-                    endTime = paramDate.atTime(endTime ?: LocalTime.getStartOfDay()),
-                    upperGoalModel = contributeGoal,
-                    upperGoalContributionScore = contributionScore,
-                    memo = memo
-                )
+            paramTodo.copy(
+                title = title,
+                date = paramDate,
+                startTime = paramDate.atTime(startTime ?: LocalTime.getStartOfDay()),
+                endTime = paramDate.atTime(endTime ?: LocalTime.getStartOfDay()),
+                upperGoalModel = contributeGoal,
+                upperGoalContributionScore = contributionScore,
+                memo = memo
+            )
         } ?: run {
-                TodoModel(
-                    title = title,
-                    date = paramDate,
-                    startTime = paramDate.atTime(startTime ?: LocalTime.getStartOfDay()),
-                    endTime = paramDate.atTime(endTime ?: LocalTime.getStartOfDay()),
-                    upperGoalModel = contributeGoal,
-                    upperGoalContributionScore = contributionScore,
-                    memo = memo
-                )
+            TodoModel(
+                title = title,
+                date = paramDate,
+                startTime = paramDate.atTime(startTime ?: LocalTime.getStartOfDay()),
+                endTime = paramDate.atTime(endTime ?: LocalTime.getStartOfDay()),
+                upperGoalModel = contributeGoal,
+                upperGoalContributionScore = contributionScore,
+                memo = memo
+            )
         }
     }
 }
