@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.yessorae.base.BaseScreenViewModel
 import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.domain.repository.TodoRepository
+import com.yessorae.domain.usecase.GetTodoWithUpperGoalUseCase
 import com.yessorae.presentation.R
 import com.yessorae.presentation.TodoEditorDestination
 import com.yessorae.presentation.model.GoalModel
@@ -16,11 +17,11 @@ import com.yessorae.util.StringModel
 import com.yessorae.util.fromHourMinute
 import com.yessorae.util.getStartOfDay
 import com.yessorae.util.now
-import com.yessorae.util.toDefaultLocalDateTime
 import com.yessorae.util.toLocalDateTime
+import com.yessorae.util.toStartLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
@@ -29,13 +30,14 @@ import kotlinx.datetime.atTime
 @HiltViewModel
 class TodoEditorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val getTodoWithUpperGoalUseCase: GetTodoWithUpperGoalUseCase,
     private val goalRepository: GoalRepository,
     private val todoRepository: TodoRepository
 ) : BaseScreenViewModel<TodoEditorScreenState>() {
-    private val todoIdParam: Int =
+    private val paramTodoId: Int =
         checkNotNull(savedStateHandle[TodoEditorDestination.todoIdArg])
     private val isUpdate: Boolean by lazy {
-        todoIdParam == TodoEditorDestination.defaultTodoId
+        paramTodoId != TodoEditorDestination.defaultTodoId
     }
     private val todoDayMilliSecParam: Long =
         checkNotNull(savedStateHandle[TodoEditorDestination.todoDayMilliSecArg])
@@ -45,36 +47,35 @@ class TodoEditorViewModel @Inject constructor(
     }
 
     private fun initStateValue() = ioScope.launch {
-        if (todoIdParam != TodoEditorDestination.defaultTodoId) {
-            val model = todoRepository.getTodo(todoId = todoIdParam).asModel()
+        if (paramTodoId != TodoEditorDestination.defaultTodoId) {
+            val model = getTodoWithUpperGoalUseCase(todoId = paramTodoId).asModel()
             updateState {
                 stateValue.copy(
-                    paramIsUpdate = true,
+                    paramTodoId = paramTodoId,
                     paramTodo = model,
                     todoTitle = model.title,
                     startTime = model.startTime?.time,
                     endTime = model.endTime?.time,
-                    contributeGoal = model.goalModel,
-                    contributionScore = model.goalContributionScore ?: 0,
+                    contributeGoal = model.upperGoalModel,
+                    contributionScore = model.upperGoalContributionScore ?: 0,
                     memo = model.memo
                 )
             }
         }
 
-        if (todoDayMilliSecParam != TodoEditorDestination.defaultTodoDayMilliSec) {
-            val date = todoDayMilliSecParam.toLocalDateTime().date
-            updateState {
-                stateValue.copy(
-                    paramDate = date
-                )
-            }
+        val date = todoDayMilliSecParam.toLocalDateTime().date
+        updateState {
+            stateValue.copy(
+                paramDate = date
+            )
         }
     }
 
     fun onChangeTitle(title: String) {
         updateState {
             stateValue.copy(
-                todoTitle = title
+                todoTitle = title,
+                changed = true
             )
         }
     }
@@ -107,7 +108,8 @@ class TodoEditorViewModel @Inject constructor(
         val date = milliSec.toLocalDateTime().date
         updateState {
             stateValue.copy(
-                paramDate = date
+                paramDate = date,
+                changed = true
             )
         }
         onCancelDialog()
@@ -119,13 +121,15 @@ class TodoEditorViewModel @Inject constructor(
             when (dialogState) {
                 EditorDialogState.StartTime -> {
                     stateValue.copy(
-                        startTime = time
+                        startTime = time,
+                        changed = true
                     )
                 }
 
                 EditorDialogState.EndTime -> {
                     stateValue.copy(
-                        endTime = time
+                        endTime = time,
+                        changed = true
                     )
                 }
 
@@ -138,13 +142,18 @@ class TodoEditorViewModel @Inject constructor(
 
     fun onClickContributeGoal() = ioScope.launch {
         goalRepository
-            .getWeekdayGoalsFlow(stateValue.paramDate.toDefaultLocalDateTime())
-            .collectLatest { goals ->
-                val goalModels = goals.map { it.asModel() }
-                updateState {
-                    stateValue.copy(
-                        editorDialogState = EditorDialogState.ContributeGoal(goalModels)
-                    )
+            .getWeekdayGoalsFlow(stateValue.paramDate.toStartLocalDateTime())
+            .firstOrNull()
+            ?.let { goals ->
+                if (goals.isEmpty()) {
+                    _toast.emit(ResString(R.string.common_no_upper_goal))
+                } else {
+                    val goalModels = goals.map { it.asModel() }
+                    updateState {
+                        stateValue.copy(
+                            editorDialogState = EditorDialogState.ContributeGoal(goalModels)
+                        )
+                    }
                 }
             }
     }
@@ -153,7 +162,8 @@ class TodoEditorViewModel @Inject constructor(
         updateState {
             stateValue.copy(
                 contributeGoal = goal,
-                contributionScore = 0
+                contributionScore = 0,
+                changed = true
             )
         }
         onCancelDialog()
@@ -163,7 +173,8 @@ class TodoEditorViewModel @Inject constructor(
         updateState {
             stateValue.copy(
                 contributeGoal = null,
-                contributionScore = 0
+                contributionScore = 0,
+                changed = true
             )
         }
         onCancelDialog()
@@ -172,7 +183,8 @@ class TodoEditorViewModel @Inject constructor(
     fun onChangeContributeGoalScore(score: Int) {
         updateState {
             stateValue.copy(
-                contributionScore = score
+                contributionScore = score,
+                changed = true
             )
         }
     }
@@ -180,13 +192,14 @@ class TodoEditorViewModel @Inject constructor(
     fun onChangeMemo(memo: String) {
         updateState {
             stateValue.copy(
-                memo = memo
+                memo = memo,
+                changed = true
             )
         }
     }
 
     fun onClickBack() = ioScope.launch {
-        if (stateValue.enableSaveButton) {
+        if (stateValue.changed) {
             updateState {
                 stateValue.copy(
                     editorDialogState = EditorDialogState.ExitConfirm
@@ -240,19 +253,24 @@ class TodoEditorViewModel @Inject constructor(
 }
 
 data class TodoEditorScreenState(
+    val paramTodoId: Int? = null,
     val paramTodo: TodoModel? = null,
     val paramDate: LocalDate = LocalDate.now(),
-    val paramIsUpdate: Boolean = false,
     val todoTitle: String? = null,
     val startTime: LocalTime? = null,
     val endTime: LocalTime? = null,
     val contributeGoal: GoalModel? = null,
     val contributionScore: Int = 0,
     val memo: String? = null,
+    val changed: Boolean = false,
     val editorDialogState: EditorDialogState = EditorDialogState.None
 ) {
     val enableSaveButton by lazy {
         todoTitle.isNullOrEmpty().not()
+    }
+
+    private val paramIsUpdate: Boolean by lazy {
+        paramTodoId != null
     }
 
     val toolbarTitle: StringModel by lazy {
@@ -264,29 +282,27 @@ data class TodoEditorScreenState(
     }
 
     fun getTodo(): TodoModel? {
+        val title = todoTitle ?: return null
         return paramTodo?.let {
-            todoTitle?.let {
-                paramTodo.copy(
-                    title = todoTitle,
-                    date = paramDate,
-                    startTime = paramDate.atTime(startTime ?: LocalTime.getStartOfDay()),
-                    endTime = paramDate.atTime(endTime ?: LocalTime.getStartOfDay()),
-                    goalModel = contributeGoal,
-                    goalContributionScore = contributionScore,
-                    memo = memo
-                )
-            }
+            paramTodo.copy(
+                title = title,
+                date = paramDate,
+                startTime = paramDate.atTime(startTime ?: LocalTime.getStartOfDay()),
+                endTime = paramDate.atTime(endTime ?: LocalTime.getStartOfDay()),
+                upperGoalModel = contributeGoal,
+                upperGoalContributionScore = contributionScore,
+                memo = memo
+            )
         } ?: run {
-            todoTitle?.let {
-                TodoModel(
-                    title = todoTitle,
-                    startTime = paramDate.atTime(startTime ?: LocalTime.getStartOfDay()),
-                    endTime = paramDate.atTime(endTime ?: LocalTime.getStartOfDay()),
-                    goalModel = contributeGoal,
-                    goalContributionScore = contributionScore,
-                    memo = memo
-                )
-            }
+            TodoModel(
+                title = title,
+                date = paramDate,
+                startTime = paramDate.atTime(startTime ?: LocalTime.getStartOfDay()),
+                endTime = paramDate.atTime(endTime ?: LocalTime.getStartOfDay()),
+                upperGoalModel = contributeGoal,
+                upperGoalContributionScore = contributionScore,
+                memo = memo
+            )
         }
     }
 }

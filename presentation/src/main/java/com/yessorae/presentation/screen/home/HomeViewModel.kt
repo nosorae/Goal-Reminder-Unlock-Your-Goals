@@ -1,9 +1,11 @@
 package com.yessorae.presentation.screen.home
 
 import com.yessorae.base.BaseScreenViewModel
-import com.yessorae.domain.model.enum.GoalType
+import com.yessorae.domain.model.type.GoalType
+import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.domain.repository.PreferencesDatastoreRepository
 import com.yessorae.domain.repository.TodoRepository
+import com.yessorae.domain.usecase.CheckTodoTransactionUseCase
 import com.yessorae.domain.usecase.GetHomeUseCase
 import com.yessorae.presentation.FinalGoalDestination
 import com.yessorae.presentation.GoalEditorDestination
@@ -11,6 +13,7 @@ import com.yessorae.presentation.TodoEditorDestination
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.model.asDomainModel
+import com.yessorae.presentation.model.asDomainWithGoalModel
 import com.yessorae.presentation.model.asModel
 import com.yessorae.util.getWeekRangePair
 import com.yessorae.util.now
@@ -33,8 +36,9 @@ import kotlinx.datetime.LocalDateTime
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getHomeUseCase: GetHomeUseCase,
-    private val goalRepository: TodoRepository,
+    private val goalRepository: GoalRepository,
     private val todoRepository: TodoRepository,
+    private val checkTodoTransactionUseCase: CheckTodoTransactionUseCase,
     private val preferencesDatastoreRepository: PreferencesDatastoreRepository
 ) : BaseScreenViewModel<HomeScreenState>() {
 
@@ -127,7 +131,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onConfirmGoalDelete(dialogState: HomeDialogState.DeleteGoalConfirmDialog) = ioScope.launch {
-        goalRepository.deleteTodo(dialogState.goalModel.goalId)
+        goalRepository.deleteGoalTransaction(dialogState.goalModel.asDomainModel())
         onCancelDialog()
     }
 
@@ -166,16 +170,12 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onConfirmTodoDelete(dialogState: HomeDialogState.DeleteTodoConfirmDialog) = ioScope.launch {
-        todoRepository.deleteTodo(dialogState.todoModel.todoId)
+        todoRepository.deleteTodo(dialogState.todoModel.asDomainModel())
         onCancelDialog()
     }
 
     fun onClickTodoCheckBox(todo: TodoModel) = ioScope.launch {
-        todoRepository.updateTodo(
-            todo = todo.copy(
-                completed = todo.completed.not()
-            ).asDomainModel()
-        )
+        checkTodoTransactionUseCase.invoke(todo.asDomainWithGoalModel())
     }
 
     fun onCancelDialog() {

@@ -1,7 +1,7 @@
 package com.yessorae.presentation.model
 
 import com.yessorae.domain.model.Goal
-import com.yessorae.domain.model.enum.GoalType
+import com.yessorae.domain.model.type.GoalType
 import com.yessorae.presentation.R
 import com.yessorae.util.ResString
 import com.yessorae.util.StringModel
@@ -12,15 +12,17 @@ import kotlin.math.roundToInt
 import kotlinx.datetime.LocalDateTime
 
 data class GoalModel(
-    val goalId: Int = 0,
+    var goalId: Int = 0,
     val title: String,
+    val dateFrom: LocalDateTime,
     val startTime: LocalDateTime? = null,
     val endTime: LocalDateTime? = null,
     val totalScore: Int,
     val currentScore: Int,
-    val contributeGoalId: Int? = null,
-    val contributeScore: Int? = null,
+    val upperGoalId: Int? = null,
+    val upperGoalContributionScore: Int? = null,
     val memo: String? = null,
+    val notification: Boolean = false,
     val type: GoalType
 ) {
     val subtitle: StringModel? by lazy {
@@ -68,30 +70,40 @@ fun Goal.asModel(): GoalModel {
     return GoalModel(
         goalId = goalId,
         title = title,
+        dateFrom = dateFrom,
         startTime = startTime,
         endTime = endTime,
         totalScore = totalScore,
         currentScore = currentScore,
-        type = type,
-        memo = memo
+        upperGoalId = upperGoalId,
+        upperGoalContributionScore = upperGoalContributionScore,
+        memo = memo,
+        notification = notification,
+        type = type
     )
 }
 
 fun GoalModel.asDomainModel(): Goal {
     return Goal(
+        goalId = goalId,
         title = title,
+        dateFrom = dateFrom,
         startTime = startTime,
         endTime = endTime,
         totalScore = totalScore,
         currentScore = currentScore,
-        type = type,
-        memo = memo
+        upperGoalId = upperGoalId,
+        upperGoalContributionScore = upperGoalContributionScore,
+        memo = memo,
+        notification = notification,
+        type = type
     )
 }
 
 val mockGoalDatumModels = listOf(
     GoalModel(
         title = "운동하기",
+        dateFrom = LocalDateTime(2023, 1, 1, 0, 0),
         startTime = LocalDateTime(2023, 1, 1, 0, 0),
         endTime = LocalDateTime(2023, 12, 31, 23, 59),
         totalScore = 365,
@@ -100,6 +112,7 @@ val mockGoalDatumModels = listOf(
     ),
     GoalModel(
         title = "독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기독서하기",
+        dateFrom = LocalDateTime(2023, 6, 1, 0, 0),
         startTime = LocalDateTime(2023, 6, 1, 0, 0),
         endTime = LocalDateTime(2023, 6, 30, 23, 59),
         totalScore = 30,
@@ -108,6 +121,7 @@ val mockGoalDatumModels = listOf(
     ),
     GoalModel(
         title = "영어공부하기",
+        dateFrom = LocalDateTime(2023, 1, 1, 0, 0),
         startTime = LocalDateTime(2023, 1, 1, 0, 0),
         endTime = LocalDateTime(2023, 12, 31, 23, 59),
         totalScore = 365,
@@ -116,6 +130,7 @@ val mockGoalDatumModels = listOf(
     ),
     GoalModel(
         title = "물 마시기",
+        dateFrom = LocalDateTime(2023, 6, 1, 0, 0),
         startTime = LocalDateTime(2023, 6, 1, 0, 0),
         endTime = LocalDateTime(2023, 6, 30, 23, 59),
         totalScore = 30,
@@ -124,6 +139,7 @@ val mockGoalDatumModels = listOf(
     ),
     GoalModel(
         title = "걷기",
+        dateFrom = LocalDateTime(2023, 1, 1, 0, 0),
         startTime = LocalDateTime(2023, 1, 1, 0, 0),
         endTime = LocalDateTime(2023, 12, 31, 23, 59),
         totalScore = 365,

@@ -75,7 +75,7 @@ fun HomeTopAppBar(
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.clickable { onClickTitle() }.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
             )
         },
         actions = {
@@ -86,7 +86,10 @@ fun HomeTopAppBar(
                 )
             }
         },
-        scrollBehavior = scrollBehavior
+        scrollBehavior = scrollBehavior,
+        modifier = Modifier.clickable {
+            onClickTitle()
+        }
     )
 }
 

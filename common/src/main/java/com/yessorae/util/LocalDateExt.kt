@@ -21,7 +21,7 @@ fun Long.toLocalDateTime(): LocalDateTime {
 }
 
 fun LocalDateTime.toMilliSecond(): Long {
-    return this.toInstant(TimeZone.UTC).epochSeconds * 1000
+    return this.toInstant(TimeZone.currentSystemDefault()).epochSeconds * 1000
 }
 
 fun LocalDateTime.getMonthDisplay(): String =
@@ -67,15 +67,19 @@ fun LocalTime.Companion.getStartOfDay(): LocalTime {
     return fromSecondOfDay(0)
 }
 
-fun LocalDate.toDefaultLocalDateTime(): LocalDateTime {
+fun LocalDate.toStartLocalDateTime(): LocalDateTime {
     return atTime(LocalTime.getStartOfDay())
 }
-fun LocalTime.Companion.fromHourMinute(hour: Int, minute: Int): LocalTime {
-    return fromSecondOfDay((hour * 60 * 60) + (minute * 60))
+
+fun LocalDate.toEndLocalDateTime(): LocalDateTime {
+    return atTime(hour = 23, minute = 59, second = 59)
+}
+fun LocalTime.Companion.fromHourMinute(hour: Int, minute: Int, second: Int = 0): LocalTime {
+    return fromSecondOfDay((hour * 60 * 60) + (minute * 60) + second)
 }
 
-fun LocalDate.toDefaultLocalDateTime(hour: Int? = null, minute: Int? = null): LocalDateTime {
-    return this.atTime(LocalTime.fromHourMinute(hour = hour ?: 0, minute = minute ?: 0))
+fun LocalDate.toLocalDateTime(hour: Int? = null, minute: Int? = null, second: Int? = null): LocalDateTime {
+    return this.atTime(LocalTime.fromHourMinute(hour = hour ?: 0, minute = minute ?: 0, second = second ?: 0))
 }
 
 fun Int.toLocalString(): String {

@@ -6,18 +6,20 @@ import com.yessorae.presentation.R
 import com.yessorae.util.ResString
 import com.yessorae.util.StringModel
 import com.yessorae.util.now
+import com.yessorae.util.toStartLocalDateTime
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
 data class TodoModel(
-    val todoId: Int = 0,
+    var todoId: Int = 0,
     val title: String = "",
+    val done: Boolean = false,
     val date: LocalDate = LocalDate.now(),
-    val completed: Boolean = false,
     val startTime: LocalDateTime? = null,
     val endTime: LocalDateTime? = null,
-    val goalModel: GoalModel? = null,
-    val goalContributionScore: Int? = null,
+    val upperGoalModel: GoalModel? = null,
+    val upperGoalContributionScore: Int? = null,
+    val notification: Boolean = false,
     val memo: String? = null
 ) {
     val subtitle: StringModel? by lazy {
@@ -28,32 +30,37 @@ data class TodoModel(
         }
     }
 
-    val goalId: Int? = goalModel?.goalId
-    val goalTitle: String? = goalModel?.title
+    val goalId: Int? = upperGoalModel?.goalId
+    val goalTitle: String? = upperGoalModel?.title
 }
 
 fun Todo.asModel(): TodoModel {
     return TodoModel(
         todoId = todoId,
         title = title,
-        completed = completed,
+        done = done,
+        date = date.date,
         startTime = startTime,
         endTime = endTime,
-        goalModel = null,
-        goalContributionScore = goalContributionScore,
+        upperGoalModel = null,
+        upperGoalContributionScore = upperGoalContributionScore,
+        notification = notification,
         memo = memo
     )
 }
+
 fun TodoWithGoal.asModel(): TodoModel {
     return TodoModel(
-        todoId = todoId,
-        title = title,
-        completed = completed,
-        startTime = startTime,
-        endTime = endTime,
-        goalModel = goal?.asModel(),
-        goalContributionScore = goalContributionScore,
-        memo = memo
+        todoId = todo.todoId,
+        title = todo.title,
+        done = todo.done,
+        date = todo.date.date,
+        startTime = todo.startTime,
+        endTime = todo.endTime,
+        upperGoalModel = upperGoal?.asModel(),
+        upperGoalContributionScore = todo.upperGoalContributionScore,
+        notification = todo.notification,
+        memo = todo.memo
     )
 }
 
@@ -61,52 +68,50 @@ fun TodoModel.asDomainModel(): Todo {
     return Todo(
         todoId = todoId,
         title = title,
-        completed = completed,
+        done = done,
+        date = date.toStartLocalDateTime(),
         startTime = startTime,
         endTime = endTime,
-        goalId = goalId,
+        upperGoalId = goalId,
+        upperGoalContributionScore = upperGoalContributionScore,
+        notification = notification,
         memo = memo
     )
 }
 
-fun TodoModel.asTodoWithGoal(): TodoWithGoal {
+fun TodoModel.asDomainWithGoalModel(): TodoWithGoal {
     return TodoWithGoal(
-        todoId = todoId,
-        title = title,
-        completed = completed,
-        startTime = startTime,
-        endTime = endTime,
-        goal = goalModel?.asDomainModel(),
-        memo = memo
+        todo = this.asDomainModel(),
+        upperGoal = upperGoalModel?.asDomainModel()
     )
 }
 
 val mockTodoDatumModels = listOf(
     TodoModel(
         todoId = 1,
-        goalContributionScore = 5,
+        upperGoalContributionScore = 5,
         title = "Morning Jogging",
         startTime = LocalDateTime(2023, 6, 7, 6, 0),
         endTime = LocalDateTime(2023, 6, 7, 7, 0),
-        completed = false,
+        done = false,
         memo = "Jog around the local park for one hour"
     ),
     TodoModel(
         todoId = 2,
-        goalContributionScore = 8,
+        upperGoalContributionScore = 8,
         title = "Python Learning",
         startTime = LocalDateTime(2023, 6, 7, 8, 0),
         endTime = LocalDateTime(2023, 6, 7, 10, 0),
-        completed = false,
+        done = false,
         memo = "Complete the exercises from chapter 7 to 9 in the Python book"
     ),
     TodoModel(
         todoId = 3,
-        goalContributionScore = null,
+        upperGoalContributionScore = null,
         title = "Grocery Shopping",
         startTime = LocalDateTime(2023, 6, 7, 12, 0),
         endTime = LocalDateTime(2023, 6, 7, 13, 30),
-        completed = false,
+        done = false,
         memo = "Buy fresh fruits, vegetables, milk, bread, and eggs"
     )
 )

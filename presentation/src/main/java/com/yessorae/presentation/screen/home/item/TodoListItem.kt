@@ -67,7 +67,7 @@ fun TodoListItem(
             },
             supportingContent = {
                 val goalTitle = todoModel.goalTitle
-                val score = todoModel.goalContributionScore
+                val score = todoModel.upperGoalContributionScore
                 if (goalTitle != null && score != null) {
                     Text(
                         text = stringResource(id = R.string.home_goal_contribution_).format(
@@ -83,7 +83,7 @@ fun TodoListItem(
             },
             leadingContent = {
                 Checkbox(
-                    checked = todoModel.completed,
+                    checked = todoModel.done,
                     onCheckedChange = {
                         onClickCheckBox()
                     }
