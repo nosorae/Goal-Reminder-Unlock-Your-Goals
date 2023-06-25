@@ -30,9 +30,9 @@ class TodoRepositoryImpl @Inject constructor(
     }
 
     override suspend fun checkTodoTransaction(todoWithGoal: TodoWithGoal) {
-        todoDao.checkTodo(
-            todoEntity = todoWithGoal.todo.asEntity(),
-            goalEntity = todoWithGoal.upperGoal?.asEntity()
+        todoDao.checkTodoTransaction(
+            todo = todoWithGoal.todo.asEntity(),
+            upperGoal = todoWithGoal.upperGoal?.asEntity()
         )
     }
 
@@ -45,10 +45,10 @@ class TodoRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateTodo(todo: Todo) {
-        todoDao.update(todo.asEntity())
+        todoDao.updateTodoTransaction(todo.asEntity())
     }
 
     override suspend fun deleteTodo(todo: Todo) {
-        todoDao.delete(todo.asEntity())
+        todoDao.deleteTodoTransaction(todo.asEntity())
     }
 }

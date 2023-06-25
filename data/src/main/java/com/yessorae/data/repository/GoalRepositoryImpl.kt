@@ -114,7 +114,7 @@ class GoalRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateGoal(goal: Goal) {
-        goalDao.update(goal.asEntity())
+        goalDao.updateGoalTransaction(goal.asEntity())
     }
 
     override suspend fun deleteGoalTransaction(goal: Goal) {
