@@ -25,10 +25,10 @@ class PreferenceDataStore @Inject constructor(
     private val finalGoalKey = stringPreferencesKey(Constants.PREF_KEY_FINAL_GOAL)
     private val finalGoalYearKey = intPreferencesKey(Constants.PREF_KEY_FINAL_GOAL_YEAR)
 
-    suspend fun getCompleteOnBoarding(): Boolean {
+    fun getCompleteOnBoarding(): Flow<Boolean> {
         return preferences.data.map { preferences ->
             preferences[completeOnBoarding] ?: false
-        }.firstOrNull() ?: false
+        }
     }
 
     suspend fun setCompleteOnBoarding() {

@@ -48,7 +48,11 @@ class HomeViewModel @Inject constructor(
     private val _scrollToPageEvent = MutableSharedFlow<Int>()
     val scrollToPageEvent: SharedFlow<Int> = _scrollToPageEvent.asSharedFlow()
 
+    private val _completeOnBoarding = MutableStateFlow<Boolean?>(null)
+    val completeOnBoarding: StateFlow<Boolean?> = _completeOnBoarding.asStateFlow()
+
     init {
+        processOnBoarding()
         getHomeScreenState()
     }
 
@@ -71,10 +75,11 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun processOnBoarding() = ioScope.launch {
-        if (preferencesDatastoreRepository.getCompleteOnBoarding().not()) {
-            _navigationEvent.emit(FinalGoalDestination.getRouteWithArgs(onBoarding = true))
+    private fun processOnBoarding() = ioScope.launch {
+        preferencesDatastoreRepository.getCompleteOnBoarding().collectLatest { result ->
+            _completeOnBoarding.value = result
         }
+
     }
 
     fun onOverlayConfirmed(confirmed: Boolean) {

@@ -34,6 +34,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.yessorae.designsystem.common.ScreenLoadingProgressbar
 import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.domain.model.type.GoalType
+import com.yessorae.presentation.FinalGoalDestination
 import com.yessorae.presentation.R
 import com.yessorae.presentation.dialogs.ConfirmDialog
 import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
@@ -63,6 +64,7 @@ fun HomeScreen(
 ) {
     val model by viewModel.state.collectAsState()
     val loading by viewModel.loading.collectAsState()
+    val completeOnBoarding by viewModel.completeOnBoarding.collectAsState()
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -81,10 +83,6 @@ fun HomeScreen(
                     onNavOutEvent(route)
                 }
             }
-        }
-
-        launch {
-            viewModel.processOnBoarding()
         }
     }
 
@@ -214,12 +212,10 @@ fun HomeScreen(
     }
 
     OverlayPermissionDialog(
-        showDialog = model.dialogState is HomeDialogState.OverlayConfirmDialog,
+        showDialog = (model.dialogState is HomeDialogState.OverlayConfirmDialog)
+                && completeOnBoarding == true,
         onOverlayConfirmed = { confirmed ->
             viewModel.onOverlayConfirmed(confirmed)
-        },
-        onCancelDialog = {
-            viewModel.onCancelDialog()
         }
     )
 
@@ -266,6 +262,10 @@ fun HomeScreen(
         dismissOnClickOutside = true,
         dismissOnBackPress = true
     )
+
+    if (completeOnBoarding == false) {
+        onNavOutEvent(FinalGoalDestination.getRouteWithArgs(onBoarding = true))
+    }
 
     ScreenLoadingProgressbar(show = loading)
 }
