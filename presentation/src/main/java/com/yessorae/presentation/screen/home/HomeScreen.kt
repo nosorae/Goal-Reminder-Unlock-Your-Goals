@@ -31,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.yessorae.designsystem.common.ScreenLoadingProgressbar
 import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.domain.model.type.GoalType
 import com.yessorae.presentation.R
@@ -61,6 +62,7 @@ fun HomeScreen(
     onNavOutEvent: (String) -> Unit = {}
 ) {
     val model by viewModel.state.collectAsState()
+    val loading by viewModel.loading.collectAsState()
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -264,6 +266,8 @@ fun HomeScreen(
         dismissOnClickOutside = true,
         dismissOnBackPress = true
     )
+
+    ScreenLoadingProgressbar(show = loading)
 }
 
 @OptIn(ExperimentalFoundationApi::class)

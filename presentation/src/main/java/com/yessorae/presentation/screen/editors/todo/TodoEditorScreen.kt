@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.yessorae.designsystem.common.ScreenLoadingProgressbar
 import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.designsystem.util.BasePreview
 import com.yessorae.presentation.R
@@ -74,6 +75,8 @@ fun TodoEditorScreen(
     val context = LocalContext.current
 
     val model by viewModel.state.collectAsState()
+    val loading by viewModel.loading.collectAsState()
+
     val listState = rememberLazyListState()
 
     LaunchedEffect(key1 = Unit) {
@@ -179,8 +182,8 @@ fun TodoEditorScreen(
                     .padding(horizontal = Dimen.SidePadding)
                     .padding(
                         bottom = (
-                            Dimen.BottomPadding - BottomNavigationBarHeightDp
-                            )
+                                Dimen.BottomPadding - BottomNavigationBarHeightDp
+                                )
                             .value
                             .coerceAtLeast(0f)
                             .dp
@@ -282,6 +285,8 @@ fun TodoEditorScreen(
             viewModel.onPermissionLogicCompleted(result)
         }
     )
+
+    ScreenLoadingProgressbar(show = loading)
 }
 
 @Composable
