@@ -239,7 +239,7 @@ class TodoEditorViewModel @Inject constructor(
     fun onClickSave() = ioScope.launch {
         stateValue.getTodo()?.asDomainModel()?.let {
             if (isUpdate) {
-                todoRepository.updateTodo(it)
+                todoRepository.updateTodoTransaction(it)
             } else {
                 todoRepository.insertTodo(it)
             }

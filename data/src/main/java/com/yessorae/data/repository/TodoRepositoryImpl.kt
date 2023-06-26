@@ -29,13 +29,6 @@ class TodoRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun checkTodoTransaction(todoWithGoal: TodoWithGoal) {
-        todoDao.checkTodoTransaction(
-            todo = todoWithGoal.todo.asEntity(),
-            upperGoal = todoWithGoal.upperGoal?.asEntity()
-        )
-    }
-
     override suspend fun getTodo(todoId: Int): Todo {
         return todoDao.loadTodoById(id = todoId).asDomainModel()
     }
@@ -44,11 +37,18 @@ class TodoRepositoryImpl @Inject constructor(
         return todoDao.insert(todo.asEntity()).toInt()
     }
 
-    override suspend fun updateTodo(todo: Todo) {
+    override suspend fun checkTodoTransaction(todoWithGoal: TodoWithGoal) {
+        todoDao.checkTodoTransaction(
+            todo = todoWithGoal.todo.asEntity(),
+            upperGoal = todoWithGoal.upperGoal?.asEntity()
+        )
+    }
+
+    override suspend fun updateTodoTransaction(todo: Todo) {
         todoDao.updateTodoTransaction(todo.asEntity())
     }
 
-    override suspend fun deleteTodo(todo: Todo) {
+    override suspend fun deleteTodoTransaction(todo: Todo) {
         todoDao.deleteTodoTransaction(todo.asEntity())
     }
 }

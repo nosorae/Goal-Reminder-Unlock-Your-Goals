@@ -170,7 +170,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onConfirmTodoDelete(dialogState: HomeDialogState.DeleteTodoConfirmDialog) = ioScope.launch {
-        todoRepository.deleteTodo(dialogState.todoModel.asDomainModel())
+        todoRepository.deleteTodoTransaction(dialogState.todoModel.asDomainModel())
         onCancelDialog()
     }
 

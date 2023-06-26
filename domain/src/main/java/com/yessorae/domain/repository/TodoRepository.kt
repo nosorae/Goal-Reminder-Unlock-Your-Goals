@@ -10,11 +10,11 @@ interface TodoRepository {
 
     suspend fun getTodo(todoId: Int): Todo
 
-    suspend fun checkTodoTransaction(todoWithGoal: TodoWithGoal)
-
     suspend fun insertTodo(todo: Todo): Int
 
-    suspend fun updateTodo(todo: Todo)
+    suspend fun checkTodoTransaction(todoWithGoal: TodoWithGoal)
 
-    suspend fun deleteTodo(todo: Todo)
+    suspend fun updateTodoTransaction(todo: Todo)
+
+    suspend fun deleteTodoTransaction(todo: Todo)
 }
