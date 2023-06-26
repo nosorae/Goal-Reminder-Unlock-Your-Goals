@@ -201,8 +201,7 @@ data class HomeScreenState(
     val monthlyGoalModels: List<GoalModel> = listOf(),
     val weeklyGoalModels: List<GoalModel> = listOf(),
     val dailyTodoModels: List<TodoModel> = listOf(),
-    val dialogState: HomeDialogState = HomeDialogState.None,
-    val showDatePickerDialog: Boolean = false
+    val dialogState: HomeDialogState = HomeDialogState.None
 ) {
     val weekPair by lazy {
         now.date.getWeekRangePair()
