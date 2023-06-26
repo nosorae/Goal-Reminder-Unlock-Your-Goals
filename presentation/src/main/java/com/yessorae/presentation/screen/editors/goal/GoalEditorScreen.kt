@@ -38,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.yessorae.designsystem.common.ScreenLoadingProgressbar
 import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.presentation.R
 import com.yessorae.presentation.buttons.BackgroundTextButton
@@ -65,6 +66,8 @@ fun GoalEditorScreen(
     onBackEvent: () -> Unit = {}
 ) {
     val model by viewModel.state.collectAsState()
+    val loading by viewModel.loading.collectAsState()
+
     val context = LocalContext.current
 
     LaunchedEffect(key1 = Unit) {
@@ -251,6 +254,8 @@ fun GoalEditorScreen(
             )
         }
     }
+
+    ScreenLoadingProgressbar(show = loading)
 }
 
 @Composable
