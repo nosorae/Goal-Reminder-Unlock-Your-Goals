@@ -321,7 +321,6 @@ class GoalEditorViewModel @Inject constructor(
     fun onClickSave() = ioScope.launch {
         stateValue.getUpdatedGoal()?.asDomainModel()?.let {
             showLoading()
-            delay(1000L) // todo delete
             if (isUpdate) {
                 goalRepository.updateGoalTransaction(it)
             } else {
