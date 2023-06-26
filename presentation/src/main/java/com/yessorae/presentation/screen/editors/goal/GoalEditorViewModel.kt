@@ -2,7 +2,6 @@ package com.yessorae.presentation.screen.editors.goal
 
 import androidx.lifecycle.SavedStateHandle
 import com.yessorae.base.BaseScreenViewModel
-import com.yessorae.common.Logger
 import com.yessorae.domain.model.type.GoalType
 import com.yessorae.domain.model.type.toGoalType
 import com.yessorae.domain.repository.GoalRepository
@@ -21,6 +20,7 @@ import com.yessorae.util.now
 import com.yessorae.util.toLocalDateTime
 import com.yessorae.util.toStartLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
@@ -320,12 +320,14 @@ class GoalEditorViewModel @Inject constructor(
 
     fun onClickSave() = ioScope.launch {
         stateValue.getUpdatedGoal()?.asDomainModel()?.let {
-            Logger.uiDebug("onClickSave isUpdate $isUpdate / goal : $it")
+            showLoading()
+            delay(1000L) // todo delete
             if (isUpdate) {
-                goalRepository.updateGoal(it)
+                goalRepository.updateGoalTransaction(it)
             } else {
                 goalRepository.insertGoal(it)
             }
+            hideLoading()
             back()
         }
     }

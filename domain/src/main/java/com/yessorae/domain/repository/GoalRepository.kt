@@ -15,7 +15,7 @@ interface GoalRepository {
 
     suspend fun insertGoal(goal: Goal): Int
 
-    suspend fun updateGoal(goal: Goal)
+    suspend fun updateGoalTransaction(goal: Goal)
 
     suspend fun deleteGoalTransaction(goal: Goal)
 }
