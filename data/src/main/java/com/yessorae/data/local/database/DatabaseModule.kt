@@ -2,7 +2,7 @@ package com.yessorae.data.local.database
 
 import android.content.Context
 import androidx.room.Room
-import com.yessorae.data.Constants.DATABASE_NAME
+import com.yessorae.data.DataConstants.DATABASE_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

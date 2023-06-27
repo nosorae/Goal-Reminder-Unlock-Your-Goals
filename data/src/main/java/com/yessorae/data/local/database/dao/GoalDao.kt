@@ -4,11 +4,11 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.yessorae.data.Constants.COL_DATE_FROM
-import com.yessorae.data.Constants.COL_GOAL_ID
-import com.yessorae.data.Constants.COL_UPPER_GOAL_ID
-import com.yessorae.data.Constants.TABLE_GOAL
-import com.yessorae.data.Constants.TABLE_TODO
+import com.yessorae.data.DataConstants.COL_DATE_FROM
+import com.yessorae.data.DataConstants.COL_GOAL_ID
+import com.yessorae.data.DataConstants.COL_UPPER_GOAL_ID
+import com.yessorae.data.DataConstants.TABLE_GOAL
+import com.yessorae.data.DataConstants.TABLE_TODO
 import com.yessorae.data.local.database.model.GoalEntity
 import com.yessorae.data.local.database.model.TodoEntity
 import kotlinx.coroutines.flow.Flow
