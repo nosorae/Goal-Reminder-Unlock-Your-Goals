@@ -24,7 +24,11 @@ data class TodoEntity(
     @ColumnInfo(name = DataConstants.COL_UPPER_GOAL_CONTRIBUTION_SCORE)
     val upperGoalContributionScore: Int? = null,
     val notification: Boolean = false,
-    val memo: String? = null
+    val memo: String? = null,
+    @ColumnInfo(name = DataConstants.COL_SERVER_SYNC)
+    val serverSync: Boolean = false,
+    @ColumnInfo(name = DataConstants.COL_GOOGLE_CALENDAR_SYNC)
+    val googleCalendarSync: Boolean = false
 )
 
 fun TodoEntity.asDomainModel(): Todo {

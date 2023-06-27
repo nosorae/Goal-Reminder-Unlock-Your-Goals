@@ -31,7 +31,11 @@ data class GoalEntity(
     val upperGoalContributionScore: Int? = null,
     val memo: String? = null,
     val notification: Boolean = false,
-    val type: GoalType = GoalType.NONE
+    val type: GoalType = GoalType.NONE,
+    @ColumnInfo(name = DataConstants.COL_SERVER_SYNC)
+    val serverSync: Boolean = false,
+    @ColumnInfo(name = DataConstants.COL_GOOGLE_CALENDAR_SYNC)
+    val googleCalendarSync: Boolean = false
 ) {
     @Ignore
     val done = totalScore <= currentScore

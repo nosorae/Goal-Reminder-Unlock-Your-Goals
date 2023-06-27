@@ -20,4 +20,6 @@ object DataConstants {
     const val COL_CURRENT_SCORE = "current_score"
     const val COL_UPPER_GOAL_ID = "upper_goal_id"
     const val COL_UPPER_GOAL_CONTRIBUTION_SCORE = "upper_goal_contribution_score"
+    const val COL_GOOGLE_CALENDAR_SYNC = "google_calendar_sync"
+    const val COL_SERVER_SYNC = "server_sync"
 }
