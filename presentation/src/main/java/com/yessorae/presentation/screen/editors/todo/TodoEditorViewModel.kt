@@ -146,7 +146,7 @@ class TodoEditorViewModel @Inject constructor(
             .firstOrNull()
             ?.let { goals ->
                 if (goals.isEmpty()) {
-                    _toast.emit(ResString(R.string.common_no_upper_goal))
+                    _toast.emit(ResString(R.string.common_no_upper_weekly_goal))
                 } else {
                     val goalModels = goals.map { it.asModel() }
                     updateState {

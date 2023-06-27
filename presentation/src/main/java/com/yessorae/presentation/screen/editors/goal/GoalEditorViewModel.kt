@@ -20,7 +20,6 @@ import com.yessorae.util.now
 import com.yessorae.util.toLocalDateTime
 import com.yessorae.util.toStartLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import javax.inject.Inject
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
@@ -140,7 +139,7 @@ class GoalEditorViewModel @Inject constructor(
                 goalRepository.getYearlyGoalsFlow(stateValue.paramDate.toStartLocalDateTime())
                     .firstOrNull()?.let { goals ->
                         if (goals.isEmpty()) {
-                            _toast.emit(ResString(R.string.common_no_upper_goal))
+                            _toast.emit(ResString(R.string.common_no_upper_yearly_goal))
                         } else {
                             val goalModels = goals.map { it.asModel() }
                             updateState {
@@ -157,7 +156,7 @@ class GoalEditorViewModel @Inject constructor(
                     .getMonthlyGoalsFlow(stateValue.paramDate.toStartLocalDateTime())
                     .firstOrNull()?.let { goals ->
                         if (goals.isEmpty()) {
-                            _toast.emit(ResString(R.string.common_no_upper_goal))
+                            _toast.emit(ResString(R.string.common_no_upper_monthly_goal))
                         } else {
                             val goalModels = goals.map { it.asModel() }
                             updateState {
@@ -430,6 +429,13 @@ data class GoalEditorScreenState(
             }
         }
     }
+
+    val upperGoalPlaceholderText =
+        if (paramGoalType == GoalType.WEEKLY) {
+            ResString(R.string.goal_contribution_monthly_goal_placeholder)
+        } else {
+            ResString(R.string.goal_contribution_yearly_goal_placeholder)
+        }
 
     fun getUpdatedGoal(): GoalModel? {
         if (enableSaveButton.not()) return null

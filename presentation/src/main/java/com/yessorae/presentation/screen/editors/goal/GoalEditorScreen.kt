@@ -37,6 +37,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.widget.Placeholder
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.yessorae.designsystem.common.ScreenLoadingProgressbar
 import com.yessorae.designsystem.theme.Dimen
@@ -54,6 +55,7 @@ import com.yessorae.presentation.screen.editors.EditorTopAppBar
 import com.yessorae.presentation.screen.editors.MultiLineEditorListItem
 import com.yessorae.presentation.screen.editors.SelectableEditorListItem
 import com.yessorae.presentation.screen.editors.SingleLineEditorListItem
+import com.yessorae.util.StringModel
 import com.yessorae.util.showToast
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.collectLatest
@@ -152,6 +154,7 @@ fun GoalEditorScreen(
                         GoalListItem(
                             contributeGoal = model.upperGoal,
                             contributeScore = model.upperGoalContributionScore ?: 0,
+                            placeholderText = model.upperGoalPlaceholderText,
                             onClickContributeGoal = {
                                 viewModel.onClickContributeGoal()
                             },
@@ -352,14 +355,17 @@ private fun TimeListItem(
 private fun GoalListItem(
     contributeGoal: GoalModel?,
     contributeScore: Int = 0,
+    placeholderText: StringModel,
     onChangeContributeGoalScore: (Int) -> Unit = {},
     onClickContributeGoal: () -> Unit = {}
 
 ) {
     val hasContributeGoal = contributeGoal != null
+    val context = LocalContext.current
+
     SelectableEditorListItem(
         titleValue = contributeGoal?.title,
-        placeholderText = stringResource(id = R.string.goal_contribution_goal_placeholder),
+        placeholderText = placeholderText.get(context),
         content = {
             AnimatedVisibility(visible = hasContributeGoal) {
                 Text(
