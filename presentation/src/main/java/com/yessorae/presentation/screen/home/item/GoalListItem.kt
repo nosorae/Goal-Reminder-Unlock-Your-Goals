@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -28,6 +29,7 @@ import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.designsystem.util.BasePreview
 import com.yessorae.designsystem.util.Margin
 import com.yessorae.presentation.R
+import com.yessorae.presentation.ScreenConstants
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.mockGoalDatumModels
 
@@ -40,7 +42,15 @@ fun GoalListItem(
 ) {
     val context = LocalContext.current
     Box(
-        modifier = modifier.clickable { onClickGoal() }
+        modifier = modifier
+            .clickable { onClickGoal() }
+            .alpha(
+                if (goalModel.complete) {
+                    ScreenConstants.DONE_ALPHA
+                } else {
+                    1f
+                }
+            )
     ) {
         ListItem(
             headlineContent = {
