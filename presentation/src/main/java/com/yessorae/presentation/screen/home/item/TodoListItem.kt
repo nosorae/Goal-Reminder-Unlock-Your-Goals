@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.yessorae.designsystem.theme.Dimen
@@ -54,13 +55,23 @@ fun TodoListItem(
                         ),
                         modifier = Modifier.weight(1f, false),
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
+                        textDecoration = if (todoModel.done) {
+                            TextDecoration.LineThrough
+                        } else {
+                            TextDecoration.None
+                        }
                     )
                     Margin(dp = Dimen.InsideDividePadding)
                     todoModel.subtitle?.let { subtitle ->
                         Text(
                             text = subtitle.get(context),
-                            style = MaterialTheme.typography.labelSmall
+                            style = MaterialTheme.typography.labelSmall,
+                            textDecoration = if (todoModel.done) {
+                                TextDecoration.LineThrough
+                            } else {
+                                TextDecoration.None
+                            }
                         )
                     }
                 }
@@ -77,7 +88,12 @@ fun TodoListItem(
                         style = MaterialTheme.typography.titleSmall,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(top = Dimen.InsideDividePadding)
+                        modifier = Modifier.padding(top = Dimen.InsideDividePadding),
+                        textDecoration = if (todoModel.done) {
+                            TextDecoration.LineThrough
+                        } else {
+                            TextDecoration.None
+                        }
                     )
                 }
             },

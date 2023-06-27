@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.yessorae.designsystem.theme.Dimen
@@ -54,13 +55,23 @@ fun GoalListItem(
                         ),
                         modifier = Modifier.weight(1f, false),
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
+                        textDecoration = if (goalModel.complete) {
+                            TextDecoration.LineThrough
+                        } else {
+                            TextDecoration.None
+                        }
                     )
                     Margin(dp = Dimen.InsideDividePadding)
                     goalModel.subtitle?.let { subtitle ->
                         Text(
                             text = subtitle.get(context),
-                            style = MaterialTheme.typography.labelSmall
+                            style = MaterialTheme.typography.labelSmall,
+                            textDecoration = if (goalModel.complete) {
+                                TextDecoration.LineThrough
+                            } else {
+                                TextDecoration.None
+                            }
                         )
                     }
                 }
@@ -75,7 +86,12 @@ fun GoalListItem(
                             id = R.string.home_goal_progress
                         ).format(goalModel.percent),
                         style = MaterialTheme.typography.labelMedium,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        textDecoration = if (goalModel.complete) {
+                            TextDecoration.LineThrough
+                        } else {
+                            TextDecoration.None
+                        }
                     )
                     Margin(Dimen.InsideDividePadding)
                     LinearProgressIndicator(
@@ -89,7 +105,9 @@ fun GoalListItem(
         )
 
         IconButton(
-            modifier = Modifier.align(Alignment.TopEnd).padding(end = Dimen.SmallDividePadding),
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(end = Dimen.SmallDividePadding),
             onClick = { onClickMore() }
         ) {
             Icon(
