@@ -1,6 +1,7 @@
 package com.yessorae.presentation.model
 
 import com.yessorae.domain.model.Goal
+import com.yessorae.domain.model.GoalWithUpperGoal
 import com.yessorae.domain.model.type.GoalType
 import com.yessorae.presentation.R
 import com.yessorae.util.ResString
@@ -66,6 +67,11 @@ data class GoalModel(
     }
 }
 
+data class GoalWithUpperGoalModel(
+    val goal: GoalModel,
+    val upperGoal: GoalModel? = null
+)
+
 fun Goal.asModel(): GoalModel {
     return GoalModel(
         goalId = goalId,
@@ -97,6 +103,13 @@ fun GoalModel.asDomainModel(): Goal {
         memo = memo,
         notification = notification,
         type = type
+    )
+}
+
+fun GoalWithUpperGoal.asModel(): GoalWithUpperGoalModel {
+    return GoalWithUpperGoalModel(
+        goal = goal.asModel(),
+        upperGoal = upperGoal?.asModel()
     )
 }
 

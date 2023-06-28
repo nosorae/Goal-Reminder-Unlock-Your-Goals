@@ -39,6 +39,7 @@ import com.yessorae.presentation.R
 import com.yessorae.presentation.dialogs.ConfirmDialog
 import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
 import com.yessorae.presentation.model.GoalModel
+import com.yessorae.presentation.model.GoalWithUpperGoalModel
 import com.yessorae.presentation.model.TitleListItemModel
 import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.screen.home.item.GoalListItem
@@ -346,7 +347,7 @@ fun LabelTab(
 private fun GoalPage(
     modifier: Modifier = Modifier,
     title: TitleListItemModel,
-    goals: List<GoalModel>,
+    goals: List<GoalWithUpperGoalModel>,
     onClickGoal: (GoalModel) -> Unit = {},
     onClickMore: (GoalModel) -> Unit = {},
     onClickAdd: () -> Unit = {}
@@ -370,16 +371,16 @@ private fun GoalPage(
         itemsIndexed(
             items = goals,
             contentType = { _, _ ->
-                GoalModel::class
+                GoalWithUpperGoalModel::class
             }
         ) { _, item ->
             GoalListItem(
                 goalModel = item,
                 onClickGoal = {
-                    onClickGoal(item)
+                    onClickGoal(item.goal)
                 },
                 onClickMore = {
-                    onClickMore(item)
+                    onClickMore(item.goal)
                 }
             )
         }

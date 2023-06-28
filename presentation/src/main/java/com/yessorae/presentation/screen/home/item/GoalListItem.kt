@@ -30,13 +30,13 @@ import com.yessorae.designsystem.util.BasePreview
 import com.yessorae.designsystem.util.Margin
 import com.yessorae.presentation.R
 import com.yessorae.presentation.ScreenConstants
-import com.yessorae.presentation.model.GoalModel
+import com.yessorae.presentation.model.GoalWithUpperGoalModel
 import com.yessorae.presentation.model.mockGoalDatumModels
 
 @Composable
 fun GoalListItem(
     modifier: Modifier = Modifier,
-    goalModel: GoalModel,
+    goalModel: GoalWithUpperGoalModel,
     onClickGoal: () -> Unit = {},
     onClickMore: () -> Unit = {}
 ) {
@@ -45,7 +45,7 @@ fun GoalListItem(
         modifier = modifier
             .clickable { onClickGoal() }
             .alpha(
-                if (goalModel.complete) {
+                if (goalModel.goal.complete) {
                     ScreenConstants.DONE_ALPHA
                 } else {
                     1f
@@ -59,25 +59,25 @@ fun GoalListItem(
                     modifier = Modifier.padding(end = Dimen.ExtraLargeDividePadding)
                 ) {
                     Text(
-                        text = goalModel.title,
+                        text = goalModel.goal.title,
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold
                         ),
                         modifier = Modifier.weight(1f, false),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        textDecoration = if (goalModel.complete) {
+                        textDecoration = if (goalModel.goal.complete) {
                             TextDecoration.LineThrough
                         } else {
                             TextDecoration.None
                         }
                     )
                     Margin(dp = Dimen.InsideDividePadding)
-                    goalModel.subtitle?.let { subtitle ->
+                    goalModel.goal.subtitle?.let { subtitle ->
                         Text(
                             text = subtitle.get(context),
                             style = MaterialTheme.typography.labelSmall,
-                            textDecoration = if (goalModel.complete) {
+                            textDecoration = if (goalModel.goal.complete) {
                                 TextDecoration.LineThrough
                             } else {
                                 TextDecoration.None
@@ -90,14 +90,15 @@ fun GoalListItem(
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {
+                    
                     Margin(dp = Dimen.InsideDividePadding)
                     Text(
                         text = stringResource(
                             id = R.string.home_goal_progress
-                        ).format(goalModel.percent),
+                        ).format(goalModel.goal.percent),
                         style = MaterialTheme.typography.labelMedium,
                         textAlign = TextAlign.Center,
-                        textDecoration = if (goalModel.complete) {
+                        textDecoration = if (goalModel.goal.complete) {
                             TextDecoration.LineThrough
                         } else {
                             TextDecoration.None
@@ -106,7 +107,7 @@ fun GoalListItem(
                     Margin(Dimen.InsideDividePadding)
                     LinearProgressIndicator(
                         modifier = Modifier.fillMaxWidth(),
-                        progress = goalModel.progress,
+                        progress = goalModel.goal.progress,
                         color = MaterialTheme.colorScheme.primary,
                         trackColor = MaterialTheme.colorScheme.onBackground
                     )
@@ -134,7 +135,7 @@ fun GoalListItem(
 fun GoalListItemPreview() {
     BasePreview {
         mockGoalDatumModels.forEach { goal ->
-            GoalListItem(goalModel = goal)
+            GoalListItem(goalModel = GoalWithUpperGoalModel(goal = goal))
         }
     }
 }

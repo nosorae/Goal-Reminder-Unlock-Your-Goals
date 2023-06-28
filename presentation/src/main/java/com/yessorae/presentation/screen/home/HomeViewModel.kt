@@ -11,6 +11,7 @@ import com.yessorae.presentation.FinalGoalDestination
 import com.yessorae.presentation.GoalEditorDestination
 import com.yessorae.presentation.TodoEditorDestination
 import com.yessorae.presentation.model.GoalModel
+import com.yessorae.presentation.model.GoalWithUpperGoalModel
 import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.model.asDomainModel
 import com.yessorae.presentation.model.asDomainWithGoalModel
@@ -202,9 +203,9 @@ data class HomeScreenState(
     val now: LocalDateTime = LocalDateTime.now(),
     val finalGoal: String = "",
     val finalGoalYear: Int = now.year + 3,
-    val yearlyGoalModels: List<GoalModel> = listOf(),
-    val monthlyGoalModels: List<GoalModel> = listOf(),
-    val weeklyGoalModels: List<GoalModel> = listOf(),
+    val yearlyGoalModels: List<GoalWithUpperGoalModel> = listOf(),
+    val monthlyGoalModels: List<GoalWithUpperGoalModel> = listOf(),
+    val weeklyGoalModels: List<GoalWithUpperGoalModel> = listOf(),
     val dailyTodoModels: List<TodoModel> = listOf(),
     val dialogState: HomeDialogState = HomeDialogState.None
 ) {
