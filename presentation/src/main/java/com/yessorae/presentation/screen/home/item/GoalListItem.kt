@@ -90,7 +90,25 @@ fun GoalListItem(
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    
+
+                    goalModel.contributionText?.let { stringModel ->
+                        Text(
+                            text = stringModel.get(context),
+                            style = MaterialTheme.typography.titleSmall,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(
+                                top = Dimen.InsideDividePadding,
+                                end = Dimen.ExtraLargeDividePadding
+                            ),
+                            textDecoration = if (goalModel.goal.complete) {
+                                TextDecoration.LineThrough
+                            } else {
+                                TextDecoration.None
+                            }
+                        )
+                    }
+
                     Margin(dp = Dimen.InsideDividePadding)
                     Text(
                         text = stringResource(
@@ -134,8 +152,13 @@ fun GoalListItem(
 @Composable
 fun GoalListItemPreview() {
     BasePreview {
-        mockGoalDatumModels.forEach { goal ->
-            GoalListItem(goalModel = GoalWithUpperGoalModel(goal = goal))
+        mockGoalDatumModels.chunked(2).forEach {
+            GoalListItem(
+                goalModel = GoalWithUpperGoalModel(
+                    goal = it.first(),
+                    upperGoal = it.getOrNull(1)
+                )
+            )
         }
     }
 }

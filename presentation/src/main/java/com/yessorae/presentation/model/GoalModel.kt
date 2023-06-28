@@ -70,7 +70,22 @@ data class GoalModel(
 data class GoalWithUpperGoalModel(
     val goal: GoalModel,
     val upperGoal: GoalModel? = null
-)
+) {
+    val contributionText: StringModel? by lazy {
+        val upperGoalContributionScore = goal.upperGoalContributionScore
+        val title = upperGoal?.title
+        if (upperGoalContributionScore != null && title != null) {
+            val shortTitle = if (title.length >= 10) "${title.take(10)}..." else title
+            ResString(
+                R.string.home_goal_contribution_,
+                shortTitle,
+                upperGoalContributionScore
+            )
+        } else {
+            null
+        }
+    }
+}
 
 fun Goal.asModel(): GoalModel {
     return GoalModel(
@@ -121,6 +136,7 @@ val mockGoalDatumModels = listOf(
         endTime = LocalDateTime(2023, 12, 31, 23, 59),
         totalScore = 365,
         currentScore = 150,
+        upperGoalContributionScore = 30,
         type = GoalType.YEARLY
     ),
     GoalModel(
@@ -139,6 +155,7 @@ val mockGoalDatumModels = listOf(
         endTime = LocalDateTime(2023, 12, 31, 23, 59),
         totalScore = 365,
         currentScore = 200,
+        upperGoalContributionScore = 1234,
         type = GoalType.YEARLY
     ),
     GoalModel(
