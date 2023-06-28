@@ -13,6 +13,8 @@ interface GoalRepository {
 
     suspend fun getGoalById(goalId: Int): Goal
 
+    suspend fun getGoalsByUpperGoalId(upperGoalId: Int): List<Goal>
+
     suspend fun insertGoal(goal: Goal): Int
 
     suspend fun updateGoalTransaction(goal: Goal)

@@ -8,6 +8,8 @@ import kotlinx.datetime.LocalDateTime
 interface TodoRepository {
     fun getDailyTodosFlow(day: LocalDateTime): Flow<List<Todo>>
 
+    suspend fun getTodosByUpperGoal(upperGoalId: Int): List<Todo>
+
     suspend fun getTodo(todoId: Int): Todo
 
     suspend fun insertTodo(todo: Todo): Int

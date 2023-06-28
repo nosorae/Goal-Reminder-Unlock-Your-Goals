@@ -36,17 +36,17 @@ interface GoalDao : BaseDao<GoalEntity> {
 
     @Query(
         value = """
-            SELECT * FROM $TABLE_TODO WHERE $COL_UPPER_GOAL_ID = :goalId
+            SELECT * FROM $TABLE_TODO WHERE $COL_UPPER_GOAL_ID = :upperGoalId
         """
     )
-    suspend fun loadTodosByUpperGoalId(goalId: Int): List<TodoEntity>
+    suspend fun loadTodosByUpperGoalId(upperGoalId: Int): List<TodoEntity>
 
     @Query(
         value = """
-            SELECT * FROM $TABLE_GOAL WHERE $COL_UPPER_GOAL_ID = :goalId
+            SELECT * FROM $TABLE_GOAL WHERE $COL_UPPER_GOAL_ID = :upperGoalId
         """
     )
-    suspend fun loadGoalsByUpperGoalId(goalId: Int): List<GoalEntity>
+    suspend fun loadGoalsByUpperGoalId(upperGoalId: Int): List<GoalEntity>
 
     @Update
     suspend fun updateTodo(todo: TodoEntity)

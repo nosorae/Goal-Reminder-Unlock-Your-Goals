@@ -29,6 +29,12 @@ class TodoRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getTodosByUpperGoal(upperGoalId: Int): List<Todo> {
+        return todoDao.loadTodosByUpperGoalId(upperGoalId = upperGoalId).map {
+            it.asDomainModel()
+        }
+    }
+
     override suspend fun getTodo(todoId: Int): Todo {
         return todoDao.loadTodoById(id = todoId).asDomainModel()
     }

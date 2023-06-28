@@ -104,6 +104,12 @@ class GoalRepositoryImpl @Inject constructor(
         return goalDao.loadGoalById(goalId).asDomainModel()
     }
 
+    override suspend fun getGoalsByUpperGoalId(upperGoalId: Int): List<Goal> {
+        return goalDao.loadGoalsByUpperGoalId(upperGoalId = upperGoalId).map {
+            it.asDomainModel()
+        }
+    }
+
     override suspend fun insertGoal(goal: Goal): Int {
         return goalDao.insert(goal.asEntity()).toInt()
     }
