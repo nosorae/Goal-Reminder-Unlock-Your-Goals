@@ -88,6 +88,9 @@
     <string name="common_date_format">%d년 %d월 %d일 (%s)</string>
     <string name="common_select_date">날짜를 선택해주세요</string>
     <string name="common_select_year">연도 선택</string>
+    <string name="common_lower_weekly_goal">하위 주간 목표</string>
+    <string name="common_lower_monthly_goal">하위 월간 목표</string>
+    <string name="common_lower_todo">하위 투두</string>
     <string name="common_contribution_score_title">기여도 <b>%d</b> / %d</string>
     <string name="common_no_upper_weekly_goal">주간 목표가 없어요, 주간 목표를 생성해주세요 🙏</string>
     <string name="common_no_upper_monthly_goal">월간 목표가 없어요, 월간 목표를 생성해주세요 🙏</string>
