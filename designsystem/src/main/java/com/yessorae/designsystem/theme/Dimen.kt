@@ -21,4 +21,6 @@ object Dimen {
 
     val SelectionYearContainerHeight = 36.0.dp
     val SelectionYearContainerWidth = 72.0.dp
+
+    val ListItemLeadingIconPadding = 48.dp
 }
