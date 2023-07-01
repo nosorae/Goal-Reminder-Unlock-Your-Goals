@@ -4,6 +4,7 @@ object DataConstants {
     const val PREFERENCE_DATASTORE_NAME = "timeledger-preference-datastore"
     const val PREF_KEY_IS_SCREEN_ON = "is_screen_on"
     const val PREF_KEY_COMPLETE_ON_BOARDING = "on_boarding"
+    const val PREF_KEY_COMPLETE_ON_BOARDING_MOCK_DATA = "on_boarding_mock_data"
     const val PREF_KEY_FINAL_GOAL = "final_goal"
     const val PREF_KEY_FINAL_GOAL_YEAR = "final_goal_year"
 
