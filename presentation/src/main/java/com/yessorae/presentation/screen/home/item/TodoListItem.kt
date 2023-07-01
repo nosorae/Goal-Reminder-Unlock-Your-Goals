@@ -1,5 +1,6 @@
 package com.yessorae.presentation.screen.home.item
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -15,15 +16,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.designsystem.util.BasePreview
 import com.yessorae.designsystem.util.Margin
 import com.yessorae.presentation.R
+import com.yessorae.presentation.ScreenConstants
 import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.model.mockTodoDatumModels
 
@@ -37,9 +41,15 @@ fun TodoListItem(
 ) {
     val context = LocalContext.current
     Box(
-        modifier = modifier.clickable {
-            onClickTodo()
-        }
+        modifier = modifier
+            .clickable { onClickTodo() }
+            .alpha(
+                if (todoModel.done) {
+                    ScreenConstants.DONE_ALPHA
+                } else {
+                    1f
+                }
+            )
     ) {
         ListItem(
             headlineContent = {
@@ -54,13 +64,23 @@ fun TodoListItem(
                         ),
                         modifier = Modifier.weight(1f, false),
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
+                        textDecoration = if (todoModel.done) {
+                            TextDecoration.LineThrough
+                        } else {
+                            TextDecoration.None
+                        }
                     )
                     Margin(dp = Dimen.InsideDividePadding)
                     todoModel.subtitle?.let { subtitle ->
                         Text(
                             text = subtitle.get(context),
-                            style = MaterialTheme.typography.labelSmall
+                            style = MaterialTheme.typography.labelSmall,
+                            textDecoration = if (todoModel.done) {
+                                TextDecoration.LineThrough
+                            } else {
+                                TextDecoration.None
+                            }
                         )
                     }
                 }
@@ -77,7 +97,12 @@ fun TodoListItem(
                         style = MaterialTheme.typography.titleSmall,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(top = Dimen.InsideDividePadding)
+                        modifier = Modifier.padding(top = Dimen.InsideDividePadding),
+                        textDecoration = if (todoModel.done) {
+                            TextDecoration.LineThrough
+                        } else {
+                            TextDecoration.None
+                        }
                     )
                 }
             },
@@ -92,7 +117,9 @@ fun TodoListItem(
         )
 
         IconButton(
-            modifier = Modifier.align(Alignment.CenterEnd).padding(end = Dimen.SmallDividePadding),
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .padding(end = Dimen.SmallDividePadding),
             onClick = { onClickMore() }
         ) {
             Icon(

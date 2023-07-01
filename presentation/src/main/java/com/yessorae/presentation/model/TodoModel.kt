@@ -34,21 +34,6 @@ data class TodoModel(
     val goalTitle: String? = upperGoalModel?.title
 }
 
-fun Todo.asModel(): TodoModel {
-    return TodoModel(
-        todoId = todoId,
-        title = title,
-        done = done,
-        date = date.date,
-        startTime = startTime,
-        endTime = endTime,
-        upperGoalModel = null,
-        upperGoalContributionScore = upperGoalContributionScore,
-        notification = notification,
-        memo = memo
-    )
-}
-
 fun TodoWithGoal.asModel(): TodoModel {
     return TodoModel(
         todoId = todo.todoId,
@@ -64,6 +49,20 @@ fun TodoWithGoal.asModel(): TodoModel {
     )
 }
 
+fun Todo.asModel(): TodoModel {
+    return TodoModel(
+        todoId = todoId,
+        title = title,
+        done = done,
+        date = date.date,
+        startTime = startTime,
+        endTime = endTime,
+        upperGoalModel = null, // todo refactor
+        upperGoalContributionScore = upperGoalContributionScore,
+        notification = notification,
+        memo = memo
+    )
+}
 fun TodoModel.asDomainModel(): Todo {
     return Todo(
         todoId = todoId,

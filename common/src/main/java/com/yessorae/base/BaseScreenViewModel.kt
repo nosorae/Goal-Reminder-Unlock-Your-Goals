@@ -41,5 +41,13 @@ abstract class BaseScreenViewModel<T> : ViewModel() {
         }
     }
 
+    protected fun showLoading() {
+        _loading.value = true
+    }
+
+    protected fun hideLoading() {
+        _loading.value = false
+    }
+
     protected abstract fun createInitialState(): T
 }

@@ -11,6 +11,7 @@ import com.yessorae.presentation.FinalGoalDestination
 import com.yessorae.presentation.GoalEditorDestination
 import com.yessorae.presentation.TodoEditorDestination
 import com.yessorae.presentation.model.GoalModel
+import com.yessorae.presentation.model.GoalWithUpperGoalModel
 import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.model.asDomainModel
 import com.yessorae.presentation.model.asDomainWithGoalModel
@@ -48,7 +49,11 @@ class HomeViewModel @Inject constructor(
     private val _scrollToPageEvent = MutableSharedFlow<Int>()
     val scrollToPageEvent: SharedFlow<Int> = _scrollToPageEvent.asSharedFlow()
 
+    private val _completeOnBoarding = MutableStateFlow<Boolean?>(null)
+    val completeOnBoarding: StateFlow<Boolean?> = _completeOnBoarding.asStateFlow()
+
     init {
+        processOnBoarding()
         getHomeScreenState()
     }
 
@@ -71,10 +76,11 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun processOnBoarding() = ioScope.launch {
-        if (preferencesDatastoreRepository.getCompleteOnBoarding().not()) {
-            _navigationEvent.emit(FinalGoalDestination.getRouteWithArgs(onBoarding = true))
+    private fun processOnBoarding() = ioScope.launch {
+        preferencesDatastoreRepository.getCompleteOnBoarding().collectLatest { result ->
+            _completeOnBoarding.value = result
         }
+
     }
 
     fun onOverlayConfirmed(confirmed: Boolean) {
@@ -170,7 +176,9 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onConfirmTodoDelete(dialogState: HomeDialogState.DeleteTodoConfirmDialog) = ioScope.launch {
-        todoRepository.deleteTodo(dialogState.todoModel.asDomainModel())
+        showLoading()
+        todoRepository.deleteTodoTransaction(dialogState.todoModel.asDomainModel())
+        hideLoading()
         onCancelDialog()
     }
 
@@ -195,12 +203,11 @@ data class HomeScreenState(
     val now: LocalDateTime = LocalDateTime.now(),
     val finalGoal: String = "",
     val finalGoalYear: Int = now.year + 3,
-    val yearlyGoalModels: List<GoalModel> = listOf(),
-    val monthlyGoalModels: List<GoalModel> = listOf(),
-    val weeklyGoalModels: List<GoalModel> = listOf(),
+    val yearlyGoalModels: List<GoalWithUpperGoalModel> = listOf(),
+    val monthlyGoalModels: List<GoalWithUpperGoalModel> = listOf(),
+    val weeklyGoalModels: List<GoalWithUpperGoalModel> = listOf(),
     val dailyTodoModels: List<TodoModel> = listOf(),
-    val dialogState: HomeDialogState = HomeDialogState.None,
-    val showDatePickerDialog: Boolean = false
+    val dialogState: HomeDialogState = HomeDialogState.None
 ) {
     val weekPair by lazy {
         now.date.getWeekRangePair()

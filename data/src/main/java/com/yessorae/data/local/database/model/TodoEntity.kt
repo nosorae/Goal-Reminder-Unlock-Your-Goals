@@ -3,28 +3,32 @@ package com.yessorae.data.local.database.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.yessorae.data.Constants
+import com.yessorae.data.DataConstants
 import com.yessorae.domain.model.Todo
 import kotlinx.datetime.LocalDateTime
 
-@Entity(tableName = Constants.TABLE_TODO)
+@Entity(tableName = DataConstants.TABLE_TODO)
 data class TodoEntity(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = Constants.COL_TODO_ID)
+    @ColumnInfo(name = DataConstants.COL_TODO_ID)
     var todoId: Int = 0,
     val title: String,
     val done: Boolean,
     val date: LocalDateTime,
-    @ColumnInfo(name = Constants.COL_START_TIME)
+    @ColumnInfo(name = DataConstants.COL_START_TIME)
     val startTime: LocalDateTime? = null,
-    @ColumnInfo(name = Constants.COL_END_TIME)
+    @ColumnInfo(name = DataConstants.COL_END_TIME)
     val endTime: LocalDateTime? = null,
-    @ColumnInfo(name = Constants.COL_UPPER_GOAL_ID)
+    @ColumnInfo(name = DataConstants.COL_UPPER_GOAL_ID)
     val upperGoalId: Int? = null,
-    @ColumnInfo(name = Constants.COL_UPPER_GOAL_CONTRIBUTION_SCORE)
+    @ColumnInfo(name = DataConstants.COL_UPPER_GOAL_CONTRIBUTION_SCORE)
     val upperGoalContributionScore: Int? = null,
     val notification: Boolean = false,
-    val memo: String? = null
+    val memo: String? = null,
+    @ColumnInfo(name = DataConstants.COL_SERVER_SYNC)
+    val serverSync: Boolean = false,
+    @ColumnInfo(name = DataConstants.COL_GOOGLE_CALENDAR_SYNC)
+    val googleCalendarSync: Boolean = false
 )
 
 fun TodoEntity.asDomainModel(): Todo {

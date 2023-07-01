@@ -9,7 +9,7 @@ class PreferencesDatastoreRepositoryImpl @Inject constructor(
     private val preferenceDataStore: PreferenceDataStore
 ) : PreferencesDatastoreRepository {
 
-    override suspend fun getCompleteOnBoarding(): Boolean {
+    override fun getCompleteOnBoarding(): Flow<Boolean> {
         return preferenceDataStore.getCompleteOnBoarding()
     }
 

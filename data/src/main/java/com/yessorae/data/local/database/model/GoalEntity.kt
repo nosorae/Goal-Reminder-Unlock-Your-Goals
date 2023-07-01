@@ -4,34 +4,38 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.yessorae.data.Constants
+import com.yessorae.data.DataConstants
 import com.yessorae.domain.model.Goal
 import com.yessorae.domain.model.type.GoalType
 import kotlinx.datetime.LocalDateTime
 
-@Entity(tableName = Constants.TABLE_GOAL)
+@Entity(tableName = DataConstants.TABLE_GOAL)
 data class GoalEntity(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = Constants.COL_GOAL_ID)
+    @ColumnInfo(name = DataConstants.COL_GOAL_ID)
     var goalId: Int = 0,
     val title: String = "",
-    @ColumnInfo(name = Constants.COL_DATE_FROM)
+    @ColumnInfo(name = DataConstants.COL_DATE_FROM)
     val dateFrom: LocalDateTime = LocalDateTime(0, 1, 1, 0, 0),
-    @ColumnInfo(name = Constants.COL_START_TIME)
+    @ColumnInfo(name = DataConstants.COL_START_TIME)
     val startTime: LocalDateTime? = null,
-    @ColumnInfo(name = Constants.COL_END_TIME)
+    @ColumnInfo(name = DataConstants.COL_END_TIME)
     val endTime: LocalDateTime? = null,
-    @ColumnInfo(name = Constants.COL_TOTAL_SCORE)
+    @ColumnInfo(name = DataConstants.COL_TOTAL_SCORE)
     val totalScore: Int = 0,
-    @ColumnInfo(name = Constants.COL_CURRENT_SCORE)
+    @ColumnInfo(name = DataConstants.COL_CURRENT_SCORE)
     val currentScore: Int = 0,
-    @ColumnInfo(name = Constants.COL_UPPER_GOAL_ID)
+    @ColumnInfo(name = DataConstants.COL_UPPER_GOAL_ID)
     val upperGoalId: Int? = null,
-    @ColumnInfo(name = Constants.COL_UPPER_GOAL_CONTRIBUTION_SCORE)
+    @ColumnInfo(name = DataConstants.COL_UPPER_GOAL_CONTRIBUTION_SCORE)
     val upperGoalContributionScore: Int? = null,
     val memo: String? = null,
     val notification: Boolean = false,
-    val type: GoalType = GoalType.NONE
+    val type: GoalType = GoalType.NONE,
+    @ColumnInfo(name = DataConstants.COL_SERVER_SYNC)
+    val serverSync: Boolean = false,
+    @ColumnInfo(name = DataConstants.COL_GOOGLE_CALENDAR_SYNC)
+    val googleCalendarSync: Boolean = false
 ) {
     @Ignore
     val done = totalScore <= currentScore

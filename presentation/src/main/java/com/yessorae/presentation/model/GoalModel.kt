@@ -1,6 +1,7 @@
 package com.yessorae.presentation.model
 
 import com.yessorae.domain.model.Goal
+import com.yessorae.domain.model.GoalWithUpperGoal
 import com.yessorae.domain.model.type.GoalType
 import com.yessorae.presentation.R
 import com.yessorae.util.ResString
@@ -66,6 +67,26 @@ data class GoalModel(
     }
 }
 
+data class GoalWithUpperGoalModel(
+    val goal: GoalModel,
+    val upperGoal: GoalModel? = null
+) {
+    val contributionText: StringModel? by lazy {
+        val upperGoalContributionScore = goal.upperGoalContributionScore
+        val title = upperGoal?.title
+        if (upperGoalContributionScore != null && title != null) {
+            val shortTitle = if (title.length >= 10) "${title.take(10)}..." else title
+            ResString(
+                R.string.home_goal_contribution_,
+                shortTitle,
+                upperGoalContributionScore
+            )
+        } else {
+            null
+        }
+    }
+}
+
 fun Goal.asModel(): GoalModel {
     return GoalModel(
         goalId = goalId,
@@ -100,6 +121,13 @@ fun GoalModel.asDomainModel(): Goal {
     )
 }
 
+fun GoalWithUpperGoal.asModel(): GoalWithUpperGoalModel {
+    return GoalWithUpperGoalModel(
+        goal = goal.asModel(),
+        upperGoal = upperGoal?.asModel()
+    )
+}
+
 val mockGoalDatumModels = listOf(
     GoalModel(
         title = "운동하기",
@@ -108,6 +136,7 @@ val mockGoalDatumModels = listOf(
         endTime = LocalDateTime(2023, 12, 31, 23, 59),
         totalScore = 365,
         currentScore = 150,
+        upperGoalContributionScore = 30,
         type = GoalType.YEARLY
     ),
     GoalModel(
@@ -126,6 +155,7 @@ val mockGoalDatumModels = listOf(
         endTime = LocalDateTime(2023, 12, 31, 23, 59),
         totalScore = 365,
         currentScore = 200,
+        upperGoalContributionScore = 1234,
         type = GoalType.YEARLY
     ),
     GoalModel(
