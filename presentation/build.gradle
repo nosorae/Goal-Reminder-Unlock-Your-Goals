@@ -81,7 +81,6 @@ dependencies {
     implementation 'androidx.activity:activity-compose:1.6.1'
     // Optional - Integration with ViewModels
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
-
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 
@@ -90,7 +89,6 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
     implementation "androidx.hilt:hilt-navigation-compose:$hilt_compose_navigation"
-
 
     // datetime
     implementation "org.jetbrains.kotlinx:kotlinx-datetime:$date_time_version"
@@ -109,6 +107,11 @@ dependencies {
 
     // admob
     implementation "com.google.android.gms:play-services-ads:$admob_version"
+
+    // work manager
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+    implementation "androidx.hilt:hilt-work:$work_hilt_version"
+    kapt "androidx.hilt:hilt-compiler:$work_hilt_version"
 }
 
 ktlint {

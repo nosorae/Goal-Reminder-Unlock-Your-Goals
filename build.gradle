@@ -20,6 +20,7 @@ buildscript {
         date_time_version = "0.4.0"
         desugar_version = "2.0.3"
         work_version = "2.8.0"
+        work_hilt_version = "1.0.0"
         admob_version = "22.1.0"
     }
 }// Top-level build file where you can add configuration options common to all sub-projects/modules.
