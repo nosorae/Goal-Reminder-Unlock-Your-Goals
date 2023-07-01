@@ -80,9 +80,9 @@
     <string name="common_day_duration">%d일-%d일</string>
     <string name="common_hour_duration">%d시-%d시</string>
     <string name="common_yearly_goal">%d년간 목표</string>
-    <string name="common_monthly_goal">%d월간 목표</string>
-    <string name="common_weekly_goal">%d월 %d일부터 %d월 %d일까지의 주간 목표</string>
-    <string name="common_day_todo">%s일 할일</string>
+    <string name="common_monthly_goal">%d년 %d월간 목표</string>
+    <string name="common_weekly_goal">%d년 %d월%d일부터 %d월%d일까지의 주간 목표</string>
+    <string name="common_day_todo">%d년 %d월 %d일 할일</string>
     <string name="common_final_goal">%d년에 나는\n%s이다.</string>
     <string name="common_save">저장</string>
     <string name="common_date_format">%d년 %d월 %d일 (%s)</string>

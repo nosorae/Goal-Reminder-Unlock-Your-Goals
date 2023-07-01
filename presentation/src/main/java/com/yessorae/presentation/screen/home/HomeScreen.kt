@@ -152,7 +152,10 @@ fun HomeScreen(
                             title = TitleListItemModel(
                                 stringResource(
                                     id = R.string.common_monthly_goal
-                                ).format(model.now.monthNumber)
+                                ).format(
+                                    model.now.year,
+                                    model.now.monthNumber
+                                )
                             ),
                             goals = model.monthlyGoalModels,
                             onClickMore = { goal ->
@@ -173,6 +176,7 @@ fun HomeScreen(
                                 stringResource(
                                     id = R.string.common_weekly_goal
                                 ).format(
+                                    model.now.year,
                                     model.weekPair.first.monthNumber,
                                     model.weekPair.first.dayOfMonth,
                                     model.weekPair.second.monthNumber,
@@ -196,6 +200,8 @@ fun HomeScreen(
                         TodoPage(
                             title = TitleListItemModel(
                                 stringResource(id = R.string.common_day_todo).format(
+                                    model.now.year,
+                                    model.now.monthNumber,
                                     model.now.dayOfMonth
                                 )
                             ),
