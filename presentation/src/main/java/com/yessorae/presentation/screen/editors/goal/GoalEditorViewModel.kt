@@ -22,8 +22,8 @@ import com.yessorae.util.now
 import com.yessorae.util.toLocalDateTime
 import com.yessorae.util.toStartLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import javax.inject.Inject
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
@@ -34,7 +34,7 @@ class GoalEditorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val todoRepository: TodoRepository,
     private val goalRepository: GoalRepository,
-    private val getGoalWithUpperGoalUseCase: GetGoalWithUpperGoalUseCase,
+    private val getGoalWithUpperGoalUseCase: GetGoalWithUpperGoalUseCase
 ) : BaseScreenViewModel<GoalEditorScreenState>() {
     private val goalIdParam: Int =
         checkNotNull(savedStateHandle[GoalEditorDestination.goalIdArg])
@@ -491,7 +491,6 @@ data class GoalEditorScreenState(
             }
         }
     }
-
 
     fun getUpdatedGoal(): GoalModel? {
         if (enableSaveButton.not()) return null

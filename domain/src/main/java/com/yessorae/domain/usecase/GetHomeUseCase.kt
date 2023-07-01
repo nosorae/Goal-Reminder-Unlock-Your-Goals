@@ -2,7 +2,6 @@ package com.yessorae.domain.usecase
 
 import com.yessorae.domain.model.Home
 import com.yessorae.domain.model.type.GoalType
-import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.domain.repository.PreferencesDatastoreRepository
 import com.yessorae.domain.util.combine
 import javax.inject.Inject

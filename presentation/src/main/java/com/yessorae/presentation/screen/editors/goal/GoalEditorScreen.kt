@@ -35,8 +35,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -48,9 +52,14 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import com.google.android.gms.ads.AdView
+import com.yessorae.designsystem.common.AdmobBanner
 import com.yessorae.designsystem.common.ScreenLoadingProgressbar
 import com.yessorae.designsystem.theme.Dimen
+import com.yessorae.designsystem.util.ComposableLifecycle
 import com.yessorae.designsystem.util.Margin
+import com.yessorae.presentation.BuildConfig
 import com.yessorae.presentation.R
 import com.yessorae.presentation.ScreenConstants
 import com.yessorae.presentation.buttons.BackgroundTextButton
@@ -83,6 +92,17 @@ fun GoalEditorScreen(
     val loading by viewModel.loading.collectAsState()
 
     val context = LocalContext.current
+
+    val adView: MutableState<AdView?> = remember {
+        mutableStateOf(null)
+    }
+
+    ComposableLifecycle { _, event ->
+        if (event == Lifecycle.Event.ON_DESTROY) {
+            adView.value?.destroy()
+            adView.value = null
+        }
+    }
 
     LaunchedEffect(key1 = Unit) {
         launch {
@@ -187,6 +207,16 @@ fun GoalEditorScreen(
                 }
 
                 model.lowerItemsTitle?.let { lowerItemsTitle ->
+                    item {
+                        AdmobBanner(
+                            adView = adView.value,
+                            onAdViewLoad = {
+                                adView.value = it
+                            },
+                            adId = BuildConfig.ADMOB_EDITOR_BANNER_ID
+                        )
+                    }
+
                     item {
                         SingleLineEditorListItem(
                             leadingIcon = Icons.Filled.SubdirectoryArrowRight,
@@ -472,7 +502,7 @@ fun MemoListItem(
 @Composable
 fun GoalEditorListItem(
     modifier: Modifier = Modifier,
-    goalModel: GoalModel,
+    goalModel: GoalModel
 ) {
     val context = LocalContext.current
     ListItem(
@@ -549,7 +579,7 @@ fun GoalEditorListItem(
 @Composable
 fun TodoEditorListItem(
     modifier: Modifier = Modifier,
-    todoModel: TodoModel,
+    todoModel: TodoModel
 ) {
     val context = LocalContext.current
     ListItem(

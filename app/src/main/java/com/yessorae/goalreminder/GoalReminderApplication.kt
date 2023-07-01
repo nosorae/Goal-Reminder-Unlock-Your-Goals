@@ -1,6 +1,7 @@
 package com.yessorae.goalreminder
 
 import android.app.Application
+import com.google.android.gms.ads.MobileAds
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
@@ -8,7 +9,12 @@ import timber.log.Timber
 class GoalReminderApplication : Application() {
     override fun onCreate() {
         super.onCreate()
+        initMobileAdmob()
         plantTimberDebugTree()
+    }
+
+    private fun initMobileAdmob() {
+        MobileAds.initialize(this)
     }
 
     private fun plantTimberDebugTree() {
