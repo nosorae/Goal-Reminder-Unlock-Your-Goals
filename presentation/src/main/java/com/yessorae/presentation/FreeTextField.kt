@@ -16,8 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,7 +48,8 @@ fun FreeTextField(
     shape: Shape = TextFieldDefaults.shape,
     colors: TextFieldColors = TextFieldDefaults.colors(),
     textColor: Color = MaterialTheme.colorScheme.onBackground,
-    cursorColor: Color = MaterialTheme.colorScheme.onBackground
+    cursorColor: Color = MaterialTheme.colorScheme.onBackground,
+    onTextLayout: (TextLayoutResult) -> Unit = {},
 ) {
     val mergedTextStyle = textStyle.merge(TextStyle(color = textColor))
 
@@ -54,7 +57,8 @@ fun FreeTextField(
         value = value,
         modifier = modifier
             .defaultMinSize(
-                minHeight = TextFieldDefaults.MinHeight
+                minHeight = TextFieldDefaults.MinHeight,
+                minWidth = 0.dp
             ),
         onValueChange = onValueChange,
         enabled = enabled,
@@ -87,6 +91,7 @@ fun FreeTextField(
                 interactionSource = interactionSource,
                 colors = colors
             )
-        }
+        },
+        onTextLayout = onTextLayout
     )
 }

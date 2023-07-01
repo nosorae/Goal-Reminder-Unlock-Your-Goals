@@ -143,29 +143,15 @@ fun FinalGoalScreen(
 
                 Margin(dp = Dimen.DefaultDividePadding)
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.Bottom
-                ) {
-                    FinalGoalTextField(
-                        title = model.finalGoalText,
-                        onChangeTitle = {
-                            viewModel.onChangeYearText(it)
-                        },
-                        placeholderText = stringResource(id = R.string.final_goal_text_placeholder),
-                        textStyle = contentTextStyle,
-                        modifier = Modifier.weight(weight = 1f, fill = false)
-                    )
-
-                    Text(
-                        text = stringResource(id = R.string.final_goal_text_word_part),
-                        style = partTextStyle,
-                        modifier = Modifier
-                            .padding(bottom = Dimen.DefaultDividePadding)
-                            .wrapContentWidth(),
-                        maxLines = 1
-                    )
-                }
+                FinalGoalTextField(
+                    title = model.finalGoalText,
+                    onChangeTitle = {
+                        viewModel.onChangeYearText(it)
+                    },
+                    placeholderText = stringResource(id = R.string.final_goal_text_placeholder),
+                    textStyle = contentTextStyle,
+                    singleLine = false
+                )
             }
 
             BackgroundTextButton(
