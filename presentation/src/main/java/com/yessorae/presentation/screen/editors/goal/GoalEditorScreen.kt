@@ -213,7 +213,8 @@ fun GoalEditorScreen(
                             onAdViewLoad = {
                                 adView.value = it
                             },
-                            adId = BuildConfig.ADMOB_EDITOR_BANNER_ID
+                            adId = BuildConfig.ADMOB_EDITOR_BANNER_ID,
+                            modifier = Modifier.padding(bottom = Dimen.SmallDividePadding)
                         )
                     }
 
