@@ -48,6 +48,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.yessorae.designsystem.common.AdmobBanner
 import com.yessorae.designsystem.common.ScreenLoadingProgressbar
 import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.designsystem.util.Margin
@@ -186,7 +187,12 @@ fun GoalEditorScreen(
                     )
                 }
 
+
                 model.lowerItemsTitle?.let { lowerItemsTitle ->
+                    item {
+                        AdmobBanner()
+                    }
+
                     item {
                         SingleLineEditorListItem(
                             leadingIcon = Icons.Filled.SubdirectoryArrowRight,

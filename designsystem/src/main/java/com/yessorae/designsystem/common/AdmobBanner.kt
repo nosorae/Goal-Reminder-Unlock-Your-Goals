@@ -24,7 +24,7 @@ fun AdmobBanner(
     var isDestroyed by remember {
         mutableStateOf(false)
     }
-    ComposableLifecycle() { _, event ->
+    ComposableLifecycle { _, event ->
         if (event == Lifecycle.Event.ON_DESTROY) {
             isDestroyed = true
         }
