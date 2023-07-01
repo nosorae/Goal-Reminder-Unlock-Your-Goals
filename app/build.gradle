@@ -8,6 +8,9 @@ plugins {
     id 'com.google.firebase.crashlytics'
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     namespace 'com.yessorae.goalreminder'
     compileSdk 33
@@ -29,6 +32,15 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            resValue 'string', 'ADMOB_APP_ID', properties["ADMOB_APP_ID"]
+            buildConfigField "String", "ADMOB_MAIN_BANNER_ID", properties["ADMOB_MAIN_BANNER_ID"]
+            buildConfigField "String", "ADMOB_EDITOR_BANNER_ID", properties["ADMOB_EDITOR_BANNER_ID"]
+        }
+        debug {
+            resValue 'string', 'ADMOB_APP_ID', properties["ADMOB_APP_ID"]
+            buildConfigField "String", "ADMOB_MAIN_BANNER_ID", properties["ABMOB_BNNER_TEST"]
+            buildConfigField "String", "ADMOB_EDITOR_BANNER_ID", properties["ABMOB_BNNER_TEST"]
         }
     }
     compileOptions {
