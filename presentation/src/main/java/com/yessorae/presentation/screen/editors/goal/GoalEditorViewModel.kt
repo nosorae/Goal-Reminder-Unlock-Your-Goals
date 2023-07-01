@@ -2,14 +2,15 @@ package com.yessorae.presentation.screen.editors.goal
 
 import androidx.lifecycle.SavedStateHandle
 import com.yessorae.base.BaseScreenViewModel
-import com.yessorae.common.Logger
 import com.yessorae.domain.model.type.GoalType
 import com.yessorae.domain.model.type.toGoalType
 import com.yessorae.domain.repository.GoalRepository
+import com.yessorae.domain.repository.TodoRepository
 import com.yessorae.domain.usecase.GetGoalWithUpperGoalUseCase
 import com.yessorae.presentation.GoalEditorDestination
 import com.yessorae.presentation.R
 import com.yessorae.presentation.model.GoalModel
+import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.model.asDomainModel
 import com.yessorae.presentation.model.asModel
 import com.yessorae.presentation.screen.editors.EditorDialogState
@@ -21,6 +22,7 @@ import com.yessorae.util.now
 import com.yessorae.util.toLocalDateTime
 import com.yessorae.util.toStartLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import javax.inject.Inject
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
@@ -30,8 +32,9 @@ import kotlinx.datetime.LocalDateTime
 @HiltViewModel
 class GoalEditorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val todoRepository: TodoRepository,
     private val goalRepository: GoalRepository,
-    private val getGoalWithUpperGoalUseCase: GetGoalWithUpperGoalUseCase
+    private val getGoalWithUpperGoalUseCase: GetGoalWithUpperGoalUseCase,
 ) : BaseScreenViewModel<GoalEditorScreenState>() {
     private val goalIdParam: Int =
         checkNotNull(savedStateHandle[GoalEditorDestination.goalIdArg])
@@ -64,13 +67,33 @@ class GoalEditorViewModel @Inject constructor(
         }
 
         if (isUpdate) {
-            val goalWithUpperGoal = getGoalWithUpperGoalUseCase(goalIdParam)
+            val goalWithUpperGoalJob = async {
+                getGoalWithUpperGoalUseCase(goalId = goalIdParam)
+            }
+
+            val lowerTodosJob = async {
+                todoRepository.getTodosByUpperGoal(upperGoalId = goalIdParam).map {
+                    it.asModel()
+                }
+            }
+
+            val lowerGoalsJob = async {
+                goalRepository.getGoalsByUpperGoalId(upperGoalId = goalIdParam).map {
+                    it.asModel()
+                }
+            }
+
+            val goalWithUpperGoal = goalWithUpperGoalJob.await()
             val goal = goalWithUpperGoal.goal.asModel()
             val upperGoal = goalWithUpperGoal.upperGoal?.asModel()
+            val lowerGoals = lowerGoalsJob.await()
+            val lowerTodos = lowerTodosJob.await()
             updateState {
                 stateValue.copy(
                     goal = goal,
                     title = goal.title,
+                    lowerGoals = lowerGoals,
+                    lowerTodos = lowerTodos,
                     startDate = goal.startTime?.date,
                     endDate = goal.endTime?.date,
                     memo = goal.memo,
@@ -140,7 +163,7 @@ class GoalEditorViewModel @Inject constructor(
                 goalRepository.getYearlyGoalsFlow(stateValue.paramDate.toStartLocalDateTime())
                     .firstOrNull()?.let { goals ->
                         if (goals.isEmpty()) {
-                            _toast.emit(ResString(R.string.common_no_upper_goal))
+                            _toast.emit(ResString(R.string.common_no_upper_yearly_goal))
                         } else {
                             val goalModels = goals.map { it.asModel() }
                             updateState {
@@ -157,7 +180,7 @@ class GoalEditorViewModel @Inject constructor(
                     .getMonthlyGoalsFlow(stateValue.paramDate.toStartLocalDateTime())
                     .firstOrNull()?.let { goals ->
                         if (goals.isEmpty()) {
-                            _toast.emit(ResString(R.string.common_no_upper_goal))
+                            _toast.emit(ResString(R.string.common_no_upper_monthly_goal))
                         } else {
                             val goalModels = goals.map { it.asModel() }
                             updateState {
@@ -320,12 +343,13 @@ class GoalEditorViewModel @Inject constructor(
 
     fun onClickSave() = ioScope.launch {
         stateValue.getUpdatedGoal()?.asDomainModel()?.let {
-            Logger.uiDebug("onClickSave isUpdate $isUpdate / goal : $it")
+            showLoading()
             if (isUpdate) {
-                goalRepository.updateGoal(it)
+                goalRepository.updateGoalTransaction(it)
             } else {
                 goalRepository.insertGoal(it)
             }
+            hideLoading()
             back()
         }
     }
@@ -343,6 +367,8 @@ data class GoalEditorScreenState(
     val goal: GoalModel? = null,
     val paramDate: LocalDate = LocalDateTime.now().date,
     val paramGoalType: GoalType = GoalType.NONE,
+    val lowerGoals: List<GoalModel>? = null, // todo check
+    val lowerTodos: List<TodoModel>? = null, // todo check
     val title: String? = null,
     val startDate: LocalDate? = null,
     val endDate: LocalDate? = null,
@@ -429,6 +455,43 @@ data class GoalEditorScreenState(
             }
         }
     }
+
+    val upperGoalPlaceholderText by lazy {
+        if (paramGoalType == GoalType.WEEKLY) {
+            ResString(R.string.goal_contribution_monthly_goal_placeholder)
+        } else {
+            ResString(R.string.goal_contribution_yearly_goal_placeholder)
+        }
+    }
+
+    val showLowerGoals: Boolean by lazy {
+        lowerGoals.isNullOrEmpty().not()
+    }
+
+    val showLowerTodos: Boolean by lazy {
+        lowerTodos.isNullOrEmpty().not()
+    }
+
+    val lowerItemsTitle: StringModel? by lazy {
+        if (lowerGoals.isNullOrEmpty() && lowerTodos.isNullOrEmpty()) {
+            null
+        } else {
+            when (paramGoalType) {
+                GoalType.WEEKLY -> {
+                    ResString(R.string.common_lower_todo)
+                }
+
+                GoalType.MONTHLY -> {
+                    ResString(R.string.common_lower_weekly_goal)
+                }
+
+                else -> {
+                    ResString(R.string.common_lower_monthly_goal)
+                }
+            }
+        }
+    }
+
 
     fun getUpdatedGoal(): GoalModel? {
         if (enableSaveButton.not()) return null

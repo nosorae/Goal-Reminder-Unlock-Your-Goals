@@ -31,12 +31,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.yessorae.designsystem.common.ScreenLoadingProgressbar
 import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.domain.model.type.GoalType
+import com.yessorae.presentation.FinalGoalDestination
 import com.yessorae.presentation.R
 import com.yessorae.presentation.dialogs.ConfirmDialog
 import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
 import com.yessorae.presentation.model.GoalModel
+import com.yessorae.presentation.model.GoalWithUpperGoalModel
 import com.yessorae.presentation.model.TitleListItemModel
 import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.screen.home.item.GoalListItem
@@ -61,6 +64,8 @@ fun HomeScreen(
     onNavOutEvent: (String) -> Unit = {}
 ) {
     val model by viewModel.state.collectAsState()
+    val loading by viewModel.loading.collectAsState()
+    val completeOnBoarding by viewModel.completeOnBoarding.collectAsState()
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -79,10 +84,6 @@ fun HomeScreen(
                     onNavOutEvent(route)
                 }
             }
-        }
-
-        launch {
-            viewModel.processOnBoarding()
         }
     }
 
@@ -169,7 +170,12 @@ fun HomeScreen(
                             title = TitleListItemModel(
                                 stringResource(
                                     id = R.string.common_weekly_goal
-                                ).format(model.weekPair.first, model.weekPair.second)
+                                ).format(
+                                    model.weekPair.first.monthNumber,
+                                    model.weekPair.first.dayOfMonth,
+                                    model.weekPair.second.monthNumber,
+                                    model.weekPair.second.dayOfMonth
+                                )
                             ),
                             goals = model.weeklyGoalModels,
                             onClickMore = { goal ->
@@ -212,12 +218,10 @@ fun HomeScreen(
     }
 
     OverlayPermissionDialog(
-        showDialog = model.dialogState is HomeDialogState.OverlayConfirmDialog,
+        showDialog = (model.dialogState is HomeDialogState.OverlayConfirmDialog)
+                && completeOnBoarding == true,
         onOverlayConfirmed = { confirmed ->
             viewModel.onOverlayConfirmed(confirmed)
-        },
-        onCancelDialog = {
-            viewModel.onCancelDialog()
         }
     )
 
@@ -264,6 +268,12 @@ fun HomeScreen(
         dismissOnClickOutside = true,
         dismissOnBackPress = true
     )
+
+    if (completeOnBoarding == false) {
+        onNavOutEvent(FinalGoalDestination.getRouteWithArgs(onBoarding = true))
+    }
+
+    ScreenLoadingProgressbar(show = loading)
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -337,7 +347,7 @@ fun LabelTab(
 private fun GoalPage(
     modifier: Modifier = Modifier,
     title: TitleListItemModel,
-    goals: List<GoalModel>,
+    goals: List<GoalWithUpperGoalModel>,
     onClickGoal: (GoalModel) -> Unit = {},
     onClickMore: (GoalModel) -> Unit = {},
     onClickAdd: () -> Unit = {}
@@ -361,16 +371,16 @@ private fun GoalPage(
         itemsIndexed(
             items = goals,
             contentType = { _, _ ->
-                GoalModel::class
+                GoalWithUpperGoalModel::class
             }
         ) { _, item ->
             GoalListItem(
                 goalModel = item,
                 onClickGoal = {
-                    onClickGoal(item)
+                    onClickGoal(item.goal)
                 },
                 onClickMore = {
-                    onClickMore(item)
+                    onClickMore(item.goal)
                 }
             )
         }

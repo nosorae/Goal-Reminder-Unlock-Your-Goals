@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface PreferencesDatastoreRepository {
 
-    suspend fun getCompleteOnBoarding(): Boolean
+    fun getCompleteOnBoarding(): Flow<Boolean>
     suspend fun setCompleteOnBoarding()
 
     fun getServiceOnOff(): Flow<Boolean>

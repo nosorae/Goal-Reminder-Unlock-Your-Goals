@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import com.yessorae.common.Logger
 import com.yessorae.presentation.R
 import com.yessorae.presentation.dialogs.ConfirmDialog
 
@@ -16,13 +17,15 @@ import com.yessorae.presentation.dialogs.ConfirmDialog
 fun OverlayPermissionDialog(
     showDialog: Boolean,
     onOverlayConfirmed: (Boolean) -> Unit,
-    onCancelDialog: () -> Unit
 ) {
     val context = LocalContext.current
 
-    LaunchedEffect(key1 = Unit) {
-        onOverlayConfirmed(Settings.canDrawOverlays(context))
+    LaunchedEffect(key1 = showDialog) {
+        if (showDialog.not()) {
+            onOverlayConfirmed(Settings.canDrawOverlays(context))
+        }
     }
+
     val launcher =
         rememberLauncherForActivityResult(
             contract = ActivityResultContracts.StartActivityForResult()
@@ -34,9 +37,6 @@ fun OverlayPermissionDialog(
         showDialog = showDialog,
         title = stringResource(id = R.string.common_permission_request),
         body = stringResource(id = R.string.dialog_body_overlay_permission_request),
-        onClickCancel = {
-            onCancelDialog()
-        },
         onClickConfirm = {
             if (!Settings.canDrawOverlays(context)) {
                 val intent =

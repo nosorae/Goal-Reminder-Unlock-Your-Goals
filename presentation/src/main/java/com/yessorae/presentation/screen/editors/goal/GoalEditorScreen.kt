@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,13 +15,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FlagCircle
 import androidx.compose.material.icons.filled.Notes
 import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material.icons.filled.SubdirectoryArrowRight
 import androidx.compose.material.icons.filled.TableChart
 import androidx.compose.material.icons.outlined.Flag
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -32,20 +37,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.yessorae.designsystem.common.ScreenLoadingProgressbar
 import com.yessorae.designsystem.theme.Dimen
+import com.yessorae.designsystem.util.Margin
 import com.yessorae.presentation.R
+import com.yessorae.presentation.ScreenConstants
 import com.yessorae.presentation.buttons.BackgroundTextButton
 import com.yessorae.presentation.dialogs.GoalReminderAlertDialog
 import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
 import com.yessorae.presentation.dialogs.OptionListDialog
 import com.yessorae.presentation.ext.BottomNavigationBarHeightDp
 import com.yessorae.presentation.model.GoalModel
+import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.screen.editors.EditorDialogState
 import com.yessorae.presentation.screen.editors.EditorNumberField
 import com.yessorae.presentation.screen.editors.EditorTextField
@@ -53,6 +67,7 @@ import com.yessorae.presentation.screen.editors.EditorTopAppBar
 import com.yessorae.presentation.screen.editors.MultiLineEditorListItem
 import com.yessorae.presentation.screen.editors.SelectableEditorListItem
 import com.yessorae.presentation.screen.editors.SingleLineEditorListItem
+import com.yessorae.util.StringModel
 import com.yessorae.util.showToast
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.collectLatest
@@ -65,6 +80,8 @@ fun GoalEditorScreen(
     onBackEvent: () -> Unit = {}
 ) {
     val model by viewModel.state.collectAsState()
+    val loading by viewModel.loading.collectAsState()
+
     val context = LocalContext.current
 
     LaunchedEffect(key1 = Unit) {
@@ -146,9 +163,10 @@ fun GoalEditorScreen(
 
                 if (model.showGoalListItem) {
                     item {
-                        GoalListItem(
+                        ContributionGoalListItem(
                             contributeGoal = model.upperGoal,
                             contributeScore = model.upperGoalContributionScore ?: 0,
+                            placeholderText = model.upperGoalPlaceholderText,
                             onClickContributeGoal = {
                                 viewModel.onClickContributeGoal()
                             },
@@ -166,6 +184,49 @@ fun GoalEditorScreen(
                             viewModel.onChangeMemo(it)
                         }
                     )
+                }
+
+                model.lowerItemsTitle?.let { lowerItemsTitle ->
+                    item {
+                        SingleLineEditorListItem(
+                            leadingIcon = Icons.Filled.SubdirectoryArrowRight,
+                            insidePadding = Dimen.DefaultDividePadding
+                        ) {
+                            Text(text = lowerItemsTitle.get(context))
+                        }
+                    }
+
+                    if (model.showLowerGoals) {
+                        model.lowerGoals?.let { goals ->
+                            items(
+                                goals,
+                                contentType = { GoalModel::class }
+                            ) { goal ->
+                                GoalEditorListItem(
+                                    goalModel = goal,
+                                    modifier = Modifier.padding(
+                                        start = Dimen.ListItemLeadingIconPadding
+                                    )
+                                )
+                            }
+                        }
+                    }
+
+                    if (model.showLowerTodos) {
+                        model.lowerTodos?.let { todos ->
+                            items(
+                                items = todos,
+                                contentType = { TodoModel::class }
+                            ) { todo ->
+                                TodoEditorListItem(
+                                    todoModel = todo,
+                                    modifier = Modifier.padding(
+                                        start = Dimen.ListItemLeadingIconPadding
+                                    )
+                                )
+                            }
+                        }
+                    }
                 }
             }
 
@@ -251,6 +312,8 @@ fun GoalEditorScreen(
             )
         }
     }
+
+    ScreenLoadingProgressbar(show = loading)
 }
 
 @Composable
@@ -344,23 +407,26 @@ private fun TimeListItem(
 }
 
 @Composable
-private fun GoalListItem(
+private fun ContributionGoalListItem(
     contributeGoal: GoalModel?,
     contributeScore: Int = 0,
+    placeholderText: StringModel,
     onChangeContributeGoalScore: (Int) -> Unit = {},
     onClickContributeGoal: () -> Unit = {}
 
 ) {
     val hasContributeGoal = contributeGoal != null
+    val context = LocalContext.current
+
     SelectableEditorListItem(
         titleValue = contributeGoal?.title,
-        placeholderText = stringResource(id = R.string.goal_contribution_goal_placeholder),
+        placeholderText = placeholderText.get(context),
         content = {
             AnimatedVisibility(visible = hasContributeGoal) {
                 Text(
                     text = stringResource(id = R.string.common_contribution_score_title).format(
                         contributeScore,
-                        contributeGoal?.totalScore
+                        contributeGoal?.totalScore ?: 0
                     ),
                     style = MaterialTheme.typography.labelMedium
                 )
@@ -401,4 +467,139 @@ fun MemoListItem(
             singleLine = false
         )
     }
+}
+
+@Composable
+fun GoalEditorListItem(
+    modifier: Modifier = Modifier,
+    goalModel: GoalModel,
+) {
+    val context = LocalContext.current
+    ListItem(
+        headlineContent = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(end = Dimen.ExtraLargeDividePadding)
+            ) {
+                Text(
+                    text = goalModel.title,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    modifier = Modifier.weight(1f, false),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    textDecoration = if (goalModel.complete) {
+                        TextDecoration.LineThrough
+                    } else {
+                        TextDecoration.None
+                    }
+                )
+                Margin(dp = Dimen.InsideDividePadding)
+                goalModel.subtitle?.let { subtitle ->
+                    Text(
+                        text = subtitle.get(context),
+                        style = MaterialTheme.typography.labelSmall,
+                        textDecoration = if (goalModel.complete) {
+                            TextDecoration.LineThrough
+                        } else {
+                            TextDecoration.None
+                        }
+                    )
+                }
+            }
+        },
+        supportingContent = {
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Margin(dp = Dimen.InsideDividePadding)
+                Text(
+                    text = stringResource(
+                        id = R.string.home_goal_progress
+                    ).format(goalModel.percent),
+                    style = MaterialTheme.typography.labelMedium,
+                    textAlign = TextAlign.Center,
+                    textDecoration = if (goalModel.complete) {
+                        TextDecoration.LineThrough
+                    } else {
+                        TextDecoration.None
+                    }
+                )
+                Margin(Dimen.InsideDividePadding)
+                LinearProgressIndicator(
+                    modifier = Modifier.fillMaxWidth(),
+                    progress = goalModel.progress,
+                    color = MaterialTheme.colorScheme.primary,
+                    trackColor = MaterialTheme.colorScheme.onBackground
+                )
+            }
+        },
+        modifier = modifier
+            .alpha(
+                if (goalModel.complete) {
+                    ScreenConstants.DONE_ALPHA
+                } else {
+                    1f
+                }
+            )
+    )
+}
+
+@Composable
+fun TodoEditorListItem(
+    modifier: Modifier = Modifier,
+    todoModel: TodoModel,
+) {
+    val context = LocalContext.current
+    ListItem(
+        headlineContent = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(end = Dimen.ExtraLargeDividePadding)
+            ) {
+                Text(
+                    text = todoModel.title,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    modifier = Modifier.weight(1f, false),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    textDecoration = if (todoModel.done) {
+                        TextDecoration.LineThrough
+                    } else {
+                        TextDecoration.None
+                    }
+                )
+                Margin(dp = Dimen.InsideDividePadding)
+                todoModel.subtitle?.let { subtitle ->
+                    Text(
+                        text = subtitle.get(context),
+                        style = MaterialTheme.typography.labelSmall,
+                        textDecoration = if (todoModel.done) {
+                            TextDecoration.LineThrough
+                        } else {
+                            TextDecoration.None
+                        }
+                    )
+                }
+            }
+        },
+        leadingContent = {
+            Checkbox(
+                checked = todoModel.done,
+                onCheckedChange = null,
+                enabled = false
+            )
+        },
+        modifier = modifier
+            .alpha(
+                if (todoModel.done) {
+                    ScreenConstants.DONE_ALPHA
+                } else {
+                    1f
+                }
+            )
+    )
 }

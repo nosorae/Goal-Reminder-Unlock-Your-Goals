@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.yessorae.data.Constants
+import com.yessorae.data.DataConstants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,7 +13,7 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 val Context.datastore: DataStore<Preferences> by preferencesDataStore(
-    name = Constants.PREFERENCE_DATASTORE_NAME
+    name = DataConstants.PREFERENCE_DATASTORE_NAME
 )
 
 @Module

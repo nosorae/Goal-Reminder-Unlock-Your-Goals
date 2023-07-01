@@ -17,29 +17,40 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.designsystem.util.BasePreview
 import com.yessorae.designsystem.util.Margin
 import com.yessorae.presentation.R
-import com.yessorae.presentation.model.GoalModel
+import com.yessorae.presentation.ScreenConstants
+import com.yessorae.presentation.model.GoalWithUpperGoalModel
 import com.yessorae.presentation.model.mockGoalDatumModels
 
 @Composable
 fun GoalListItem(
     modifier: Modifier = Modifier,
-    goalModel: GoalModel,
+    goalModel: GoalWithUpperGoalModel,
     onClickGoal: () -> Unit = {},
     onClickMore: () -> Unit = {}
 ) {
     val context = LocalContext.current
     Box(
-        modifier = modifier.clickable { onClickGoal() }
+        modifier = modifier
+            .clickable { onClickGoal() }
+            .alpha(
+                if (goalModel.goal.complete) {
+                    ScreenConstants.DONE_ALPHA
+                } else {
+                    1f
+                }
+            )
     ) {
         ListItem(
             headlineContent = {
@@ -48,19 +59,29 @@ fun GoalListItem(
                     modifier = Modifier.padding(end = Dimen.ExtraLargeDividePadding)
                 ) {
                     Text(
-                        text = goalModel.title,
+                        text = goalModel.goal.title,
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold
                         ),
                         modifier = Modifier.weight(1f, false),
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
+                        textDecoration = if (goalModel.goal.complete) {
+                            TextDecoration.LineThrough
+                        } else {
+                            TextDecoration.None
+                        }
                     )
                     Margin(dp = Dimen.InsideDividePadding)
-                    goalModel.subtitle?.let { subtitle ->
+                    goalModel.goal.subtitle?.let { subtitle ->
                         Text(
                             text = subtitle.get(context),
-                            style = MaterialTheme.typography.labelSmall
+                            style = MaterialTheme.typography.labelSmall,
+                            textDecoration = if (goalModel.goal.complete) {
+                                TextDecoration.LineThrough
+                            } else {
+                                TextDecoration.None
+                            }
                         )
                     }
                 }
@@ -69,18 +90,42 @@ fun GoalListItem(
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {
+
+                    goalModel.contributionText?.let { stringModel ->
+                        Text(
+                            text = stringModel.get(context),
+                            style = MaterialTheme.typography.titleSmall,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(
+                                top = Dimen.InsideDividePadding,
+                                end = Dimen.ExtraLargeDividePadding
+                            ),
+                            textDecoration = if (goalModel.goal.complete) {
+                                TextDecoration.LineThrough
+                            } else {
+                                TextDecoration.None
+                            }
+                        )
+                    }
+
                     Margin(dp = Dimen.InsideDividePadding)
                     Text(
                         text = stringResource(
                             id = R.string.home_goal_progress
-                        ).format(goalModel.percent),
+                        ).format(goalModel.goal.percent),
                         style = MaterialTheme.typography.labelMedium,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        textDecoration = if (goalModel.goal.complete) {
+                            TextDecoration.LineThrough
+                        } else {
+                            TextDecoration.None
+                        }
                     )
                     Margin(Dimen.InsideDividePadding)
                     LinearProgressIndicator(
                         modifier = Modifier.fillMaxWidth(),
-                        progress = goalModel.progress,
+                        progress = goalModel.goal.progress,
                         color = MaterialTheme.colorScheme.primary,
                         trackColor = MaterialTheme.colorScheme.onBackground
                     )
@@ -89,7 +134,9 @@ fun GoalListItem(
         )
 
         IconButton(
-            modifier = Modifier.align(Alignment.TopEnd).padding(end = Dimen.SmallDividePadding),
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(end = Dimen.SmallDividePadding),
             onClick = { onClickMore() }
         ) {
             Icon(
@@ -105,8 +152,13 @@ fun GoalListItem(
 @Composable
 fun GoalListItemPreview() {
     BasePreview {
-        mockGoalDatumModels.forEach { goal ->
-            GoalListItem(goalModel = goal)
+        mockGoalDatumModels.chunked(2).forEach {
+            GoalListItem(
+                goalModel = GoalWithUpperGoalModel(
+                    goal = it.first(),
+                    upperGoal = it.getOrNull(1)
+                )
+            )
         }
     }
 }
