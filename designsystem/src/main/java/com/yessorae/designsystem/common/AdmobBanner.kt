@@ -83,7 +83,7 @@ fun AdmobBanner(
 
                 adUnitId = adId
 
-                adListener = object: AdListener() {
+                adListener = object : AdListener() {
                     override fun onAdLoaded() {
                         super.onAdLoaded()
                         onAdViewLoad(this@apply)
