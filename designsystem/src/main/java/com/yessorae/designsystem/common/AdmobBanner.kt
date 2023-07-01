@@ -50,5 +50,4 @@ fun AdmobBanner(
             it.destroy()
         }
     }
-
 }

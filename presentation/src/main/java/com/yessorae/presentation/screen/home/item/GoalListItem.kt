@@ -90,7 +90,6 @@ fun GoalListItem(
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {
-
                     goalModel.contributionText?.let { stringModel ->
                         Text(
                             text = stringModel.get(context),

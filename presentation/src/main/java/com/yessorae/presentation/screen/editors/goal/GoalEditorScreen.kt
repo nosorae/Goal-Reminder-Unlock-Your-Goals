@@ -187,7 +187,6 @@ fun GoalEditorScreen(
                     )
                 }
 
-
                 model.lowerItemsTitle?.let { lowerItemsTitle ->
                     item {
                         AdmobBanner()
@@ -478,7 +477,7 @@ fun MemoListItem(
 @Composable
 fun GoalEditorListItem(
     modifier: Modifier = Modifier,
-    goalModel: GoalModel,
+    goalModel: GoalModel
 ) {
     val context = LocalContext.current
     ListItem(
@@ -555,7 +554,7 @@ fun GoalEditorListItem(
 @Composable
 fun TodoEditorListItem(
     modifier: Modifier = Modifier,
-    todoModel: TodoModel,
+    todoModel: TodoModel
 ) {
     val context = LocalContext.current
     ListItem(

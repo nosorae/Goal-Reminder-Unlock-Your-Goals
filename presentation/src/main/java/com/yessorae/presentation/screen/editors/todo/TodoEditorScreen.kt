@@ -3,9 +3,7 @@ package com.yessorae.presentation.screen.editors.todo
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,14 +17,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FlagCircle
 import androidx.compose.material.icons.filled.Notes
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.outlined.Flag
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -38,23 +32,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.yessorae.designsystem.common.ScreenLoadingProgressbar
 import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.designsystem.util.BasePreview
-import com.yessorae.designsystem.util.Margin
 import com.yessorae.presentation.R
-import com.yessorae.presentation.ScreenConstants
 import com.yessorae.presentation.buttons.BackgroundTextButton
 import com.yessorae.presentation.dialogs.GoalReminderAlertDialog
 import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
@@ -63,7 +51,6 @@ import com.yessorae.presentation.dialogs.NotificationPermissionDialog
 import com.yessorae.presentation.dialogs.OptionListDialog
 import com.yessorae.presentation.ext.BottomNavigationBarHeightDp
 import com.yessorae.presentation.model.GoalModel
-import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.model.mockGoalDatumModels
 import com.yessorae.presentation.screen.editors.EditorDialogState
 import com.yessorae.presentation.screen.editors.EditorTextField
@@ -195,8 +182,8 @@ fun TodoEditorScreen(
                     .padding(horizontal = Dimen.SidePadding)
                     .padding(
                         bottom = (
-                                Dimen.BottomPadding - BottomNavigationBarHeightDp
-                                )
+                            Dimen.BottomPadding - BottomNavigationBarHeightDp
+                            )
                             .value
                             .coerceAtLeast(0f)
                             .dp

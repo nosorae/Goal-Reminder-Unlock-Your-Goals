@@ -12,7 +12,6 @@ fun ComposableLifecycle(
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     onEvent: (LifecycleOwner, Lifecycle.Event) -> Unit
 ) {
-
     DisposableEffect(key1 = lifecycleOwner) {
         val observer = LifecycleEventObserver { lifecycleOwner, event ->
             onEvent(lifecycleOwner, event)

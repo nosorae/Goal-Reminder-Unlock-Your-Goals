@@ -9,14 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import com.yessorae.common.Logger
 import com.yessorae.presentation.R
 import com.yessorae.presentation.dialogs.ConfirmDialog
 
 @Composable
 fun OverlayPermissionDialog(
     showDialog: Boolean,
-    onOverlayConfirmed: (Boolean) -> Unit,
+    onOverlayConfirmed: (Boolean) -> Unit
 ) {
     val context = LocalContext.current
 

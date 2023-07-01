@@ -3,12 +3,12 @@ package com.yessorae.domain.usecase
 import com.yessorae.domain.model.GoalWithUpperGoal
 import com.yessorae.domain.model.type.GoalType
 import com.yessorae.domain.repository.GoalRepository
+import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.datetime.LocalDateTime
-import javax.inject.Inject
 
 class GetGoalWithUpperGoalUseCaseFlow @Inject constructor(
     private val goalRepository: GoalRepository

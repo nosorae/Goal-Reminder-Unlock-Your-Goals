@@ -80,7 +80,6 @@ class HomeViewModel @Inject constructor(
         preferencesDatastoreRepository.getCompleteOnBoarding().collectLatest { result ->
             _completeOnBoarding.value = result
         }
-
     }
 
     fun onOverlayConfirmed(confirmed: Boolean) {
