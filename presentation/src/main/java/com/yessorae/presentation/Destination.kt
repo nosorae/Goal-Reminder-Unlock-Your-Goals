@@ -17,13 +17,16 @@ object FinalGoalDestination : Destination {
     const val onBoardingArg = "on_boarding"
     val routeWithArgs = "$route/{$onBoardingArg}"
 
+    private const val defaultOnBoardingValue = false
+
     val arguments = listOf(
         navArgument(onBoardingArg) {
+            defaultValue = defaultOnBoardingValue
             type = NavType.BoolType
         }
     )
 
-    fun getRouteWithArgs(onBoarding: Boolean = false) = "$route/$onBoarding"
+    fun getRouteWithArgs(onBoarding: Boolean = defaultOnBoardingValue) = "$route/$onBoarding"
 }
 
 object TodoEditorDestination : Destination {

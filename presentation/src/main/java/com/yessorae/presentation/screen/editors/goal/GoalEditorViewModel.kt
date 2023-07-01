@@ -2,6 +2,7 @@ package com.yessorae.presentation.screen.editors.goal
 
 import androidx.lifecycle.SavedStateHandle
 import com.yessorae.base.BaseScreenViewModel
+import com.yessorae.domain.common.DomainConstants
 import com.yessorae.domain.model.type.GoalType
 import com.yessorae.domain.model.type.toGoalType
 import com.yessorae.domain.repository.GoalRepository
@@ -372,7 +373,7 @@ data class GoalEditorScreenState(
     val title: String? = null,
     val startDate: LocalDate? = null,
     val endDate: LocalDate? = null,
-    val totalScore: Int? = 100,
+    val totalScore: Int? = DomainConstants.DEFAULT_TOTAL_SCORE,
     val upperGoal: GoalModel? = null,
     val upperGoalContributionScore: Int? = null,
     val memo: String? = null,

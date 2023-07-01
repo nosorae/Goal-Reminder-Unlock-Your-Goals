@@ -1,5 +1,6 @@
 package com.yessorae.presentation.model
 
+import com.yessorae.domain.common.DomainConstants
 import com.yessorae.domain.model.Goal
 import com.yessorae.domain.model.GoalWithUpperGoal
 import com.yessorae.domain.model.type.GoalType
@@ -18,8 +19,8 @@ data class GoalModel(
     val dateFrom: LocalDateTime,
     val startTime: LocalDateTime? = null,
     val endTime: LocalDateTime? = null,
-    val totalScore: Int,
-    val currentScore: Int,
+    val totalScore: Int = DomainConstants.DEFAULT_TOTAL_SCORE,
+    val currentScore: Int = DomainConstants.DEFAULT_INITIAL_CURRENT_SCORE,
     val upperGoalId: Int? = null,
     val upperGoalContributionScore: Int? = null,
     val memo: String? = null,
