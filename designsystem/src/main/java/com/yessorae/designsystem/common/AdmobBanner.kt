@@ -15,7 +15,6 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
-import com.yessorae.common.Logger
 import com.yessorae.designsystem.util.ComposableLifecycle
 
 @Composable
@@ -73,7 +72,6 @@ fun AdmobBanner(
             .animateContentSize(),
         factory = { context ->
             adView ?: AdView(context).apply {
-                Logger.uiDebug("AdView load")
                 setAdSize(
                     AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
                         context,
