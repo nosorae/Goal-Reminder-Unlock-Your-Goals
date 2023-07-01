@@ -95,6 +95,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
 
+    // admob
+    implementation 'com.google.android.gms:play-services-ads:22.1.0'
+
+
     // delete candidate
     implementation 'androidx.core:core-ktx:1.10.1'
     testImplementation 'junit:junit:4.13.2'

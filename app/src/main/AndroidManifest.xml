@@ -38,6 +38,10 @@
 
         <receiver android:name=".background.ScreenOnBroadcastReceiver" />
 
+        <meta-data
+            android:name="com.google.android.gms.ads.com.yessorae.goalreminder"
+            android:value="ca-app-pub-5894626103174068~9433544720"/>
+
     </application>
 
 </manifest>
