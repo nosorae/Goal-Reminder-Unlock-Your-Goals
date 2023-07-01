@@ -17,7 +17,8 @@ import com.yessorae.designsystem.util.ComposableLifecycle
 
 @Composable
 fun AdmobBanner(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    adId: String
 ) {
     val widthDp = LocalConfiguration.current.screenWidthDp
 
@@ -40,7 +41,7 @@ fun AdmobBanner(
                         widthDp
                     )
                 )
-                adUnitId = "ca-app-pub-3940256099942544/6300978111"
+                adUnitId = adId
 
                 loadAd(AdRequest.Builder().build())
             }

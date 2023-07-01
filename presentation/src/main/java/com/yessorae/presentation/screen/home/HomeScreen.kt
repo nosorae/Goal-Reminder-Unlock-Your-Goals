@@ -35,6 +35,7 @@ import com.yessorae.designsystem.common.AdmobBanner
 import com.yessorae.designsystem.common.ScreenLoadingProgressbar
 import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.domain.model.type.GoalType
+import com.yessorae.presentation.BuildConfig
 import com.yessorae.presentation.FinalGoalDestination
 import com.yessorae.presentation.R
 import com.yessorae.presentation.dialogs.ConfirmDialog
@@ -216,7 +217,9 @@ fun HomeScreen(
                 }
             }
 
-            AdmobBanner()
+            AdmobBanner(
+                adId = BuildConfig.ADMOB_MAIN_BANNER_ID
+            )
         }
     }
 

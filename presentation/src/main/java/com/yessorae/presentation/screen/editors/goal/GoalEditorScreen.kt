@@ -52,6 +52,7 @@ import com.yessorae.designsystem.common.AdmobBanner
 import com.yessorae.designsystem.common.ScreenLoadingProgressbar
 import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.designsystem.util.Margin
+import com.yessorae.presentation.BuildConfig
 import com.yessorae.presentation.R
 import com.yessorae.presentation.ScreenConstants
 import com.yessorae.presentation.buttons.BackgroundTextButton
@@ -189,7 +190,7 @@ fun GoalEditorScreen(
 
                 model.lowerItemsTitle?.let { lowerItemsTitle ->
                     item {
-                        AdmobBanner()
+                        AdmobBanner(adId = BuildConfig.ADMOB_EDITOR_BANNER_ID)
                     }
 
                     item {
