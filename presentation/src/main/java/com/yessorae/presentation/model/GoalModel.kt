@@ -56,11 +56,23 @@ data class GoalModel(
     }
 
     val percent: Int by lazy {
-        (currentScore / totalScore.toDouble() * 100).roundToInt()
+        try {
+            (currentScore / totalScore.toDouble() * 100).roundToInt()
+        } catch (e: Exception) {
+            0
+        }
     }
 
     val progress: Float by lazy {
-        (currentScore / totalScore.toFloat()).coerceIn(0f, 1f)
+        try {
+            (currentScore / totalScore.toFloat()).coerceIn(0f, 1f)
+        } catch (e: Exception) {
+            0f
+        }
+    }
+
+    val showProgress: Boolean by lazy {
+        totalScore > 0
     }
 
     val complete by lazy {
