@@ -76,7 +76,11 @@ data class GoalModel(
     }
 
     val complete by lazy {
-        currentScore >= totalScore
+        if (showProgress) {
+            currentScore >= totalScore
+        } else {
+            false
+        }
     }
 }
 
