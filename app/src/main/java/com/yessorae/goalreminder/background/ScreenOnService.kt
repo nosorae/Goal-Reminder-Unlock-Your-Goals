@@ -11,6 +11,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import timber.log.Timber
 
 @AndroidEntryPoint
 class ScreenOnService : Service() {
@@ -25,17 +26,19 @@ class ScreenOnService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        Timber.tag("SR-N").d("service onCreate")
         setupForegroundService()
         registerScreenOnOffReceiver()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Timber.tag("SR-N").d("service onStartCommand")
         return START_STICKY
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d("SR-N", "service onDestroy®")
+        Timber.tag("SR-N").d("service onDestroy")
         notification.cancel(this, FOREGROUND_SERVICE_NOTIFICATION_ID) // todo test
         unregisterReceiver(screenOnOffReceiver)
         job.cancel()
