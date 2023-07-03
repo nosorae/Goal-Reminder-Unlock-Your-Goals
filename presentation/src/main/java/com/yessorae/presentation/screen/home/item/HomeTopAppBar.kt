@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.EditCalendar
+import androidx.compose.material.icons.outlined.Help
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -65,6 +66,7 @@ import kotlin.math.roundToInt
 fun HomeTopAppBar(
     title: String,
     onClickEditCalendar: () -> Unit = {},
+    onClickNotice: () -> Unit = {},
     onClickTitle: () -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 ) {
@@ -72,7 +74,7 @@ fun HomeTopAppBar(
         title = {
             Text(
                 text = title,
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.fillMaxWidth()
@@ -82,7 +84,13 @@ fun HomeTopAppBar(
             IconButton(onClick = { onClickEditCalendar() }) {
                 Icon(
                     imageVector = Icons.Outlined.EditCalendar,
-                    contentDescription = "Localized description"
+                    contentDescription = null
+                )
+            }
+            IconButton(onClick = { onClickNotice() }) {
+                Icon(
+                    imageVector = Icons.Outlined.Help,
+                    contentDescription = null
                 )
             }
         },
@@ -199,9 +207,9 @@ private fun SingleRowTopAppBar(
     Surface(modifier = modifier.then(appBarDragModifier), color = appBarContainerColor) {
         val height = LocalDensity.current.run {
             ContainerHeight.toPx() + (
-                scrollBehavior?.state?.heightOffset
-                    ?: 0f
-                )
+                    scrollBehavior?.state?.heightOffset
+                        ?: 0f
+                    )
         }
         TopAppBarLayout(
             modifier = Modifier

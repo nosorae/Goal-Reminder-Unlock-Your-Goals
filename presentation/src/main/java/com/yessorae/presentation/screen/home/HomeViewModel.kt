@@ -1,5 +1,6 @@
 package com.yessorae.presentation.screen.home
 
+import androidx.lifecycle.viewModelScope
 import com.yessorae.base.BaseScreenViewModel
 import com.yessorae.domain.model.type.GoalType
 import com.yessorae.domain.repository.GoalRepository
@@ -48,6 +49,9 @@ class HomeViewModel @Inject constructor(
 
     private val _scrollToPageEvent = MutableSharedFlow<Int>()
     val scrollToPageEvent: SharedFlow<Int> = _scrollToPageEvent.asSharedFlow()
+
+    private val _redirectToWebBrowserEvent = MutableSharedFlow<String>()
+    val redirectToWebBrowserEvent: SharedFlow<String> = _redirectToWebBrowserEvent
 
     private val _completeOnBoarding = MutableStateFlow<Boolean?>(null)
     val completeOnBoarding: StateFlow<Boolean?> = _completeOnBoarding.asStateFlow()
@@ -109,6 +113,19 @@ class HomeViewModel @Inject constructor(
                 dialogState = HomeDialogState.DatePickerDialog
             )
         }
+    }
+
+    fun onClickNotice() = viewModelScope.launch {
+        // todo url 을 remoteConfig 로 관리
+        _redirectToWebBrowserEvent.emit(
+            "https://nosorae.tistory.com/entry/" +
+                    "%EC%9E%91%EC%84%B1%EC%A4%91-%EB%AA%A9%ED%91%9C" +
+                    "-%EB%A6%AC%EB%A7%88%EC%9D%B8%EB%8D%94" +
+                    "-%EB%8B%B9%EC%8B%A0%EC%9D%98" +
+                    "-%EB%AA%A9%ED%91%9C%EB%A5%BC" +
+                    "-%EC%9E%A0%EA%B8%88%ED%95%B4%EC%A0%9C" +
+                    "-%EC%82%AC%EC%9A%A9%EB%B2%95"
+        )
     }
 
     fun onClickTab(tab: HomeTabPage) = ioScope.launch {
