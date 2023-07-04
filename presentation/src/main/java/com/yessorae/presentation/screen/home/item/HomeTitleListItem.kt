@@ -41,7 +41,7 @@ fun HomeTitleListItem(
     ) {
         Text(
             text = model.title,
-            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             overflow = TextOverflow.Ellipsis,
             maxLines = 1
         )
