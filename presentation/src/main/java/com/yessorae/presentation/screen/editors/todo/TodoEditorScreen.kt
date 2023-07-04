@@ -182,8 +182,8 @@ fun TodoEditorScreen(
                     .padding(horizontal = Dimen.SidePadding)
                     .padding(
                         bottom = (
-                            Dimen.BottomPadding - BottomNavigationBarHeightDp
-                            )
+                                Dimen.BottomPadding - BottomNavigationBarHeightDp
+                                )
                             .value
                             .coerceAtLeast(0f)
                             .dp
@@ -246,7 +246,9 @@ fun TodoEditorScreen(
 
     OptionListDialog(
         showDialog = model.editorDialogState is EditorDialogState.ContributeGoal,
-        title = stringResource(id = R.string.todo_goal_placeholder),
+        title = stringResource(
+            id = R.string.common_dialog_title_select_weekly_contribution_goal_title
+        ),
         onCancel = {
             viewModel.onCancelDialog()
         }

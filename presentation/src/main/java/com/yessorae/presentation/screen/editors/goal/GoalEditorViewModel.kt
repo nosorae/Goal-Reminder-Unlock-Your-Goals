@@ -140,6 +140,14 @@ class GoalEditorViewModel @Inject constructor(
         }
     }
 
+    fun onClickDate() {
+        updateState {
+            stateValue.copy(
+                editorDialogState = EditorDialogState.Date
+            )
+        }
+    }
+
     fun onClickStartDate() {
         updateState {
             stateValue.copy(
@@ -169,7 +177,10 @@ class GoalEditorViewModel @Inject constructor(
                             val goalModels = goals.map { it.asModel() }
                             updateState {
                                 stateValue.copy(
-                                    editorDialogState = EditorDialogState.ContributeGoal(goalModels)
+                                    editorDialogState = EditorDialogState.ContributeGoal(
+                                        goals = goalModels,
+                                        goalType = stateValue.paramGoalType
+                                    )
                                 )
                             }
                         }
@@ -186,7 +197,10 @@ class GoalEditorViewModel @Inject constructor(
                             val goalModels = goals.map { it.asModel() }
                             updateState {
                                 stateValue.copy(
-                                    editorDialogState = EditorDialogState.ContributeGoal(goalModels)
+                                    editorDialogState = EditorDialogState.ContributeGoal(
+                                        goals = goalModels,
+                                        goalType = stateValue.paramGoalType
+                                    )
                                 )
                             }
                         }
@@ -224,7 +238,15 @@ class GoalEditorViewModel @Inject constructor(
         }
     }
 
-    fun onSelectDate(milliSec: Long, dialogState: EditorDialogState) = ioScope.launch {
+    fun onSelectDate(milliSec: Long) = ioScope.launch {
+        updateState {
+            stateValue.copy(
+                paramDate = milliSec.toLocalDateTime().date
+            )
+        }
+    }
+
+    fun onSelectRangeDate(milliSec: Long, dialogState: EditorDialogState) = ioScope.launch {
         val date = milliSec.toLocalDateTime().date
         val paramDate = stateValue.paramDate
 

@@ -37,8 +37,8 @@
     <string name="goal_start_date_value">%d월 %d일 부터 시작</string>
     <string name="goal_end_date_placeholder">예상 완료 날짜</string>
     <string name="goal_end_date_value">%d월 %d일 까지 완료</string>
-    <string name="goal_contribution_monthly_goal_placeholder">상위 월간 목표</string>
-    <string name="goal_contribution_yearly_goal_placeholder">상위 연간 목표</string>
+    <string name="goal_contribution_monthly_goal_placeholder">기여 월간 목표</string>
+    <string name="goal_contribution_yearly_goal_placeholder">기여 연간 목표</string>
     <string name="goal_toast_out_of_range_year">%d년 내에서 선택해주세요 🙏</string>
     <string name="goal_toast_out_of_range_month">%d월 내에서 선택해주세요 🙏</string>
     <string name="goal_toast_out_of_range_week">%d월%d일부터 %d월%d일 내에서 선택해주세요 🙏</string>
@@ -114,4 +114,8 @@
     <string name="common_no_upper_monthly_goal">월간 목표가 없어요, 월간 목표를 생성해주세요 🙏</string>
     <string name="common_no_upper_yearly_goal">연간 목표가 없어요, 연간 목표를 생성해주세요 🙏</string>
     <string name="common_no_web_browser">웹 브라우저 앱을 설치해주세요 🙏</string>
+    <string name="common_dialog_title_select_weekly_contribution_goal_title">기여 주간 목표 선택</string>
+    <string name="common_dialog_title_select_monthly_contribution_goal_title">기여 월간 목표 선택</string>
+    <string name="common_dialog_title_select_yearly_contribution_goal_title">기여 월간 목표 선택</string>
+    <string name="common_dialog_title_select_default_contribution_title">기여 목표 선택</string>
 </resources>
