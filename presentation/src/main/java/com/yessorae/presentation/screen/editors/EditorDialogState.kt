@@ -15,7 +15,7 @@ sealed class EditorDialogState {
     object EndTime : EditorDialogState()
     data class ContributeGoal(
         val goals: List<GoalModel>,
-        val goalType: GoalType
+        private val goalType: GoalType? = null
     ) : EditorDialogState() {
         val title = when (goalType) {
             GoalType.WEEKLY -> {
