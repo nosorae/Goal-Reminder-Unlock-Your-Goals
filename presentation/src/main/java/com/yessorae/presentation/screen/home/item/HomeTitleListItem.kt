@@ -38,7 +38,6 @@ fun HomeTitleListItem(
                 end = Dimen.SmallDividePadding
             ),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
             text = model.title,
@@ -47,6 +46,7 @@ fun HomeTitleListItem(
                 fontWeight = FontWeight.Bold
             ),
             overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f),
             maxLines = 1
         )
 

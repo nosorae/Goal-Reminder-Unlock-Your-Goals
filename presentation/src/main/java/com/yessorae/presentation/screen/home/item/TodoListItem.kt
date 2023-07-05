@@ -96,7 +96,10 @@ fun TodoListItem(
                         style = MaterialTheme.typography.titleSmall,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(top = Dimen.InsideDividePadding),
+                        modifier = Modifier.padding(
+                            top = Dimen.InsideDividePadding,
+                            end = Dimen.ExtraLargeDividePadding
+                        ),
                         textDecoration = if (todoModel.done) {
                             TextDecoration.LineThrough
                         } else {
