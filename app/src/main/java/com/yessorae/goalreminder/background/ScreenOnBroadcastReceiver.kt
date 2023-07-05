@@ -10,8 +10,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ScreenOnBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == Intent.ACTION_SCREEN_ON) {
-            Log.d("SR-N", "Screen turned ON")
+        if (intent.action == Intent.ACTION_SCREEN_OFF) {
+            Log.d("SR-N", "Screen turned OFF")
             val i = Intent(context, MainActivity::class.java)
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(i)

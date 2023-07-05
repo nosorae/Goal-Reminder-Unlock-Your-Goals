@@ -55,7 +55,7 @@ class ScreenOnService : Service() {
     }
 
     private fun registerScreenOnOffReceiver() {
-        val intentFilter = IntentFilter().apply { addAction(Intent.ACTION_SCREEN_ON) }
+        val intentFilter = IntentFilter().apply { addAction(Intent.ACTION_SCREEN_OFF) }
         screenOnOffReceiver = ScreenOnBroadcastReceiver()
         registerReceiver(screenOnOffReceiver, intentFilter)
     }
