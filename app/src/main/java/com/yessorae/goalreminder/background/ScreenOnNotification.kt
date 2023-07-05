@@ -17,7 +17,6 @@ import com.yessorae.goalreminder.R
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
 @Singleton
 class ScreenOnNotification @Inject constructor() {
     fun createToDoNotification(
@@ -67,8 +66,6 @@ class ScreenOnNotification @Inject constructor() {
 //            .setOngoing(true) todo plan
             .setPriority(NotificationCompat.PRIORITY_LOW)
     }
-
-
 
     fun createForegroundServiceNotificationChannel(context: Context) {
         createNotificationChannel(

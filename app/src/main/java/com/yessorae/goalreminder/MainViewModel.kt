@@ -3,10 +3,6 @@ package com.yessorae.goalreminder
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.work.OneTimeWorkRequest
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.OutOfQuotaPolicy
-import androidx.work.WorkRequest
 import com.yessorae.domain.repository.PreferencesDatastoreRepository
 import com.yessorae.goalreminder.util.InitDataHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,8 +16,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
-import timber.log.Timber
-import java.time.Duration
 
 @HiltViewModel
 class MainViewModel @Inject constructor(

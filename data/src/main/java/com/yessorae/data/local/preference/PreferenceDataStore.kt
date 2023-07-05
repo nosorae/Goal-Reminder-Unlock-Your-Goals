@@ -20,8 +20,12 @@ import kotlinx.datetime.LocalDateTime
 class PreferenceDataStore @Inject constructor(
     private val preferences: DataStore<Preferences>
 ) {
-    private val completeOnBoarding = booleanPreferencesKey(DataConstants.PREF_KEY_COMPLETE_ON_BOARDING)
-    private val completeOnBoardingMockData = booleanPreferencesKey(DataConstants.PREF_KEY_COMPLETE_ON_BOARDING_MOCK_DATA)
+    private val completeOnBoarding = booleanPreferencesKey(
+        DataConstants.PREF_KEY_COMPLETE_ON_BOARDING
+    )
+    private val completeOnBoardingMockData = booleanPreferencesKey(
+        DataConstants.PREF_KEY_COMPLETE_ON_BOARDING_MOCK_DATA
+    )
     private val isServiceOnKey = booleanPreferencesKey(DataConstants.PREF_KEY_IS_SCREEN_ON)
     private val finalGoalKey = stringPreferencesKey(DataConstants.PREF_KEY_FINAL_GOAL)
     private val finalGoalYearKey = intPreferencesKey(DataConstants.PREF_KEY_FINAL_GOAL_YEAR)

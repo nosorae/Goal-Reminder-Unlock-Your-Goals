@@ -14,9 +14,8 @@ import com.yessorae.presentation.R
 import com.yessorae.util.now
 import com.yessorae.util.toLocalDateTime
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.datetime.LocalDateTime
-import timber.log.Timber
 import javax.inject.Inject
+import kotlinx.datetime.LocalDateTime
 
 class InitDataHelper @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -79,7 +78,7 @@ class InitDataHelper @Inject constructor(
             startTime = now.date.toLocalDateTime(hour = 13),
             endTime = now.date.toLocalDateTime(hour = 17),
             upperGoalId = weeklyGoalId1_1,
-            upperGoalContributionScore = 20,
+            upperGoalContributionScore = 20
         )
         val todo1_2 = Todo(
             title = context.getString(R.string.mock_todo_title_1_2),
@@ -87,7 +86,7 @@ class InitDataHelper @Inject constructor(
             startTime = now.date.toLocalDateTime(hour = 13),
             endTime = now.date.toLocalDateTime(hour = 17),
             upperGoalId = weeklyGoalId1_2,
-            upperGoalContributionScore = 20,
+            upperGoalContributionScore = 20
         )
         val todo3 = Todo(
             title = context.getString(R.string.mock_todo_title_3),
@@ -106,5 +105,4 @@ class InitDataHelper @Inject constructor(
             )
         )
     }
-
 }

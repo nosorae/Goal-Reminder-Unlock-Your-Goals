@@ -1,7 +1,6 @@
 package com.yessorae.presentation.screen.home.item
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -37,7 +36,7 @@ fun HomeTitleListItem(
                 start = Dimen.SidePadding,
                 end = Dimen.SmallDividePadding
             ),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = model.title,

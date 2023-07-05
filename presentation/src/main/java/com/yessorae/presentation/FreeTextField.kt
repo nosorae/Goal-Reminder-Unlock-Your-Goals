@@ -49,7 +49,7 @@ fun FreeTextField(
     colors: TextFieldColors = TextFieldDefaults.colors(),
     textColor: Color = MaterialTheme.colorScheme.onBackground,
     cursorColor: Color = MaterialTheme.colorScheme.onBackground,
-    onTextLayout: (TextLayoutResult) -> Unit = {},
+    onTextLayout: (TextLayoutResult) -> Unit = {}
 ) {
     val mergedTextStyle = textStyle.merge(TextStyle(color = textColor))
 

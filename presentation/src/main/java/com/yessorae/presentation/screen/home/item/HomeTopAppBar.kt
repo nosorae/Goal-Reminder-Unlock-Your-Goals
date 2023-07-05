@@ -207,9 +207,9 @@ private fun SingleRowTopAppBar(
     Surface(modifier = modifier.then(appBarDragModifier), color = appBarContainerColor) {
         val height = LocalDensity.current.run {
             ContainerHeight.toPx() + (
-                    scrollBehavior?.state?.heightOffset
-                        ?: 0f
-                    )
+                scrollBehavior?.state?.heightOffset
+                    ?: 0f
+                )
         }
         TopAppBarLayout(
             modifier = Modifier

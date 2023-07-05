@@ -93,7 +93,13 @@ data class GoalWithUpperGoalModel(
         val title = upperGoal?.title
         if (upperGoalContributionScore != null && title != null) {
             val maxUpperGoalLength = 20
-            val shortTitle = if (title.length >= maxUpperGoalLength) "${title.take(maxUpperGoalLength)}..." else title
+            val shortTitle = if (title.length >= maxUpperGoalLength) {
+                "${title.take(
+                    maxUpperGoalLength
+                )}..."
+            } else {
+                title
+            }
             ResString(
                 R.string.home_goal_contribution_,
                 shortTitle,

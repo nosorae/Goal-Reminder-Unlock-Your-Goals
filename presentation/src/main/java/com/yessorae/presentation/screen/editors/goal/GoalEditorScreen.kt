@@ -1,6 +1,5 @@
 package com.yessorae.presentation.screen.editors.goal
 
-import android.content.SharedPreferences.Editor
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
@@ -297,7 +296,10 @@ fun GoalEditorScreen(
         showDialog = model.editorDialogState is EditorDialogState.StartDate,
         initDate = model.startDate ?: model.paramDate,
         onClickConfirmButton = { milliSec ->
-            viewModel.onSelectRangeDate(milliSec = milliSec, dialogState = EditorDialogState.StartDate)
+            viewModel.onSelectRangeDate(
+                milliSec = milliSec,
+                dialogState = EditorDialogState.StartDate
+            )
         },
         onCancel = {
             viewModel.onCancelDialog()
@@ -308,7 +310,10 @@ fun GoalEditorScreen(
         showDialog = model.editorDialogState is EditorDialogState.EndDate,
         initDate = model.endDate ?: model.paramDate,
         onClickConfirmButton = { milliSec ->
-            viewModel.onSelectRangeDate(milliSec = milliSec, dialogState = EditorDialogState.EndDate)
+            viewModel.onSelectRangeDate(
+                milliSec = milliSec,
+                dialogState = EditorDialogState.EndDate
+            )
         },
         onCancel = {
             viewModel.onCancelDialog()
@@ -328,7 +333,7 @@ fun GoalEditorScreen(
 
     OptionListDialog(
         showDialog = model.editorDialogState is EditorDialogState.ContributeGoal,
-        title =(model.editorDialogState as? EditorDialogState.ContributeGoal)?.title?.get(context)
+        title = (model.editorDialogState as? EditorDialogState.ContributeGoal)?.title?.get(context)
             ?: stringResource(id = R.string.common_dialog_title_select_default_contribution_title),
         onCancel = {
             viewModel.onCancelDialog()

@@ -17,7 +17,6 @@ import com.yessorae.presentation.screen.editors.EditorDialogState
 import com.yessorae.util.ResString
 import com.yessorae.util.StringModel
 import com.yessorae.util.fromHourMinute
-import com.yessorae.util.getStartOfDay
 import com.yessorae.util.now
 import com.yessorae.util.toLocalDateTime
 import com.yessorae.util.toStartLocalDateTime

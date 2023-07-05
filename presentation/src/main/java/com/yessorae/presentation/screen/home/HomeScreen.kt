@@ -251,7 +251,7 @@ fun HomeScreen(
 
     OverlayPermissionDialog(
         showDialog = (model.dialogState is HomeDialogState.OverlayConfirmDialog) &&
-                completeOnBoarding == true,
+            completeOnBoarding == true,
         onOverlayConfirmed = { confirmed ->
             viewModel.onOverlayConfirmed(confirmed)
         }

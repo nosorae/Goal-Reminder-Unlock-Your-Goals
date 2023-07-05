@@ -182,8 +182,8 @@ fun TodoEditorScreen(
                     .padding(horizontal = Dimen.SidePadding)
                     .padding(
                         bottom = (
-                                Dimen.BottomPadding - BottomNavigationBarHeightDp
-                                )
+                            Dimen.BottomPadding - BottomNavigationBarHeightDp
+                            )
                             .value
                             .coerceAtLeast(0f)
                             .dp

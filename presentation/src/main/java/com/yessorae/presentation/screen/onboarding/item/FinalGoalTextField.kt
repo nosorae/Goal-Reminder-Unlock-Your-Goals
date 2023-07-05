@@ -2,10 +2,7 @@ package com.yessorae.presentation.screen.onboarding.item
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.presentation.FreeTextField
 import com.yessorae.presentation.R
 import com.yessorae.presentation.ext.keyboardAsState
@@ -88,14 +84,12 @@ fun FinalGoalTextField(
                         maxLines = 1,
                         color = MaterialTheme.colorScheme.onBackground
                     )
-
                 }
             },
             onTextLayout = { result ->
-                with (density) {
+                with(density) {
                     tfHeight = result.size.height.toDp()
                 }
-
             }
         )
     }
