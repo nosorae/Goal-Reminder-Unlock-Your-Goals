@@ -35,11 +35,11 @@ object Logger {
         Timber.tag(DATA_TAG).e(message)
     }
 
-    fun recordException(e: Throwable) { // todo test
+    fun recordException(e: Throwable) {
         Firebase.crashlytics.recordException(e)
     }
 
-    fun logAnalyticsEvent( // todo test
+    fun logAnalyticsEvent(
         event: String,
         vararg params: Pair<String, Any?>
     ) {

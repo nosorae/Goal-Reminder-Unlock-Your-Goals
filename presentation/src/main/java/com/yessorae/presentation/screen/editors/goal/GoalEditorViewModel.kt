@@ -2,6 +2,8 @@ package com.yessorae.presentation.screen.editors.goal
 
 import androidx.lifecycle.SavedStateHandle
 import com.yessorae.base.BaseScreenViewModel
+import com.yessorae.common.AnalyticsConstants
+import com.yessorae.common.Logger
 import com.yessorae.domain.common.DomainConstants
 import com.yessorae.domain.model.type.GoalType
 import com.yessorae.domain.model.type.toGoalType
@@ -374,6 +376,15 @@ class GoalEditorViewModel @Inject constructor(
             if (isUpdate) {
                 goalRepository.updateGoalTransaction(it)
             } else {
+                with(AnalyticsConstants) {
+                    Logger.logAnalyticsEvent(
+                        event = EVENT_INSERT_GOAL,
+                        PARAM_TITLE to it.title,
+                        PARAM_START to "${it.startTime}",
+                        PARAM_END to "${it.endTime}",
+                        PARAM_HAS_UPPER_GOAL to (it.upperGoalId != null)
+                    )
+                }
                 goalRepository.insertGoal(it)
             }
             hideLoading()

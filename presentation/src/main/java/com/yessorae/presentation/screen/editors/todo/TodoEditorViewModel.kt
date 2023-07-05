@@ -2,6 +2,8 @@ package com.yessorae.presentation.screen.editors.todo
 
 import androidx.lifecycle.SavedStateHandle
 import com.yessorae.base.BaseScreenViewModel
+import com.yessorae.common.AnalyticsConstants
+import com.yessorae.common.Logger
 import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.domain.repository.TodoRepository
 import com.yessorae.domain.usecase.GetTodoWithUpperGoalUseCase
@@ -259,6 +261,15 @@ class TodoEditorViewModel @Inject constructor(
             if (isUpdate) {
                 todoRepository.updateTodoTransaction(it)
             } else {
+                with(AnalyticsConstants) {
+                    Logger.logAnalyticsEvent(
+                        event = EVENT_INSERT_TODO,
+                        PARAM_TITLE to it.title,
+                        PARAM_START to "${it.startTime}",
+                        PARAM_END to "${it.endTime}",
+                        PARAM_HAS_UPPER_GOAL to (it.upperGoalId != null)
+                    )
+                }
                 todoRepository.insertTodo(it)
             }
             hideLoading()

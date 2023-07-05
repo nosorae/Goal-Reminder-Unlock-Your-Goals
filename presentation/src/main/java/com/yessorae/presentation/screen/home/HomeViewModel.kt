@@ -2,6 +2,8 @@ package com.yessorae.presentation.screen.home
 
 import androidx.lifecycle.viewModelScope
 import com.yessorae.base.BaseScreenViewModel
+import com.yessorae.common.AnalyticsConstants
+import com.yessorae.common.Logger
 import com.yessorae.domain.model.type.GoalType
 import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.domain.repository.PreferencesDatastoreRepository
@@ -117,6 +119,10 @@ class HomeViewModel @Inject constructor(
 
     fun onClickNotice() = viewModelScope.launch {
         // todo url 을 remoteConfig 로 관리
+        with(AnalyticsConstants) {
+            Logger.logAnalyticsEvent(event = EVENT_TOUCH_HOME_NOTICE)
+        }
+
         _redirectToWebBrowserEvent.emit(
             "https://nosorae.tistory.com/entry/" +
                     "%EC%9E%91%EC%84%B1%EC%A4%91-%EB%AA%A9%ED%91%9C" +
