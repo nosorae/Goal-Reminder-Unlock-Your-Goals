@@ -20,7 +20,10 @@ class MainActivity : ComponentActivity() {
 
         setScreen()
         startScreenOnOffService()
+
+        viewModel.onCreateActivity()
     }
+
     private fun setScreen() {
         setContent {
             GoalReminderAppScreen()

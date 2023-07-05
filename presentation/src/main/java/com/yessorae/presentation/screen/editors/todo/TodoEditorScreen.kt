@@ -197,6 +197,7 @@ fun TodoEditorScreen(
 
     GoalReminderDatePickerDialog(
         showDialog = model.editorDialogState is EditorDialogState.Date,
+        initDate = model.paramDate,
         onClickConfirmButton = { milliSec ->
             viewModel.onSelectDate(milliSec = milliSec)
         },
@@ -246,7 +247,9 @@ fun TodoEditorScreen(
 
     OptionListDialog(
         showDialog = model.editorDialogState is EditorDialogState.ContributeGoal,
-        title = stringResource(id = R.string.todo_goal_placeholder),
+        title = stringResource(
+            id = R.string.common_dialog_title_select_weekly_contribution_goal_title
+        ),
         onCancel = {
             viewModel.onCancelDialog()
         }

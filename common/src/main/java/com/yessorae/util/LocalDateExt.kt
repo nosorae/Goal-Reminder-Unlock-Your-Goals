@@ -7,6 +7,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.atTime
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
@@ -68,7 +69,7 @@ fun LocalTime.Companion.getStartOfDay(): LocalTime {
 }
 
 fun LocalDate.toStartLocalDateTime(): LocalDateTime {
-    return atTime(LocalTime.getStartOfDay())
+    return atStartOfDayIn(TimeZone.currentSystemDefault()).toLocalDateTime(TimeZone.currentSystemDefault())
 }
 
 fun LocalDate.toEndLocalDateTime(): LocalDateTime {

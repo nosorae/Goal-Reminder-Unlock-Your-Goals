@@ -11,19 +11,27 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.yessorae.designsystem.util.BasePreview
 import com.yessorae.presentation.R
+import com.yessorae.util.now
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GoalReminderDatePickerDialog(
     showDialog: Boolean = false,
+    initDate: LocalDate,
     onClickConfirmButton: (timestamp: Long) -> Unit = {},
     onCancel: () -> Unit = {},
     confirmText: String = stringResource(id = R.string.common_confirm),
     cancelText: String = stringResource(id = R.string.common_cancel)
 ) {
-    val datePickerState = rememberDatePickerState()
-
     if (showDialog) {
+        val initMillis = initDate.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds()
+        val datePickerState = rememberDatePickerState(
+            initialDisplayedMonthMillis = initMillis,
+            initialSelectedDateMillis = initMillis
+        )
         DatePickerDialog(
             onDismissRequest = {
                 onCancel()
@@ -56,6 +64,6 @@ fun GoalReminderDatePickerDialog(
 @Composable
 fun DatePickerDialogPreview() {
     BasePreview {
-        GoalReminderDatePickerDialog()
+        GoalReminderDatePickerDialog(initDate = LocalDate.now())
     }
 }

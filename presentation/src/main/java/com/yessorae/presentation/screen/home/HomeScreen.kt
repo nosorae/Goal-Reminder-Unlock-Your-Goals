@@ -27,6 +27,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -40,6 +41,7 @@ import com.yessorae.presentation.FinalGoalDestination
 import com.yessorae.presentation.R
 import com.yessorae.presentation.dialogs.ConfirmDialog
 import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
+import com.yessorae.presentation.ext.redirectToWebBrowser
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.GoalWithUpperGoalModel
 import com.yessorae.presentation.model.TitleListItemModel
@@ -49,6 +51,8 @@ import com.yessorae.presentation.screen.home.item.HomeTitleListItem
 import com.yessorae.presentation.screen.home.item.HomeTopAppBar
 import com.yessorae.presentation.screen.home.item.OverlayPermissionDialog
 import com.yessorae.presentation.screen.home.item.TodoListItem
+import com.yessorae.util.ResString
+import com.yessorae.util.showToast
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -73,6 +77,8 @@ fun HomeScreen(
 
     val pagerState = rememberPagerState()
 
+    val context = LocalContext.current
+
     LaunchedEffect(key1 = Unit) {
         launch {
             viewModel.scrollToPageEvent.collectLatest { page ->
@@ -87,6 +93,17 @@ fun HomeScreen(
                 }
             }
         }
+
+        launch {
+            viewModel.redirectToWebBrowserEvent.collectLatest { link ->
+                context.redirectToWebBrowser(
+                    link = link,
+                    onActivityNotFoundException = {
+                        context.showToast(ResString(R.string.common_no_web_browser))
+                    }
+                )
+            }
+        }
     }
 
     Scaffold(
@@ -99,6 +116,9 @@ fun HomeScreen(
                 ),
                 onClickEditCalendar = {
                     viewModel.onClickEditCalendar()
+                },
+                onClickNotice = {
+                    viewModel.onClickNotice()
                 },
                 onClickTitle = {
                     viewModel.onClickToolbarTitle()
@@ -152,7 +172,10 @@ fun HomeScreen(
                             title = TitleListItemModel(
                                 stringResource(
                                     id = R.string.common_monthly_goal
-                                ).format(model.now.monthNumber)
+                                ).format(
+                                    model.now.year,
+                                    model.now.monthNumber
+                                )
                             ),
                             goals = model.monthlyGoalModels,
                             onClickMore = { goal ->
@@ -173,6 +196,7 @@ fun HomeScreen(
                                 stringResource(
                                     id = R.string.common_weekly_goal
                                 ).format(
+                                    model.now.year,
                                     model.weekPair.first.monthNumber,
                                     model.weekPair.first.dayOfMonth,
                                     model.weekPair.second.monthNumber,
@@ -196,6 +220,8 @@ fun HomeScreen(
                         TodoPage(
                             title = TitleListItemModel(
                                 stringResource(id = R.string.common_day_todo).format(
+                                    model.now.year,
+                                    model.now.monthNumber,
                                     model.now.dayOfMonth
                                 )
                             ),
@@ -233,6 +259,7 @@ fun HomeScreen(
 
     GoalReminderDatePickerDialog(
         showDialog = model.dialogState is HomeDialogState.DatePickerDialog,
+        initDate = model.now.date,
         onClickConfirmButton = { timestamp ->
             viewModel.onSelectDate(timestamp)
         },

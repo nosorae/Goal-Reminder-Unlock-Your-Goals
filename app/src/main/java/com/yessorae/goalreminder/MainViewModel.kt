@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yessorae.domain.repository.PreferencesDatastoreRepository
+import com.yessorae.goalreminder.util.InitDataHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -12,12 +13,14 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val preferencesDatastoreRepository: PreferencesDatastoreRepository
+    private val preferencesDatastoreRepository: PreferencesDatastoreRepository,
+    private val initialDataHelper: InitDataHelper
 ) : ViewModel() {
     private val _isServiceOn = MutableSharedFlow<Boolean>()
     val isServiceOn: SharedFlow<Boolean> = _isServiceOn.asSharedFlow()
@@ -28,8 +31,9 @@ class MainViewModel @Inject constructor(
 
     private val scope = viewModelScope + coroutineExceptionHandler + Dispatchers.IO
 
-    init {
+    fun onCreateActivity() {
         getIsServiceOn()
+        processOnBoardingMockData()
     }
 
     private fun getIsServiceOn() = scope.launch {
@@ -40,5 +44,13 @@ class MainViewModel @Inject constructor(
 
     fun setServiceOn(on: Boolean) = scope.launch {
         preferencesDatastoreRepository.setServiceOnOff(on = on)
+    }
+
+    private fun processOnBoardingMockData() = scope.launch {
+        preferencesDatastoreRepository.getCompleteOnBoarding().firstOrNull()?.let {
+            if (it.not()) {
+                initialDataHelper.processOnBoardingData()
+            }
+        }
     }
 }

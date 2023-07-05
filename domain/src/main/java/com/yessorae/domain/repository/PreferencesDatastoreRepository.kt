@@ -4,6 +4,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface PreferencesDatastoreRepository {
 
+    suspend fun getCompleteOnBoardingMockData(): Boolean
+    suspend fun setCompleteOnBoardingMockData()
     fun getCompleteOnBoarding(): Flow<Boolean>
     suspend fun setCompleteOnBoarding()
 

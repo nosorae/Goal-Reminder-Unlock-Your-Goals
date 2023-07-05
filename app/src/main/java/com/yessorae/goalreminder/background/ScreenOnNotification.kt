@@ -50,13 +50,31 @@ class ScreenOnNotification @Inject constructor() {
         title: String,
         body: String
     ): NotificationCompat.Builder {
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            0,
+            Intent(context, MainActivity::class.java),
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
         return NotificationCompat.Builder(context, FOREGROUND_SERVICE_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(title)
             .setContentText(body)
+            .setContentIntent(pendingIntent)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 //            .setOngoing(true) todo plan
             .setPriority(NotificationCompat.PRIORITY_LOW)
+    }
+
+    fun createForegroundServiceNotificationChannel(context: Context) {
+        createNotificationChannel(
+            context = context,
+            id = FOREGROUND_SERVICE_CHANNEL_ID,
+            name = FOREGROUND_SERVICE_CHANNEL_NAME,
+            desc = FOREGROUND_SERVICE_CHANNEL_DESCRIPTION,
+            importance = NotificationManager.IMPORTANCE_LOW
+        )
     }
 
     fun showNotification(context: Context, id: Int = 0, builder: Notification) =
@@ -78,16 +96,6 @@ class ScreenOnNotification @Inject constructor() {
             notify(id, builder)
         }
 
-    fun createForegroundServiceNotificationChannel(context: Context) {
-        createNotificationChannel(
-            context = context,
-            id = FOREGROUND_SERVICE_CHANNEL_ID,
-            name = FOREGROUND_SERVICE_CHANNEL_NAME,
-            desc = FOREGROUND_SERVICE_CHANNEL_DESCRIPTION,
-            importance = NotificationManager.IMPORTANCE_LOW
-        )
-    }
-
     fun createGoalNotificationChannel(context: Context) {
         createNotificationChannel(
             context = context,
@@ -105,6 +113,19 @@ class ScreenOnNotification @Inject constructor() {
             name = TODO_CHANNEL_NAME,
             desc = TODO_CHANNEL_DESCRIPTION,
             importance = NotificationManager.IMPORTANCE_HIGH
+        )
+    }
+
+    private fun getDefaultPendingIntent(context: Context): PendingIntent {
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+    }
+
+    fun cancel(context: Context, serviceNotificationId: Int) {
+        (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(
+            serviceNotificationId
         )
     }
 
@@ -130,19 +151,6 @@ class ScreenOnNotification @Inject constructor() {
         }
     }
 
-    private fun getDefaultPendingIntent(context: Context): PendingIntent {
-        val intent = Intent(context, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-    }
-
-    fun cancel(context: Context, serviceNotificationId: Int) {
-        (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(
-            serviceNotificationId
-        )
-    }
-
     companion object {
         const val TODO_CHANNEL_ID = "Todo push channel"
         const val TODO_CHANNEL_NAME = "Todo push channel"
@@ -150,9 +158,8 @@ class ScreenOnNotification @Inject constructor() {
         const val GOAL_CHANNEL_ID = "Goal push channel"
         const val GOAL_CHANNEL_NAME = "Goal push channel"
         const val GOAL_CHANNEL_DESCRIPTION = "give you goal push"
-        const val FOREGROUND_SERVICE_CHANNEL_ID = "Todo creation service channel"
-        const val FOREGROUND_SERVICE_CHANNEL_NAME = "Todo creation service channel"
-        const val FOREGROUND_SERVICE_CHANNEL_DESCRIPTION =
-            "Todo creation button, launch app every screen on"
+        const val FOREGROUND_SERVICE_CHANNEL_ID = "Foreground service channel"
+        const val FOREGROUND_SERVICE_CHANNEL_NAME = "Foreground service channel"
+        const val FOREGROUND_SERVICE_CHANNEL_DESCRIPTION = "launch app every screen on"
     }
 }

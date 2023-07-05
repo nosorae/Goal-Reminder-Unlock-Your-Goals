@@ -2,6 +2,7 @@
 <resources>
     <!-- 홈 -->
     <string name="home_goal_progress">진행도 %d%%</string>
+    <string name="home_goal_progress_none">진행도 없음. 목표 완성 점수를 입력해주세요.</string>
     <string name="home_goal_contribution">기여도 %d%%</string>
     <string name="home_goal_contribution_">\"%s\"에 %d만큼 기여</string>
     <string name="home_tab_yearly_goal">연간 목표</string>
@@ -36,13 +37,13 @@
     <string name="goal_start_date_value">%d월 %d일 부터 시작</string>
     <string name="goal_end_date_placeholder">예상 완료 날짜</string>
     <string name="goal_end_date_value">%d월 %d일 까지 완료</string>
-    <string name="goal_contribution_monthly_goal_placeholder">상위 월간 목표</string>
-    <string name="goal_contribution_yearly_goal_placeholder">상위 연간 목표</string>
+    <string name="goal_contribution_monthly_goal_placeholder">기여 월간 목표</string>
+    <string name="goal_contribution_yearly_goal_placeholder">기여 연간 목표</string>
     <string name="goal_toast_out_of_range_year">%d년 내에서 선택해주세요 🙏</string>
     <string name="goal_toast_out_of_range_month">%d월 내에서 선택해주세요 🙏</string>
     <string name="goal_toast_out_of_range_week">%d월%d일부터 %d월%d일 내에서 선택해주세요 🙏</string>
-    <string name="goal_toast_out_of_order_start">시작 시간은 종료 시간 이후일 수 없습니다.</string>
-    <string name="goal_toast_out_of_order_end">종료 시간은 시작 시간 이전일 수 없습니다.</string>
+    <string name="goal_toast_out_of_order_start_day">시작 날짜는 종료 시간 이후일 수 없습니다.</string>
+    <string name="goal_toast_out_of_order_end_day">종료 날짜는 시작 시간 이전일 수 없습니다.</string>
 
     <!-- 할 일 추가/수정 -->
     <string name="todo_add_toolbar_title">투두 추가</string>
@@ -61,17 +62,26 @@
     <string name="todo_toast_please_alarm_on">알림권한을 켜야 알림을 받아보실 수 있어요 🥺</string>
     <string name="todo_toast_will_send_you_notification">알림을 보내드릴게요 😉</string>
     <string name="todo_none_goal">없음</string>
+    <string name="goal_toast_out_of_order_start_time">시작 시간은 종료 시간 이후일 수 없습니다.</string>
+    <string name="goal_toast_out_of_order_end_time">종료 시간은 시작 시간 이전일 수 없습니다.</string>
 
 
     <!-- 반복 일정 등록  -->
-
-    <!-- 노티피케이션  -->
 
     <!-- 설정  -->
 
     <!-- 권한 -->
     <string name="dialog_body_overlay_permission_request">잠금해제할 때마다 목표를 확인하기위해, 권한을 허용해 주세요.\n\n구글 정책에 따라 권한이 필요합니다.</string>
     <string name="dialog_body_notification_permission_request">앗! 알람이 비활성화 되어있어요, 설정화면으로 이동해서 알람을 커주세요.</string>
+
+    <!-- 목데이터 -->
+    <string name="mock_yearly_goal_title_1">책 12권 읽기 📚</string>
+    <string name="mock_monthly_goal_title_1">독서 1권 - 7월 도서 “생각에 관한 생각"</string>
+    <string name="mock_weekly_goal_title_1_1">7월 도서 3부 읽고 글쓰기 1000자 이상</string>
+    <string name="mock_weekly_goal_title_1_2">다음 달에 읽을 도서 선정</string>
+    <string name="mock_todo_title_1_1">7월 도서 3부 1~3장 읽고 글쓰기 200자 이상 작성</string>
+    <string name="mock_todo_title_1_2">신간 도서 1권 조사</string>
+    <string name="mock_todo_title_3">기상 후 푸시업 200회</string>
 
     <!-- 공통 -->
     <string name="common_permission_request">권한 요청</string>
@@ -80,9 +90,9 @@
     <string name="common_day_duration">%d일-%d일</string>
     <string name="common_hour_duration">%d시-%d시</string>
     <string name="common_yearly_goal">%d년간 목표</string>
-    <string name="common_monthly_goal">%d월간 목표</string>
-    <string name="common_weekly_goal">%d월 %d일부터 %d월 %d일까지의 주간 목표</string>
-    <string name="common_day_todo">%s일 할일</string>
+    <string name="common_monthly_goal">%d년 %d월간 목표</string>
+    <string name="common_weekly_goal">%d년 %d월%d일부터 %d월%d일까지의 주간 목표</string>
+    <string name="common_day_todo">%d년 %d월 %d일 할일</string>
     <string name="common_final_goal">%d년에 나는\n%s이다.</string>
     <string name="common_save">저장</string>
     <string name="common_date_format">%d년 %d월 %d일 (%s)</string>
@@ -95,4 +105,9 @@
     <string name="common_no_upper_weekly_goal">주간 목표가 없어요, 주간 목표를 생성해주세요 🙏</string>
     <string name="common_no_upper_monthly_goal">월간 목표가 없어요, 월간 목표를 생성해주세요 🙏</string>
     <string name="common_no_upper_yearly_goal">연간 목표가 없어요, 연간 목표를 생성해주세요 🙏</string>
+    <string name="common_no_web_browser">웹 브라우저 앱을 설치해주세요 🙏</string>
+    <string name="common_dialog_title_select_weekly_contribution_goal_title">기여 주간 목표 선택</string>
+    <string name="common_dialog_title_select_monthly_contribution_goal_title">기여 월간 목표 선택</string>
+    <string name="common_dialog_title_select_yearly_contribution_goal_title">기여 월간 목표 선택</string>
+    <string name="common_dialog_title_select_default_contribution_title">기여 목표 선택</string>
 </resources>

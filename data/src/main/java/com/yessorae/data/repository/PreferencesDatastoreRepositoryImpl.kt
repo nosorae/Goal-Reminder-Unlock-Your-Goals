@@ -8,6 +8,13 @@ import kotlinx.coroutines.flow.Flow
 class PreferencesDatastoreRepositoryImpl @Inject constructor(
     private val preferenceDataStore: PreferenceDataStore
 ) : PreferencesDatastoreRepository {
+    override suspend fun getCompleteOnBoardingMockData(): Boolean {
+        return preferenceDataStore.getCompleteOnBoardingMockData()
+    }
+
+    override suspend fun setCompleteOnBoardingMockData() {
+        preferenceDataStore.setCompleteOnBoardingMockData()
+    }
 
     override fun getCompleteOnBoarding(): Flow<Boolean> {
         return preferenceDataStore.getCompleteOnBoarding()

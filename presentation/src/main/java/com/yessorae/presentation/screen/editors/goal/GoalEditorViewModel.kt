@@ -2,6 +2,9 @@ package com.yessorae.presentation.screen.editors.goal
 
 import androidx.lifecycle.SavedStateHandle
 import com.yessorae.base.BaseScreenViewModel
+import com.yessorae.common.AnalyticsConstants
+import com.yessorae.common.Logger
+import com.yessorae.domain.common.DomainConstants
 import com.yessorae.domain.model.type.GoalType
 import com.yessorae.domain.model.type.toGoalType
 import com.yessorae.domain.repository.GoalRepository
@@ -139,6 +142,14 @@ class GoalEditorViewModel @Inject constructor(
         }
     }
 
+    fun onClickDate() {
+        updateState {
+            stateValue.copy(
+                editorDialogState = EditorDialogState.Date
+            )
+        }
+    }
+
     fun onClickStartDate() {
         updateState {
             stateValue.copy(
@@ -168,7 +179,10 @@ class GoalEditorViewModel @Inject constructor(
                             val goalModels = goals.map { it.asModel() }
                             updateState {
                                 stateValue.copy(
-                                    editorDialogState = EditorDialogState.ContributeGoal(goalModels)
+                                    editorDialogState = EditorDialogState.ContributeGoal(
+                                        goals = goalModels,
+                                        goalType = stateValue.paramGoalType
+                                    )
                                 )
                             }
                         }
@@ -185,7 +199,10 @@ class GoalEditorViewModel @Inject constructor(
                             val goalModels = goals.map { it.asModel() }
                             updateState {
                                 stateValue.copy(
-                                    editorDialogState = EditorDialogState.ContributeGoal(goalModels)
+                                    editorDialogState = EditorDialogState.ContributeGoal(
+                                        goals = goalModels,
+                                        goalType = stateValue.paramGoalType
+                                    )
                                 )
                             }
                         }
@@ -223,7 +240,19 @@ class GoalEditorViewModel @Inject constructor(
         }
     }
 
-    fun onSelectDate(milliSec: Long, dialogState: EditorDialogState) = ioScope.launch {
+    fun onSelectDate(milliSec: Long) = ioScope.launch {
+        updateState {
+            stateValue.copy(
+                paramDate = milliSec.toLocalDateTime().date,
+                startDate = null,
+                endDate = null,
+                changed = true
+            )
+        }
+        onCancelDialog()
+    }
+
+    fun onSelectRangeDate(milliSec: Long, dialogState: EditorDialogState) = ioScope.launch {
         val date = milliSec.toLocalDateTime().date
         val paramDate = stateValue.paramDate
 
@@ -277,7 +306,7 @@ class GoalEditorViewModel @Inject constructor(
             is EditorDialogState.StartDate -> {
                 val endDate = stateValue.endDate
                 if (endDate != null && endDate < date) {
-                    _toast.emit(ResString(R.string.goal_toast_out_of_order_start))
+                    _toast.emit(ResString(R.string.goal_toast_out_of_order_start_day))
                     return@launch
                 }
                 updateState {
@@ -291,7 +320,7 @@ class GoalEditorViewModel @Inject constructor(
             is EditorDialogState.EndDate -> {
                 val startDate = stateValue.startDate
                 if (startDate != null && startDate > date) {
-                    _toast.emit(ResString(R.string.goal_toast_out_of_order_end))
+                    _toast.emit(ResString(R.string.goal_toast_out_of_order_end_day))
                     return@launch
                 }
                 updateState {
@@ -347,6 +376,15 @@ class GoalEditorViewModel @Inject constructor(
             if (isUpdate) {
                 goalRepository.updateGoalTransaction(it)
             } else {
+                with(AnalyticsConstants) {
+                    Logger.logAnalyticsEvent(
+                        event = EVENT_INSERT_GOAL,
+                        PARAM_TITLE to it.title,
+                        PARAM_START to "${it.startTime}",
+                        PARAM_END to "${it.endTime}",
+                        PARAM_HAS_UPPER_GOAL to (it.upperGoalId != null)
+                    )
+                }
                 goalRepository.insertGoal(it)
             }
             hideLoading()
@@ -372,7 +410,7 @@ data class GoalEditorScreenState(
     val title: String? = null,
     val startDate: LocalDate? = null,
     val endDate: LocalDate? = null,
-    val totalScore: Int? = 100,
+    val totalScore: Int? = DomainConstants.DEFAULT_TOTAL_SCORE,
     val upperGoal: GoalModel? = null,
     val upperGoalContributionScore: Int? = null,
     val memo: String? = null,

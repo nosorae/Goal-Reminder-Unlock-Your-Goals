@@ -40,7 +40,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -172,6 +171,9 @@ fun GoalEditorScreen(
                         title = model.dayEditorTitle?.get(context = context),
                         startDay = model.startDate,
                         endDay = model.endDate,
+                        onClickDay = {
+                            viewModel.onClickDate()
+                        },
                         onClickStartDay = {
                             viewModel.onClickStartDate()
                         },
@@ -213,7 +215,8 @@ fun GoalEditorScreen(
                             onAdViewLoad = {
                                 adView.value = it
                             },
-                            adId = BuildConfig.ADMOB_EDITOR_BANNER_ID
+                            adId = BuildConfig.ADMOB_EDITOR_BANNER_ID,
+                            modifier = Modifier.padding(bottom = Dimen.SmallDividePadding)
                         )
                     }
 
@@ -279,9 +282,24 @@ fun GoalEditorScreen(
     }
 
     GoalReminderDatePickerDialog(
-        showDialog = model.editorDialogState is EditorDialogState.StartDate,
+        showDialog = model.editorDialogState is EditorDialogState.Date,
+        initDate = model.paramDate,
         onClickConfirmButton = { milliSec ->
-            viewModel.onSelectDate(milliSec = milliSec, dialogState = EditorDialogState.StartDate)
+            viewModel.onSelectDate(milliSec = milliSec)
+        },
+        onCancel = {
+            viewModel.onCancelDialog()
+        }
+    )
+
+    GoalReminderDatePickerDialog(
+        showDialog = model.editorDialogState is EditorDialogState.StartDate,
+        initDate = model.startDate ?: model.paramDate,
+        onClickConfirmButton = { milliSec ->
+            viewModel.onSelectRangeDate(
+                milliSec = milliSec,
+                dialogState = EditorDialogState.StartDate
+            )
         },
         onCancel = {
             viewModel.onCancelDialog()
@@ -290,8 +308,12 @@ fun GoalEditorScreen(
 
     GoalReminderDatePickerDialog(
         showDialog = model.editorDialogState is EditorDialogState.EndDate,
+        initDate = model.endDate ?: model.paramDate,
         onClickConfirmButton = { milliSec ->
-            viewModel.onSelectDate(milliSec = milliSec, dialogState = EditorDialogState.EndDate)
+            viewModel.onSelectRangeDate(
+                milliSec = milliSec,
+                dialogState = EditorDialogState.EndDate
+            )
         },
         onCancel = {
             viewModel.onCancelDialog()
@@ -311,7 +333,8 @@ fun GoalEditorScreen(
 
     OptionListDialog(
         showDialog = model.editorDialogState is EditorDialogState.ContributeGoal,
-        title = stringResource(id = R.string.todo_goal_placeholder),
+        title = (model.editorDialogState as? EditorDialogState.ContributeGoal)?.title?.get(context)
+            ?: stringResource(id = R.string.common_dialog_title_select_default_contribution_title),
         onCancel = {
             viewModel.onCancelDialog()
         }
@@ -384,6 +407,7 @@ private fun TimeListItem(
     title: String? = null,
     startDay: LocalDate? = null,
     endDay: LocalDate? = null,
+    onClickDay: () -> Unit = {},
     onClickStartDay: () -> Unit = {},
     onClickEndDay: () -> Unit = {}
 ) {
@@ -432,7 +456,9 @@ private fun TimeListItem(
             }
         },
         leadingIcon = Icons.Filled.Schedule,
-        clickEnabled = false
+        onClick = {
+            onClickDay()
+        }
     )
 }
 

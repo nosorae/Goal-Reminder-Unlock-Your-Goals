@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -23,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -143,29 +141,15 @@ fun FinalGoalScreen(
 
                 Margin(dp = Dimen.DefaultDividePadding)
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.Bottom
-                ) {
-                    FinalGoalTextField(
-                        title = model.finalGoalText,
-                        onChangeTitle = {
-                            viewModel.onChangeYearText(it)
-                        },
-                        placeholderText = stringResource(id = R.string.final_goal_text_placeholder),
-                        textStyle = contentTextStyle,
-                        modifier = Modifier.weight(weight = 1f, fill = false)
-                    )
-
-                    Text(
-                        text = stringResource(id = R.string.final_goal_text_word_part),
-                        style = partTextStyle,
-                        modifier = Modifier
-                            .padding(bottom = Dimen.DefaultDividePadding)
-                            .wrapContentWidth(),
-                        maxLines = 1
-                    )
-                }
+                FinalGoalTextField(
+                    title = model.finalGoalText,
+                    onChangeTitle = {
+                        viewModel.onChangeYearText(it)
+                    },
+                    placeholderText = stringResource(id = R.string.final_goal_text_placeholder),
+                    textStyle = contentTextStyle,
+                    singleLine = false
+                )
             }
 
             BackgroundTextButton(

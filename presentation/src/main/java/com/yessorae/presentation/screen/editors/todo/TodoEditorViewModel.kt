@@ -2,6 +2,8 @@ package com.yessorae.presentation.screen.editors.todo
 
 import androidx.lifecycle.SavedStateHandle
 import com.yessorae.base.BaseScreenViewModel
+import com.yessorae.common.AnalyticsConstants
+import com.yessorae.common.Logger
 import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.domain.repository.TodoRepository
 import com.yessorae.domain.usecase.GetTodoWithUpperGoalUseCase
@@ -15,7 +17,6 @@ import com.yessorae.presentation.screen.editors.EditorDialogState
 import com.yessorae.util.ResString
 import com.yessorae.util.StringModel
 import com.yessorae.util.fromHourMinute
-import com.yessorae.util.getStartOfDay
 import com.yessorae.util.now
 import com.yessorae.util.toLocalDateTime
 import com.yessorae.util.toStartLocalDateTime
@@ -115,26 +116,43 @@ class TodoEditorViewModel @Inject constructor(
         onCancelDialog()
     }
 
-    fun onSelectTime(hour: Int, minute: Int, dialogState: EditorDialogState) {
+    fun onSelectTime(hour: Int, minute: Int, dialogState: EditorDialogState) = ioScope.launch {
         val time = LocalTime.fromHourMinute(hour = hour, minute = minute)
-        updateState {
-            when (dialogState) {
-                EditorDialogState.StartTime -> {
+        val newTimeMin = (hour * 60) + minute
+
+        when (dialogState) {
+            EditorDialogState.StartTime -> {
+                stateValue.endTime?.let { endTime ->
+                    val endTimeMin = (endTime.hour * 60) + endTime.minute
+                    if (endTimeMin < newTimeMin) {
+                        _toast.emit(ResString(R.string.goal_toast_out_of_order_start_time))
+                        return@launch
+                    }
+                }
+                updateState {
                     stateValue.copy(
                         startTime = time,
                         changed = true
                     )
                 }
+            }
 
-                EditorDialogState.EndTime -> {
+            EditorDialogState.EndTime -> {
+                stateValue.startTime?.let { startTime ->
+                    val startTimeMin = (startTime.hour * 60) + startTime.minute
+                    if (startTimeMin > newTimeMin) {
+                        _toast.emit(ResString(R.string.goal_toast_out_of_order_end_time))
+                        return@launch
+                    }
+                }
+                updateState {
                     stateValue.copy(
                         endTime = time,
                         changed = true
                     )
                 }
-
-                else -> stateValue
             }
+            else -> {}
         }
 
         onCancelDialog()
@@ -242,6 +260,15 @@ class TodoEditorViewModel @Inject constructor(
             if (isUpdate) {
                 todoRepository.updateTodoTransaction(it)
             } else {
+                with(AnalyticsConstants) {
+                    Logger.logAnalyticsEvent(
+                        event = EVENT_INSERT_TODO,
+                        PARAM_TITLE to it.title,
+                        PARAM_START to "${it.startTime}",
+                        PARAM_END to "${it.endTime}",
+                        PARAM_HAS_UPPER_GOAL to (it.upperGoalId != null)
+                    )
+                }
                 todoRepository.insertTodo(it)
             }
             hideLoading()
@@ -289,8 +316,8 @@ data class TodoEditorScreenState(
             paramTodo.copy(
                 title = title,
                 date = paramDate,
-                startTime = paramDate.atTime(startTime ?: LocalTime.getStartOfDay()),
-                endTime = paramDate.atTime(endTime ?: LocalTime.getStartOfDay()),
+                startTime = startTime?.let { time -> paramDate.atTime(time) },
+                endTime = endTime?.let { it1 -> paramDate.atTime(it1) },
                 upperGoalModel = contributeGoal,
                 upperGoalContributionScore = contributionScore,
                 memo = memo
@@ -299,8 +326,8 @@ data class TodoEditorScreenState(
             TodoModel(
                 title = title,
                 date = paramDate,
-                startTime = paramDate.atTime(startTime ?: LocalTime.getStartOfDay()),
-                endTime = paramDate.atTime(endTime ?: LocalTime.getStartOfDay()),
+                startTime = startTime?.let { paramDate.atTime(it) },
+                endTime = endTime?.let { paramDate.atTime(it) },
                 upperGoalModel = contributeGoal,
                 upperGoalContributionScore = contributionScore,
                 memo = memo

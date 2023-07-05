@@ -109,25 +109,38 @@ fun GoalListItem(
                     }
 
                     Margin(dp = Dimen.InsideDividePadding)
-                    Text(
-                        text = stringResource(
-                            id = R.string.home_goal_progress
-                        ).format(goalModel.goal.percent),
-                        style = MaterialTheme.typography.labelMedium,
-                        textAlign = TextAlign.Center,
-                        textDecoration = if (goalModel.goal.complete) {
-                            TextDecoration.LineThrough
-                        } else {
-                            TextDecoration.None
-                        }
-                    )
-                    Margin(Dimen.InsideDividePadding)
-                    LinearProgressIndicator(
-                        modifier = Modifier.fillMaxWidth(),
-                        progress = goalModel.goal.progress,
-                        color = MaterialTheme.colorScheme.primary,
-                        trackColor = MaterialTheme.colorScheme.onBackground
-                    )
+                    if (goalModel.goal.showProgress) {
+                        Text(
+                            text = stringResource(
+                                id = R.string.home_goal_progress
+                            ).format(goalModel.goal.percent),
+                            style = MaterialTheme.typography.labelMedium,
+                            textAlign = TextAlign.Center,
+                            textDecoration = if (goalModel.goal.complete) {
+                                TextDecoration.LineThrough
+                            } else {
+                                TextDecoration.None
+                            }
+                        )
+                        Margin(Dimen.InsideDividePadding)
+                        LinearProgressIndicator(
+                            modifier = Modifier.fillMaxWidth(),
+                            progress = goalModel.goal.progress,
+                            color = MaterialTheme.colorScheme.primary,
+                            trackColor = MaterialTheme.colorScheme.onBackground
+                        )
+                    } else {
+                        Text(
+                            text = stringResource(id = R.string.home_goal_progress_none),
+                            style = MaterialTheme.typography.labelMedium,
+                            textAlign = TextAlign.Center,
+                            textDecoration = if (goalModel.goal.complete) {
+                                TextDecoration.LineThrough
+                            } else {
+                                TextDecoration.None
+                            }
+                        )
+                    }
                 }
             }
         )
