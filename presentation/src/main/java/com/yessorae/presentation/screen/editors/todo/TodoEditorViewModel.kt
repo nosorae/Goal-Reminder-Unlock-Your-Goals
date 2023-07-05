@@ -289,8 +289,8 @@ data class TodoEditorScreenState(
             paramTodo.copy(
                 title = title,
                 date = paramDate,
-                startTime = paramDate.atTime(startTime ?: LocalTime.getStartOfDay()),
-                endTime = paramDate.atTime(endTime ?: LocalTime.getStartOfDay()),
+                startTime = startTime?.let { time -> paramDate.atTime(time) },
+                endTime = endTime?.let { it1 -> paramDate.atTime(it1) },
                 upperGoalModel = contributeGoal,
                 upperGoalContributionScore = contributionScore,
                 memo = memo
@@ -299,8 +299,8 @@ data class TodoEditorScreenState(
             TodoModel(
                 title = title,
                 date = paramDate,
-                startTime = paramDate.atTime(startTime ?: LocalTime.getStartOfDay()),
-                endTime = paramDate.atTime(endTime ?: LocalTime.getStartOfDay()),
+                startTime = startTime?.let { paramDate.atTime(it) },
+                endTime = endTime?.let { paramDate.atTime(it) },
                 upperGoalModel = contributeGoal,
                 upperGoalContributionScore = contributionScore,
                 memo = memo

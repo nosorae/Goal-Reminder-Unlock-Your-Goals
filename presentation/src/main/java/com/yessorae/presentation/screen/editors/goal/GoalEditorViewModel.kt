@@ -243,7 +243,8 @@ class GoalEditorViewModel @Inject constructor(
             stateValue.copy(
                 paramDate = milliSec.toLocalDateTime().date,
                 startDate = null,
-                endDate = null
+                endDate = null,
+                changed = true
             )
         }
         onCancelDialog()
