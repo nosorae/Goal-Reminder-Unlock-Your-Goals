@@ -76,19 +76,11 @@
 
     <!-- 목데이터 -->
     <string name="mock_yearly_goal_title_1">책 12권 읽기 📚</string>
-    <string name="mock_yearly_goal_title_2">사람들에게 도움이되는 앱을 제작하여 총 다운로드 수 10만 이상 달성 🚀</string>
-
-    <string name="mock_monthly_goal_title_1">독서 1권 - “생각에 관한 생각”</string>
-    <string name="mock_monthly_goal_title_2">목표 리마인더 앱 런칭 📢</string>
-
-    <string name="mock_weekly_goal_title_1_1">“생각에 관한 생각” 도서 3부 읽고 글쓰기 1000자 이상</string>
+    <string name="mock_monthly_goal_title_1">독서 1권 - 7월 도서 “생각에 관한 생각"</string>
+    <string name="mock_weekly_goal_title_1_1">7월 도서 3부 읽고 글쓰기 1000자 이상</string>
     <string name="mock_weekly_goal_title_1_2">다음 달에 읽을 도서 선정</string>
-    <string name="mock_weekly_goal_title_2">목표 리마인더 앱 심사 요청</string>
-
-    <string name="mock_todo_title_1_1">“생각에 관한 생각” 3부 1~3장 읽고 글쓰기 200자 이상</string>
+    <string name="mock_todo_title_1_1">7월 도서 3부 1~3장 읽고 글쓰기 200자 이상 작성</string>
     <string name="mock_todo_title_1_2">신간 도서 1권 조사</string>
-    <string name="mock_todo_title_2_1">목표 리마인더 앱 UI 테스트</string>
-    <string name="mock_todo_title_2_2">목표 리마인더 앱 크래시 수정</string>
     <string name="mock_todo_title_3">기상 후 푸시업 200회</string>
 
     <!-- 공통 -->

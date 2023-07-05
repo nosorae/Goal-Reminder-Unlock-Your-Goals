@@ -1,6 +1,7 @@
 package com.yessorae.goalreminder.util
 
 import android.content.Context
+import com.yessorae.common.Logger
 import com.yessorae.domain.model.Goal
 import com.yessorae.domain.model.Todo
 import com.yessorae.domain.model.TodoWithGoal
@@ -30,7 +31,7 @@ class InitDataHelper @Inject constructor(
             try {
                 insertOnBoardingData()
             } catch (e: Exception) {
-                Timber.tag("SR-N").e("InitDataHelper processOnBoardingData : $e")
+                Logger.recordException(e)
             }
         }
     }
@@ -43,13 +44,8 @@ class InitDataHelper @Inject constructor(
             type = GoalType.YEARLY,
             totalScore = 12
         )
-        val yearlyGoal2 = Goal(
-            title = context.getString(R.string.mock_yearly_goal_title_2),
-            dateFrom = now,
-            type = GoalType.YEARLY
-        )
+
         val yearlyGoalId1 = goalRepository.insertGoal(goal = yearlyGoal1)
-        val yearlyGoalId2 = goalRepository.insertGoal(goal = yearlyGoal2)
 
         val monthlyGoal1 = Goal(
             title = context.getString(R.string.mock_monthly_goal_title_1),
@@ -58,15 +54,7 @@ class InitDataHelper @Inject constructor(
             upperGoalId = yearlyGoalId1,
             upperGoalContributionScore = 1
         )
-        val monthlyGoal2 = Goal(
-            title = context.getString(R.string.mock_monthly_goal_title_2),
-            dateFrom = now,
-            type = GoalType.MONTHLY,
-            upperGoalId = yearlyGoalId2,
-            upperGoalContributionScore = 50
-        )
         val monthlyGoalId1 = goalRepository.insertGoal(goal = monthlyGoal1)
-        val monthlyGoalId2 = goalRepository.insertGoal(goal = monthlyGoal2)
 
         val weeklyGoal1_1 = Goal(
             title = context.getString(R.string.mock_weekly_goal_title_1_1),
@@ -82,16 +70,8 @@ class InitDataHelper @Inject constructor(
             upperGoalId = monthlyGoalId1,
             upperGoalContributionScore = 5
         )
-        val weeklyGoal2 = Goal(
-            title = context.getString(R.string.mock_weekly_goal_title_2),
-            dateFrom = now,
-            type = GoalType.WEEKLY,
-            upperGoalId = monthlyGoalId2,
-            upperGoalContributionScore = 100
-        )
         val weeklyGoalId1_1 = goalRepository.insertGoal(weeklyGoal1_1)
         val weeklyGoalId1_2 = goalRepository.insertGoal(weeklyGoal1_2)
-        val weeklyGoalId2 = goalRepository.insertGoal(weeklyGoal2)
 
         val todo1_1 = Todo(
             title = context.getString(R.string.mock_todo_title_1_1),
@@ -109,22 +89,6 @@ class InitDataHelper @Inject constructor(
             upperGoalId = weeklyGoalId1_2,
             upperGoalContributionScore = 20,
         )
-        val todo2_1 = Todo(
-            title = context.getString(R.string.mock_todo_title_2_1),
-            date = now,
-            startTime = now.date.toLocalDateTime(hour = 13),
-            endTime = now.date.toLocalDateTime(hour = 17),
-            upperGoalId = weeklyGoalId2,
-            upperGoalContributionScore = 50,
-        )
-        val todo2_2 = Todo(
-            title = context.getString(R.string.mock_todo_title_2_2),
-            date = now,
-            startTime = now.date.toLocalDateTime(hour = 13),
-            endTime = now.date.toLocalDateTime(hour = 17),
-            upperGoalId = weeklyGoalId2,
-            upperGoalContributionScore = 50,
-        )
         val todo3 = Todo(
             title = context.getString(R.string.mock_todo_title_3),
             date = now,
@@ -132,21 +96,13 @@ class InitDataHelper @Inject constructor(
             endTime = now.date.toLocalDateTime()
         )
         todoRepository.insertTodo(todo1_1)
-        todoRepository.insertTodo(todo1_2)
-        val todoId2_1 = todoRepository.insertTodo(todo2_1)
-        val todoId2_2 = todoRepository.insertTodo(todo2_2)
+        val todoId1_2 = todoRepository.insertTodo(todo1_2)
+
         todoRepository.insertTodo(todo3)
         checkTodoTransactionUseCase(
             TodoWithGoal(
-                todo = todo2_1.copy(todoId = todoId2_1),
-                upperGoal = weeklyGoal2.copy(goalId = weeklyGoalId2)
-            )
-        )
-
-        checkTodoTransactionUseCase(
-            TodoWithGoal(
-                todo = todo2_2.copy(todoId = todoId2_2),
-                upperGoal = weeklyGoal2.copy(goalId = weeklyGoalId2)
+                todo = todo1_2.copy(todoId = todoId1_2),
+                upperGoal = weeklyGoal1_2.copy(goalId = weeklyGoalId1_2)
             )
         )
     }
