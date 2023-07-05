@@ -284,6 +284,7 @@ fun GoalEditorScreen(
 
     GoalReminderDatePickerDialog(
         showDialog = model.editorDialogState is EditorDialogState.Date,
+        initDate = model.paramDate,
         onClickConfirmButton = { milliSec ->
             viewModel.onSelectDate(milliSec = milliSec)
         },
@@ -294,6 +295,7 @@ fun GoalEditorScreen(
 
     GoalReminderDatePickerDialog(
         showDialog = model.editorDialogState is EditorDialogState.StartDate,
+        initDate = model.startDate ?: model.paramDate,
         onClickConfirmButton = { milliSec ->
             viewModel.onSelectRangeDate(milliSec = milliSec, dialogState = EditorDialogState.StartDate)
         },
@@ -304,6 +306,7 @@ fun GoalEditorScreen(
 
     GoalReminderDatePickerDialog(
         showDialog = model.editorDialogState is EditorDialogState.EndDate,
+        initDate = model.endDate ?: model.paramDate,
         onClickConfirmButton = { milliSec ->
             viewModel.onSelectRangeDate(milliSec = milliSec, dialogState = EditorDialogState.EndDate)
         },

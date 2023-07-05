@@ -259,6 +259,7 @@ fun HomeScreen(
 
     GoalReminderDatePickerDialog(
         showDialog = model.dialogState is HomeDialogState.DatePickerDialog,
+        initDate = model.now.date,
         onClickConfirmButton = { timestamp ->
             viewModel.onSelectDate(timestamp)
         },

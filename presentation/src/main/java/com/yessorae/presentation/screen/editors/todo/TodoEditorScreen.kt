@@ -197,6 +197,7 @@ fun TodoEditorScreen(
 
     GoalReminderDatePickerDialog(
         showDialog = model.editorDialogState is EditorDialogState.Date,
+        initDate = model.paramDate,
         onClickConfirmButton = { milliSec ->
             viewModel.onSelectDate(milliSec = milliSec)
         },

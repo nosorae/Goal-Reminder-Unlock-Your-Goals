@@ -241,9 +241,12 @@ class GoalEditorViewModel @Inject constructor(
     fun onSelectDate(milliSec: Long) = ioScope.launch {
         updateState {
             stateValue.copy(
-                paramDate = milliSec.toLocalDateTime().date
+                paramDate = milliSec.toLocalDateTime().date,
+                startDate = null,
+                endDate = null
             )
         }
+        onCancelDialog()
     }
 
     fun onSelectRangeDate(milliSec: Long, dialogState: EditorDialogState) = ioScope.launch {
