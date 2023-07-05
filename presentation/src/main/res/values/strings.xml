@@ -42,8 +42,8 @@
     <string name="goal_toast_out_of_range_year">%d년 내에서 선택해주세요 🙏</string>
     <string name="goal_toast_out_of_range_month">%d월 내에서 선택해주세요 🙏</string>
     <string name="goal_toast_out_of_range_week">%d월%d일부터 %d월%d일 내에서 선택해주세요 🙏</string>
-    <string name="goal_toast_out_of_order_start">시작 시간은 종료 시간 이후일 수 없습니다.</string>
-    <string name="goal_toast_out_of_order_end">종료 시간은 시작 시간 이전일 수 없습니다.</string>
+    <string name="goal_toast_out_of_order_start_day">시작 날짜는 종료 시간 이후일 수 없습니다.</string>
+    <string name="goal_toast_out_of_order_end_day">종료 날짜는 시작 시간 이전일 수 없습니다.</string>
 
     <!-- 할 일 추가/수정 -->
     <string name="todo_add_toolbar_title">투두 추가</string>
@@ -62,6 +62,8 @@
     <string name="todo_toast_please_alarm_on">알림권한을 켜야 알림을 받아보실 수 있어요 🥺</string>
     <string name="todo_toast_will_send_you_notification">알림을 보내드릴게요 😉</string>
     <string name="todo_none_goal">없음</string>
+    <string name="goal_toast_out_of_order_start_time">시작 시간은 종료 시간 이후일 수 없습니다.</string>
+    <string name="goal_toast_out_of_order_end_time">종료 시간은 시작 시간 이전일 수 없습니다.</string>
 
 
     <!-- 반복 일정 등록  -->

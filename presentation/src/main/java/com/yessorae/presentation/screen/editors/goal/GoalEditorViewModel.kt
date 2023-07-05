@@ -304,7 +304,7 @@ class GoalEditorViewModel @Inject constructor(
             is EditorDialogState.StartDate -> {
                 val endDate = stateValue.endDate
                 if (endDate != null && endDate < date) {
-                    _toast.emit(ResString(R.string.goal_toast_out_of_order_start))
+                    _toast.emit(ResString(R.string.goal_toast_out_of_order_start_day))
                     return@launch
                 }
                 updateState {
@@ -318,7 +318,7 @@ class GoalEditorViewModel @Inject constructor(
             is EditorDialogState.EndDate -> {
                 val startDate = stateValue.startDate
                 if (startDate != null && startDate > date) {
-                    _toast.emit(ResString(R.string.goal_toast_out_of_order_end))
+                    _toast.emit(ResString(R.string.goal_toast_out_of_order_end_day))
                     return@launch
                 }
                 updateState {

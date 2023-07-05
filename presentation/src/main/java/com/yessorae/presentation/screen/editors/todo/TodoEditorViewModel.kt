@@ -115,26 +115,43 @@ class TodoEditorViewModel @Inject constructor(
         onCancelDialog()
     }
 
-    fun onSelectTime(hour: Int, minute: Int, dialogState: EditorDialogState) {
+    fun onSelectTime(hour: Int, minute: Int, dialogState: EditorDialogState) = ioScope.launch {
         val time = LocalTime.fromHourMinute(hour = hour, minute = minute)
-        updateState {
-            when (dialogState) {
-                EditorDialogState.StartTime -> {
+        val newTimeMin = (hour * 60) + minute
+
+        when (dialogState) {
+            EditorDialogState.StartTime -> {
+                stateValue.endTime?.let { endTime ->
+                    val endTimeMin = (endTime.hour * 60) + endTime.minute
+                    if (endTimeMin < newTimeMin) {
+                        _toast.emit(ResString(R.string.goal_toast_out_of_order_start_time))
+                        return@launch
+                    }
+                }
+                updateState {
                     stateValue.copy(
                         startTime = time,
                         changed = true
                     )
                 }
+            }
 
-                EditorDialogState.EndTime -> {
+            EditorDialogState.EndTime -> {
+                stateValue.startTime?.let { startTime ->
+                    val startTimeMin = (startTime.hour * 60) + startTime.minute
+                    if (startTimeMin > newTimeMin) {
+                        _toast.emit(ResString(R.string.goal_toast_out_of_order_end_time))
+                        return@launch
+                    }
+                }
+                updateState {
                     stateValue.copy(
                         endTime = time,
                         changed = true
                     )
                 }
-
-                else -> stateValue
             }
+            else -> {}
         }
 
         onCancelDialog()
