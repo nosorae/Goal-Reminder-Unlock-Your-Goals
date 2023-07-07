@@ -14,3 +14,9 @@ dependencyResolutionManagement {
 }
 rootProject.name = "GoalReminder"
 include ':app'
+include ':data'
+include ':designsystem'
+include ':domain'
+include ':di'
+include ':presentation'
+include ':common'
