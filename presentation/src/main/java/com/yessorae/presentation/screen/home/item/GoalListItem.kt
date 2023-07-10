@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -152,7 +153,7 @@ fun GoalListItem(
             onClick = { onClickMore() }
         ) {
             Icon(
-                imageVector = Icons.Filled.Delete,
+                imageVector = Icons.Filled.MoreVert,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onBackground
             )
