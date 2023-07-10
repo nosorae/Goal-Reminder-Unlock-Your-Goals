@@ -12,7 +12,10 @@
     <string name="home_confirm_dialog_delete_body">정말 삭제하시겠습니까?</string>
     <string name="home_confirm_dialog_delete_goal_title">목표 삭제</string>
     <string name="home_confirm_dialog_delete_todo_title">할일 삭제</string>
-    <string name="home_option_dialog_postpone">내일로 미루기</string>
+    <string name="home_option_dialog_postpone_next_day">내일로 미루기</string>
+    <string name="home_option_dialog_postpone_next_week">다음 주로 미루기</string>
+    <string name="home_option_dialog_postpone_next_month">다음 주로 미루기</string>
+    <string name="home_option_dialog_postpone_next_year">내년으로 미루기</string>
     <string name="home_option_dialog_copy">복사 하기</string>
     <string name="home_option_dialog_delete">삭제 하기</string>
 
@@ -113,4 +116,5 @@
     <string name="common_dialog_title_select_monthly_contribution_goal_title">기여 월간 목표 선택</string>
     <string name="common_dialog_title_select_yearly_contribution_goal_title">기여 월간 목표 선택</string>
     <string name="common_dialog_title_select_default_contribution_title">기여 목표 선택</string>
+    <string name="common_error_occur">오류 발생</string>
 </resources>

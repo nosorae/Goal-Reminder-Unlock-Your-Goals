@@ -254,7 +254,7 @@ fun HomeScreen(
 
     OverlayPermissionDialog(
         showDialog = (model.dialogState is HomeDialogState.OverlayConfirmDialog) &&
-            completeOnBoarding == true,
+                completeOnBoarding == true,
         onOverlayConfirmed = { confirmed ->
             viewModel.onOverlayConfirmed(confirmed)
         }
@@ -313,15 +313,17 @@ fun HomeScreen(
                     viewModel.onCancelDialog()
                 }
             ) {
-                item {
-                    ListItem(
-                        headlineContent = {
-                            Text(text = stringResource(id = R.string.home_option_dialog_postpone))
-                        },
-                        modifier = Modifier.clickable {
-                            viewModel.onSelectOptionPostponeOneDay(dialogState.selectedItem)
-                        }
-                    )
+                if (dialogState.selectedItem is TodoModel) {
+                    item {
+                        ListItem(
+                            headlineContent = {
+                                Text(text = dialogState.postponeTitle.get(context))
+                            },
+                            modifier = Modifier.clickable {
+                                viewModel.onSelectOptionPostponeOneDay(dialogState.selectedItem)
+                            }
+                        )
+                    }
                 }
                 item {
                     ListItem(
