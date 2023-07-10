@@ -1,6 +1,7 @@
 package com.yessorae.presentation.screen.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +14,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -41,6 +43,7 @@ import com.yessorae.presentation.FinalGoalDestination
 import com.yessorae.presentation.R
 import com.yessorae.presentation.dialogs.ConfirmDialog
 import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
+import com.yessorae.presentation.dialogs.OptionsDialog
 import com.yessorae.presentation.ext.redirectToWebBrowser
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.GoalWithUpperGoalModel
@@ -156,7 +159,7 @@ fun HomeScreen(
                             ),
                             goals = model.yearlyGoalModels,
                             onClickMore = { goal ->
-                                viewModel.onClickGoalDelete(goal = goal)
+                                viewModel.onClickOption(item = goal)
                             },
                             onClickGoal = { goal ->
                                 viewModel.onClickGoal(goal = goal)
@@ -179,7 +182,7 @@ fun HomeScreen(
                             ),
                             goals = model.monthlyGoalModels,
                             onClickMore = { goal ->
-                                viewModel.onClickGoalDelete(goal = goal)
+                                viewModel.onClickOption(item = goal)
                             },
                             onClickGoal = { goal ->
                                 viewModel.onClickGoal(goal = goal)
@@ -205,7 +208,7 @@ fun HomeScreen(
                             ),
                             goals = model.weeklyGoalModels,
                             onClickMore = { goal ->
-                                viewModel.onClickGoalDelete(goal = goal)
+                                viewModel.onClickOption(item = goal)
                             },
                             onClickGoal = { goal ->
                                 viewModel.onClickGoal(goal = goal)
@@ -227,7 +230,7 @@ fun HomeScreen(
                             ),
                             todos = model.dailyTodoModels,
                             onClickMore = { todo ->
-                                viewModel.onClickTodoDelete(todo = todo)
+                                viewModel.onClickOption(item = todo)
                             },
                             onClickCheckBox = { todo ->
                                 viewModel.onClickTodoCheckBox(todo = todo)
@@ -301,6 +304,54 @@ fun HomeScreen(
         dismissOnClickOutside = true,
         dismissOnBackPress = true
     )
+
+    when (val dialogState = model.dialogState) {
+        is HomeDialogState.OptionDialog -> {
+            OptionsDialog(
+                title = dialogState.selectedItem.display,
+                onCancel = {
+                    viewModel.onCancelDialog()
+                }
+            ) {
+                item {
+                    ListItem(
+                        headlineContent = {
+                            Text(text = stringResource(id = R.string.home_option_dialog_postpone))
+                        },
+                        modifier = Modifier.clickable {
+                            viewModel.onSelectOptionPostponeOneDay(dialogState.selectedItem)
+                        }
+                    )
+                }
+                item {
+                    ListItem(
+                        headlineContent = {
+                            Text(text = stringResource(id = R.string.home_option_dialog_copy))
+                        },
+                        modifier = Modifier.clickable {
+                            viewModel.onSelectOptionCopy(dialogState.selectedItem)
+                        }
+                    )
+                }
+                item {
+                    ListItem(
+                        headlineContent = {
+                            Text(text = stringResource(id = R.string.home_option_dialog_delete))
+                        },
+                        modifier = Modifier.clickable {
+                            viewModel.onSelectOptionDelete(dialogState.selectedItem)
+                        }
+                    )
+                }
+            }
+        }
+        // todo 파라미터로 노출된 show 를 제거하고 when 문으로 이동
+        else -> {
+            // do nothing
+        }
+    }
+
+
 
     if (completeOnBoarding == false) {
         onNavOutEvent(FinalGoalDestination.getRouteWithArgs(onBoarding = true))

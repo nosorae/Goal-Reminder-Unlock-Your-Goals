@@ -15,6 +15,7 @@ import com.yessorae.presentation.GoalEditorDestination
 import com.yessorae.presentation.TodoEditorDestination
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.GoalWithUpperGoalModel
+import com.yessorae.presentation.model.HomeOptionListItem
 import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.model.asDomainModel
 import com.yessorae.presentation.model.asDomainWithGoalModel
@@ -148,11 +149,100 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    fun onClickGoalDelete(goal: GoalModel) {
+    fun onClickOption(item: HomeOptionListItem) {
+        updateState {
+            stateValue.copy(
+                dialogState = HomeDialogState.OptionDialog(selectedItem = item)
+            )
+        }
+    }
+
+    fun onSelectOptionCopy(item: HomeOptionListItem) {
+        when (item) {
+            is GoalModel -> {
+                copyGoal(goal = item)
+                Logger.uiDebug("onSelectOptionCopy $item")
+            }
+            is TodoModel -> {
+                copyTodo(todo = item)
+                Logger.uiDebug("onSelectOptionCopy $item")
+            }
+            else -> {
+                // do nothing
+                Logger.uiDebug("onSelectOptionCopy else")
+            }
+        }
+
+        onCancelDialog()
+    }
+    
+    private fun copyGoal(goal: GoalModel) { // todo impl
+
+    }
+
+    private fun copyTodo(todo: TodoModel) { // todo impl
+
+    }
+
+    fun onSelectOptionPostponeOneDay(item: HomeOptionListItem) {
+        when (item) {
+            is GoalModel -> {
+                postponeGoalOneDay(goal = item)
+                Logger.uiDebug("onSelectOptionPostponeOneDay $item")
+            }
+            is TodoModel -> {
+                postponeTodoOneDay(todo = item)
+                Logger.uiDebug("onSelectOptionPostponeOneDay $item")
+            }
+            else -> {
+                // do nothing
+                Logger.uiDebug("onSelectOptionPostponeOneDay else")
+            }
+        }
+
+        onCancelDialog()
+    }
+    
+    private fun postponeGoalOneDay(goal: GoalModel) { // todo impl
+        
+    }
+    
+    private fun postponeTodoOneDay(todo: TodoModel) { // todo impl
+        
+    }
+
+    fun onSelectOptionDelete(item: HomeOptionListItem) {
+        when (item) {
+            is GoalModel -> {
+                showDeleteGoalConfirmDialog(goal = item)
+                Logger.uiDebug("onClickOptionDelete $item")
+            }
+            is TodoModel -> {
+                showDeleteTodoConfirmDialog(todo = item)
+                Logger.uiDebug("onClickOptionDelete $item")
+            }
+            else -> {
+                // do nothing
+                Logger.uiDebug("onClickOptionDelete else")
+            }
+        }
+    }
+
+    private fun showDeleteGoalConfirmDialog(goal: GoalModel) {
         updateState {
             stateValue.copy(
                 dialogState = HomeDialogState.DeleteGoalConfirmDialog(
                     goalModel = goal
+                )
+            )
+        }
+    }
+
+    private fun showDeleteTodoConfirmDialog(todo: TodoModel) {
+        updateState {
+            stateValue.copy(
+                dialogState = HomeDialogState.DeleteTodoConfirmDialog(
+                    todoModel = todo
                 )
             )
         }
@@ -185,16 +275,6 @@ class HomeViewModel @Inject constructor(
         _navigationEvent.emit(
             TodoEditorDestination.getRouteWithArgs(todoDay = currentDay.value.toMilliSecond())
         )
-    }
-
-    fun onClickTodoDelete(todo: TodoModel) {
-        updateState {
-            stateValue.copy(
-                dialogState = HomeDialogState.DeleteTodoConfirmDialog(
-                    todoModel = todo
-                )
-            )
-        }
     }
 
     fun onConfirmTodoDelete(dialogState: HomeDialogState.DeleteTodoConfirmDialog) = ioScope.launch {
