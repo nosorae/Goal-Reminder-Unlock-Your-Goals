@@ -21,7 +21,10 @@ data class TodoModel(
     val upperGoalContributionScore: Int? = null,
     val notification: Boolean = false,
     val memo: String? = null
-) {
+) : HomeOptionListItem {
+    override val id: Int = todoId
+    override val display: String = title
+
     val subtitle: StringModel? by lazy {
         if (startTime == null || endTime == null) {
             null

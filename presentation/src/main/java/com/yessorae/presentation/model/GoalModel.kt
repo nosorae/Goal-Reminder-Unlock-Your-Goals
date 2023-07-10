@@ -26,7 +26,10 @@ data class GoalModel(
     val memo: String? = null,
     val notification: Boolean = false,
     val type: GoalType
-) {
+) : HomeOptionListItem {
+    override val id: Int = goalId
+    override val display: String = title
+
     val subtitle: StringModel? by lazy {
         if (startTime == null || endTime == null) {
             null
