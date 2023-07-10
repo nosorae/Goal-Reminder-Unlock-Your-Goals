@@ -160,33 +160,42 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun onSelectOptionCopy(item: HomeOptionListItem) {
+    fun onSelectOptionCopy(item: HomeOptionListItem, copyText: String) {
         when (item) {
             is GoalModel -> {
-                copyGoal(goal = item)
-                Logger.uiDebug("onSelectOptionCopy $item")
+                copyGoal(goal = item, copyText = copyText)
             }
 
             is TodoModel -> {
-                copyTodo(todo = item)
-                Logger.uiDebug("onSelectOptionCopy $item")
+                copyTodo(todo = item, copyText = copyText)
             }
 
             else -> {
                 // do nothing
-                Logger.uiDebug("onSelectOptionCopy else")
             }
         }
 
         onCancelDialog()
     }
 
-    private fun copyGoal(goal: GoalModel) { // todo impl
-
+    private fun copyGoal(goal: GoalModel, copyText: String) = ioScope.launch {
+        goalRepository.insertGoal(
+            goal = goal.copy(
+                goalId = 0,
+                title = goal.title.plus(copyText),
+                currentScore = 0
+            ).asDomainModel()
+        )
     }
 
-    private fun copyTodo(todo: TodoModel) { // todo impl
-
+    private fun copyTodo(todo: TodoModel, copyText: String) = ioScope.launch {
+        todoRepository.insertTodo(
+            todo = todo.copy(
+                todoId = 0,
+                title = todo.title.plus(copyText),
+                done = false
+            ).asDomainModel()
+        )
     }
 
     fun onSelectOptionPostponeOneDay(item: HomeOptionListItem) {
