@@ -28,64 +28,61 @@ import com.yessorae.designsystem.theme.Dimen
 
 @Composable
 fun OptionsDialog(
-    showDialog: Boolean,
     title: String,
     onCancel: () -> Unit = {},
     items: LazyListScope.() -> Unit = {}
 ) {
-    if (showDialog) {
-        Dialog(onDismissRequest = { onCancel() }) {
-            Surface(
-                modifier = Modifier
-                    .wrapContentWidth()
-                    .wrapContentHeight()
-                    .sizeIn(
-                        minWidth = Dimen.MinDialogWidth,
-                        maxHeight = Dimen.MaxListDialogHeight
-                    ),
-                color = MaterialTheme.colorScheme.background,
-                shape = MaterialTheme.shapes.large
-            ) {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = title,
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(
-                                    top = Dimen.DefaultDividePadding,
-                                    bottom = Dimen.SmallDividePadding,
-                                    start = Dimen.SidePadding,
-                                ),
-                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1
-                        )
+    Dialog(onDismissRequest = { onCancel() }) {
+        Surface(
+            modifier = Modifier
+                .wrapContentWidth()
+                .wrapContentHeight()
+                .sizeIn(
+                    minWidth = Dimen.MinDialogWidth,
+                    maxHeight = Dimen.MaxListDialogHeight
+                ),
+            color = MaterialTheme.colorScheme.background,
+            shape = MaterialTheme.shapes.large
+        ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = title,
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(
+                                top = Dimen.DefaultDividePadding,
+                                bottom = Dimen.SmallDividePadding,
+                                start = Dimen.SidePadding,
+                            ),
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
+                    )
 
-                        Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .clickable(
-                                    onClick = { onCancel() },
-                                    indication = null,
-                                    interactionSource = MutableInteractionSource()
-                                )
-                                .padding(
-                                    top = Dimen.DefaultDividePadding,
-                                    bottom = Dimen.SmallDividePadding,
-                                    start = Dimen.DefaultDividePadding,
-                                    end = Dimen.SidePadding
-                                )
-                        )
-                    }
-                    LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                        items()
-                    }
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .clickable(
+                                onClick = { onCancel() },
+                                indication = null,
+                                interactionSource = MutableInteractionSource()
+                            )
+                            .padding(
+                                top = Dimen.DefaultDividePadding,
+                                bottom = Dimen.SmallDividePadding,
+                                start = Dimen.DefaultDividePadding,
+                                end = Dimen.SidePadding
+                            )
+                    )
+                }
+                LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                    items()
                 }
             }
         }
