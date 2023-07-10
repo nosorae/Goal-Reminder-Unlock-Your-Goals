@@ -64,7 +64,7 @@ import com.yessorae.presentation.ScreenConstants
 import com.yessorae.presentation.buttons.BackgroundTextButton
 import com.yessorae.presentation.dialogs.GoalReminderAlertDialog
 import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
-import com.yessorae.presentation.dialogs.OptionListDialog
+import com.yessorae.presentation.dialogs.OptionsDialog
 import com.yessorae.presentation.ext.BottomNavigationBarHeightDp
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TodoModel
@@ -331,7 +331,7 @@ fun GoalEditorScreen(
         }
     )
 
-    OptionListDialog(
+    OptionsDialog(
         showDialog = model.editorDialogState is EditorDialogState.ContributeGoal,
         title = (model.editorDialogState as? EditorDialogState.ContributeGoal)?.title?.get(context)
             ?: stringResource(id = R.string.common_dialog_title_select_default_contribution_title),

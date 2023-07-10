@@ -48,7 +48,7 @@ import com.yessorae.presentation.dialogs.GoalReminderAlertDialog
 import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
 import com.yessorae.presentation.dialogs.GoalReminderTimePickerDialog
 import com.yessorae.presentation.dialogs.NotificationPermissionDialog
-import com.yessorae.presentation.dialogs.OptionListDialog
+import com.yessorae.presentation.dialogs.OptionsDialog
 import com.yessorae.presentation.ext.BottomNavigationBarHeightDp
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.mockGoalDatumModels
@@ -245,7 +245,7 @@ fun TodoEditorScreen(
         }
     )
 
-    OptionListDialog(
+    OptionsDialog(
         showDialog = model.editorDialogState is EditorDialogState.ContributeGoal,
         title = stringResource(
             id = R.string.common_dialog_title_select_weekly_contribution_goal_title

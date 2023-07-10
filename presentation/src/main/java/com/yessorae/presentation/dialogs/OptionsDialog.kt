@@ -1,9 +1,10 @@
 package com.yessorae.presentation.dialogs
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
@@ -14,7 +15,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -27,7 +27,7 @@ import androidx.compose.ui.window.Dialog
 import com.yessorae.designsystem.theme.Dimen
 
 @Composable
-fun OptionListDialog(
+fun OptionsDialog(
     showDialog: Boolean,
     title: String,
     onCancel: () -> Unit = {},
@@ -41,36 +41,47 @@ fun OptionListDialog(
                     .wrapContentHeight()
                     .sizeIn(
                         minWidth = Dimen.MinDialogWidth,
-                        minHeight = Dimen.MinListDialogHeight,
                         maxHeight = Dimen.MaxListDialogHeight
                     ),
                 color = MaterialTheme.colorScheme.background,
                 shape = MaterialTheme.shapes.large
             ) {
-                Column(Modifier.fillMaxSize()) {
+                Column(modifier = Modifier.fillMaxWidth()) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                top = Dimen.LargeDividePadding,
-                                bottom = Dimen.SmallDividePadding
-                            )
-                            .padding(horizontal = Dimen.SidePadding),
+                        modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = title,
-                            style = MaterialTheme.typography.titleLarge.copy(
-                                fontWeight = FontWeight.Bold
-                            ),
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(
+                                    top = Dimen.DefaultDividePadding,
+                                    bottom = Dimen.SmallDividePadding,
+                                    start = Dimen.SidePadding,
+                                ),
+                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 1
                         )
-                        IconButton(onClick = { onCancel() }) {
-                            Icon(imageVector = Icons.Filled.Close, contentDescription = null)
-                        }
+
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .clickable(
+                                    onClick = { onCancel() },
+                                    indication = null,
+                                    interactionSource = MutableInteractionSource()
+                                )
+                                .padding(
+                                    top = Dimen.DefaultDividePadding,
+                                    bottom = Dimen.SmallDividePadding,
+                                    start = Dimen.DefaultDividePadding,
+                                    end = Dimen.SidePadding
+                                )
+                        )
                     }
                     LazyColumn(modifier = Modifier.fillMaxWidth()) {
                         items()
