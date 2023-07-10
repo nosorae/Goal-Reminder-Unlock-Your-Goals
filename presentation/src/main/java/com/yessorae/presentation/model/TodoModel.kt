@@ -35,6 +35,13 @@ data class TodoModel(
 
     val goalId: Int? = upperGoalModel?.goalId
     val goalTitle: String? = upperGoalModel?.title
+
+    fun getNoUpperGoalTodoModel(): TodoModel {
+        return this.copy(
+            upperGoalModel = null,
+            upperGoalContributionScore = null
+        )
+    }
 }
 
 fun TodoWithGoal.asModel(): TodoModel {

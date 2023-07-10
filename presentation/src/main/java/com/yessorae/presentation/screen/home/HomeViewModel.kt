@@ -24,6 +24,7 @@ import com.yessorae.util.getWeekRangePair
 import com.yessorae.util.now
 import com.yessorae.util.toLocalDateTime
 import com.yessorae.util.toMilliSecond
+import com.yessorae.util.toStartLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -36,7 +37,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.plus
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -126,12 +129,12 @@ class HomeViewModel @Inject constructor(
 
         _redirectToWebBrowserEvent.emit(
             "https://nosorae.tistory.com/entry/" +
-                "%EC%9E%91%EC%84%B1%EC%A4%91-%EB%AA%A9%ED%91%9C" +
-                "-%EB%A6%AC%EB%A7%88%EC%9D%B8%EB%8D%94" +
-                "-%EB%8B%B9%EC%8B%A0%EC%9D%98" +
-                "-%EB%AA%A9%ED%91%9C%EB%A5%BC" +
-                "-%EC%9E%A0%EA%B8%88%ED%95%B4%EC%A0%9C" +
-                "-%EC%82%AC%EC%9A%A9%EB%B2%95"
+                    "%EC%9E%91%EC%84%B1%EC%A4%91-%EB%AA%A9%ED%91%9C" +
+                    "-%EB%A6%AC%EB%A7%88%EC%9D%B8%EB%8D%94" +
+                    "-%EB%8B%B9%EC%8B%A0%EC%9D%98" +
+                    "-%EB%AA%A9%ED%91%9C%EB%A5%BC" +
+                    "-%EC%9E%A0%EA%B8%88%ED%95%B4%EC%A0%9C" +
+                    "-%EC%82%AC%EC%9A%A9%EB%B2%95"
         )
     }
 
@@ -163,10 +166,12 @@ class HomeViewModel @Inject constructor(
                 copyGoal(goal = item)
                 Logger.uiDebug("onSelectOptionCopy $item")
             }
+
             is TodoModel -> {
                 copyTodo(todo = item)
                 Logger.uiDebug("onSelectOptionCopy $item")
             }
+
             else -> {
                 // do nothing
                 Logger.uiDebug("onSelectOptionCopy else")
@@ -175,7 +180,7 @@ class HomeViewModel @Inject constructor(
 
         onCancelDialog()
     }
-    
+
     private fun copyGoal(goal: GoalModel) { // todo impl
 
     }
@@ -187,43 +192,98 @@ class HomeViewModel @Inject constructor(
     fun onSelectOptionPostponeOneDay(item: HomeOptionListItem) {
         when (item) {
             is GoalModel -> {
-                postponeGoalOneDay(goal = item)
-                Logger.uiDebug("onSelectOptionPostponeOneDay $item")
+                postponeGoalOneDay(old = item)
             }
+
             is TodoModel -> {
-                postponeTodoOneDay(todo = item)
-                Logger.uiDebug("onSelectOptionPostponeOneDay $item")
+                postponeTodoOneDay(old = item)
             }
+
             else -> {
                 // do nothing
-                Logger.uiDebug("onSelectOptionPostponeOneDay else")
             }
         }
 
         onCancelDialog()
     }
-    
-    private fun postponeGoalOneDay(goal: GoalModel) { // todo impl
-        
+
+    private fun postponeGoalOneDay(old: GoalModel) = ioScope.launch { // todo impl
+        val oldDate = old.dateFrom.date
+        when (old.type) {
+            GoalType.WEEKLY -> {
+                val newDate = oldDate.plus(7, DateTimeUnit.DAY)
+                val new = old.copy(dateFrom = newDate.toStartLocalDateTime())
+
+                val newGoalArg = old.upperGoalId?.let {
+                    val oldMonthNumber = oldDate.monthNumber
+                    val newWeekPair = newDate.getWeekRangePair()
+                    if (
+                        newWeekPair.first.monthNumber != oldMonthNumber &&
+                        newWeekPair.second.monthNumber != oldMonthNumber
+                    ) {
+                        new.getNoUpperGoalModel()
+                    } else {
+                        new
+                    }
+                } ?: new
+
+                goalRepository.updateGoalTransaction(goal = newGoalArg.asDomainModel())
+            }
+
+            GoalType.MONTHLY -> {
+                val newDate = oldDate.plus(1, DateTimeUnit.MONTH)
+                val new = old.copy(dateFrom = newDate.toStartLocalDateTime())
+
+                val newGoalArg = old.upperGoalId?.let {
+                    if (new.dateFrom.year != oldDate.year) {
+                        new.getNoUpperGoalModel()
+                    } else {
+                        new
+                    }
+                } ?: new
+
+                goalRepository.updateGoalTransaction(goal = newGoalArg.asDomainModel())
+            }
+
+            GoalType.YEARLY -> {
+                val newDate = oldDate.plus(1, DateTimeUnit.YEAR)
+                val newGoalArg = old.copy(dateFrom = newDate.toStartLocalDateTime())
+                goalRepository.updateGoalTransaction(goal = newGoalArg.asDomainModel())
+            }
+
+            else -> {
+                // do nothing
+            }
+        }
     }
-    
-    private fun postponeTodoOneDay(todo: TodoModel) { // todo impl
-        
+
+    private fun postponeTodoOneDay(old: TodoModel) = ioScope.launch { // todo impl
+        val new = old.copy(date = old.date.plus(1, DateTimeUnit.DAY))
+
+        val newTodo = old.upperGoalModel?.let { upperGoal ->
+            val pair = upperGoal.dateFrom.date.getWeekRangePair()
+            if (new.date in pair.first..pair.second) {
+                new
+            } else {
+                new.getNoUpperGoalTodoModel()
+            }
+        } ?: old
+
+        todoRepository.updateTodoTransaction(todo = newTodo.asDomainModel())
     }
 
     fun onSelectOptionDelete(item: HomeOptionListItem) {
         when (item) {
             is GoalModel -> {
                 showDeleteGoalConfirmDialog(goal = item)
-                Logger.uiDebug("onClickOptionDelete $item")
             }
+
             is TodoModel -> {
                 showDeleteTodoConfirmDialog(todo = item)
-                Logger.uiDebug("onClickOptionDelete $item")
             }
+
             else -> {
                 // do nothing
-                Logger.uiDebug("onClickOptionDelete else")
             }
         }
     }

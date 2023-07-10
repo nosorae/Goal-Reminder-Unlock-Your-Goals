@@ -313,18 +313,17 @@ fun HomeScreen(
                     viewModel.onCancelDialog()
                 }
             ) {
-                if (dialogState.selectedItem is TodoModel) {
-                    item {
-                        ListItem(
-                            headlineContent = {
-                                Text(text = dialogState.postponeTitle.get(context))
-                            },
-                            modifier = Modifier.clickable {
-                                viewModel.onSelectOptionPostponeOneDay(dialogState.selectedItem)
-                            }
-                        )
-                    }
+                item {
+                    ListItem(
+                        headlineContent = {
+                            Text(text = dialogState.postponeTitle.get(context))
+                        },
+                        modifier = Modifier.clickable {
+                            viewModel.onSelectOptionPostponeOneDay(dialogState.selectedItem)
+                        }
+                    )
                 }
+
                 item {
                     ListItem(
                         headlineContent = {

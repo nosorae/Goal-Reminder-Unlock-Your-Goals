@@ -85,6 +85,13 @@ data class GoalModel(
             false
         }
     }
+
+    fun getNoUpperGoalModel(): GoalModel {
+        return this.copy(
+            upperGoalId = null,
+            upperGoalContributionScore = null
+        )
+    }
 }
 
 data class GoalWithUpperGoalModel(

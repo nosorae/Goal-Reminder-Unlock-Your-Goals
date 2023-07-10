@@ -7,7 +7,11 @@ import androidx.room.PrimaryKey
 import com.yessorae.data.DataConstants
 import com.yessorae.domain.model.Goal
 import com.yessorae.domain.model.type.GoalType
+import com.yessorae.util.getWeekRangePair
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.toKotlinLocalDate
+import java.time.YearMonth
 
 @Entity(tableName = DataConstants.TABLE_GOAL)
 data class GoalEntity(
