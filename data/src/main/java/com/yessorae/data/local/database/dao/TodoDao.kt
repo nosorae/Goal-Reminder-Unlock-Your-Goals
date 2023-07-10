@@ -11,6 +11,7 @@ import com.yessorae.data.DataConstants.TABLE_GOAL
 import com.yessorae.data.DataConstants.TABLE_TODO
 import com.yessorae.data.local.database.model.GoalEntity
 import com.yessorae.data.local.database.model.TodoEntity
+import com.yessorae.util.getWeekRangePair
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDateTime
 
@@ -53,20 +54,49 @@ interface TodoDao : BaseDao<TodoEntity> {
     suspend fun updateTodoTransaction(new: TodoEntity) {
         val old = loadTodoById(new.todoId)
 
-        // 하위 먼저 업데이트 후
-        update(new)
+        // 날짜만 바뀌었을 때 상위 목표 범위 벗어난 경우 상위 목표 제거.
+        val newUpperGoalId = when {
+            new.upperGoalId != old.upperGoalId -> new.upperGoalId
+
+            new.date != old.date -> {
+                new.upperGoalId?.let {
+                    val oldWeekRangePair = old.date.date.getWeekRangePair()
+                    if (new.date.date !in oldWeekRangePair.first..oldWeekRangePair.second) {
+                        null
+                    } else {
+                        new.upperGoalId
+                    }
+                }
+            }
+
+            else -> {
+                new.upperGoalId
+            }
+        }
 
         // 예전 상위 업데이트
-        if (new.upperGoalId != old.upperGoalId) {
+        if (newUpperGoalId != old.upperGoalId) {
             old.upperGoalId?.let { oldUpperGoalId ->
                 updateUpperGoalScoreTransaction(oldUpperGoalId)
             }
         }
 
         // 새로운 상위 업데이트
-        new.upperGoalId?.let { upperGoalId ->
+        newUpperGoalId?.let { upperGoalId ->
             updateUpperGoalScoreTransaction(upperGoalId = upperGoalId)
         }
+
+        // 최종 투두 업데이트
+        update(
+            new.copy(
+                upperGoalId = newUpperGoalId,
+                upperGoalContributionScore = if (newUpperGoalId == null) {
+                    null
+                } else {
+                    new.upperGoalContributionScore
+                }
+            )
+        )
     }
 
     @Transaction

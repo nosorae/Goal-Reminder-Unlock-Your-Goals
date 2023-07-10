@@ -66,10 +66,7 @@ fun LocalDate.getMonthRangePair(): Pair<LocalDate, LocalDate> {
         .atEndOfMonth().toKotlinLocalDate().dayOfMonth
     return Pair(
         first = this.minus(this.dayOfMonth - 1, DateTimeUnit.DAY),
-        second = this.plus(
-            endDayOfMonth - this.dayOfMonth,
-            DateTimeUnit.DAY
-        )
+        second = this.plus(endDayOfMonth - this.dayOfMonth, DateTimeUnit.DAY)
     )
 }
 

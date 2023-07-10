@@ -117,4 +117,5 @@
     <string name="common_dialog_title_select_yearly_contribution_goal_title">기여 월간 목표 선택</string>
     <string name="common_dialog_title_select_default_contribution_title">기여 목표 선택</string>
     <string name="common_error_occur">오류 발생</string>
+    <string name="common_copied">복사됨</string>
 </resources>

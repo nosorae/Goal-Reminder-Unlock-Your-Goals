@@ -330,7 +330,10 @@ fun HomeScreen(
                             Text(text = stringResource(id = R.string.home_option_dialog_copy))
                         },
                         modifier = Modifier.clickable {
-                            viewModel.onSelectOptionCopy(dialogState.selectedItem)
+                            viewModel.onSelectOptionCopy(
+                                item = dialogState.selectedItem,
+                                copyText = context.getString(R.string.common_copied)
+                            )
                         }
                     )
                 }

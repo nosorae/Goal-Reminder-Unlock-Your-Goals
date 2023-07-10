@@ -207,48 +207,25 @@ class HomeViewModel @Inject constructor(
         onCancelDialog()
     }
 
-    private fun postponeGoalOneDay(old: GoalModel) = ioScope.launch { // todo impl
+    private fun postponeGoalOneDay(old: GoalModel) = ioScope.launch {
         val oldDate = old.dateFrom.date
         when (old.type) {
             GoalType.WEEKLY -> {
                 val newDate = oldDate.plus(7, DateTimeUnit.DAY)
                 val new = old.copy(dateFrom = newDate.toStartLocalDateTime())
-
-                val newGoalArg = old.upperGoalId?.let {
-                    val oldMonthNumber = oldDate.monthNumber
-                    val newWeekPair = newDate.getWeekRangePair()
-                    if (
-                        newWeekPair.first.monthNumber != oldMonthNumber &&
-                        newWeekPair.second.monthNumber != oldMonthNumber
-                    ) {
-                        new.getNoUpperGoalModel()
-                    } else {
-                        new
-                    }
-                } ?: new
-
-                goalRepository.updateGoalTransaction(goal = newGoalArg.asDomainModel())
+                goalRepository.updateGoalTransaction(goal = new.asDomainModel())
             }
 
             GoalType.MONTHLY -> {
                 val newDate = oldDate.plus(1, DateTimeUnit.MONTH)
                 val new = old.copy(dateFrom = newDate.toStartLocalDateTime())
-
-                val newGoalArg = old.upperGoalId?.let {
-                    if (new.dateFrom.year != oldDate.year) {
-                        new.getNoUpperGoalModel()
-                    } else {
-                        new
-                    }
-                } ?: new
-
-                goalRepository.updateGoalTransaction(goal = newGoalArg.asDomainModel())
+                goalRepository.updateGoalTransaction(goal = new.asDomainModel())
             }
 
             GoalType.YEARLY -> {
                 val newDate = oldDate.plus(1, DateTimeUnit.YEAR)
-                val newGoalArg = old.copy(dateFrom = newDate.toStartLocalDateTime())
-                goalRepository.updateGoalTransaction(goal = newGoalArg.asDomainModel())
+                val new = old.copy(dateFrom = newDate.toStartLocalDateTime())
+                goalRepository.updateGoalTransaction(goal = new.asDomainModel())
             }
 
             else -> {
@@ -257,18 +234,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun postponeTodoOneDay(old: TodoModel) = ioScope.launch { // todo impl
-        val new = old.copy(date = old.date.plus(1, DateTimeUnit.DAY))
-
-        val newTodo = old.upperGoalModel?.let { upperGoal ->
-            val pair = upperGoal.dateFrom.date.getWeekRangePair()
-            if (new.date in pair.first..pair.second) {
-                new
-            } else {
-                new.getNoUpperGoalTodoModel()
-            }
-        } ?: old
-
+    private fun postponeTodoOneDay(old: TodoModel) = ioScope.launch {
+        val newDate = old.date.plus(1, DateTimeUnit.DAY)
+        val newTodo = old.copy(date = newDate)
         todoRepository.updateTodoTransaction(todo = newTodo.asDomainModel())
     }
 

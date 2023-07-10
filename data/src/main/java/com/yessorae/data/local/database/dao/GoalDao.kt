@@ -12,6 +12,7 @@ import com.yessorae.data.DataConstants.TABLE_TODO
 import com.yessorae.data.local.database.model.GoalEntity
 import com.yessorae.data.local.database.model.TodoEntity
 import com.yessorae.domain.model.type.GoalType
+import com.yessorae.util.getMonthRangePair
 import com.yessorae.util.getWeekRangePair
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDateTime
@@ -58,16 +59,52 @@ interface GoalDao : BaseDao<GoalEntity> {
     suspend fun updateGoalTransaction(new: GoalEntity) {
         val old = loadGoalById(new.goalId)
 
+        // 현재 목표의 날짜만 바뀌었을 때 상위 목표 범위 벗어났다면 제거
+        val newUpperGoalId = when {
+            new.upperGoalId != old.upperGoalId -> new.upperGoalId
+
+            new.dateFrom != old.dateFrom -> {
+                val oldDate = old.dateFrom.date
+                val newDate = new.dateFrom.date
+                when (old.type) {
+                    GoalType.MONTHLY -> {
+                        if (oldDate.year != newDate.year) {
+                            null
+                        } else {
+                            new.upperGoalId
+                        }
+                    }
+
+                    GoalType.WEEKLY -> {
+                        val oldMonthRangePair = oldDate.getMonthRangePair()
+                        if (newDate !in oldMonthRangePair.first..oldMonthRangePair.second) {
+                            null
+                        } else {
+                            new.upperGoalId
+                        }
+                    }
+
+                    else -> {
+                        new.upperGoalId
+                    }
+                }
+            }
+
+            else -> {
+                new.upperGoalId
+            }
+        }
+
         // 현재 목표의 예전 상위 목표 업데이트
-        if (new.upperGoalId != old.upperGoalId) {
+        if (newUpperGoalId != old.upperGoalId) {
             old.upperGoalId?.let { oldUpperGoalId ->
                 updateUpperGoalScoreTransaction(upperGoalId = oldUpperGoalId)
             }
         }
 
         // 현재 목표의 새로운 상위 목표 업데이트
-        new.upperGoalId?.let { newUpperGoalId ->
-            updateUpperGoalScoreTransaction(upperGoalId = newUpperGoalId)
+        newUpperGoalId?.let {
+            updateUpperGoalScoreTransaction(upperGoalId = it)
         }
 
         // 현재 목표의 하위 투두/목표들 범위 체크
@@ -130,10 +167,16 @@ interface GoalDao : BaseDao<GoalEntity> {
             }
         }
 
-        // 현재 목표 점수 업데이트
+        // 최종 목표 업데이트
         update(
             new.copy(
-                currentScore = totalScore
+                currentScore = totalScore,
+                upperGoalId = newUpperGoalId,
+                upperGoalContributionScore = if (newUpperGoalId == null) {
+                    null
+                } else {
+                    new.upperGoalContributionScore
+                }
             )
         )
     }
