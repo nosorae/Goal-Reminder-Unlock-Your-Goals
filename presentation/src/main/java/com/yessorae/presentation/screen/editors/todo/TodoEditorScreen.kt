@@ -154,8 +154,8 @@ fun TodoEditorScreen(
 
                 item {
                     GoalListItem(
-                        contributeGoal = model.contributeGoal,
-                        contributeScore = model.contributionScore,
+                        contributeGoal = model.upperGoal,
+                        contributeScore = model.upperGoalContributionScore,
                         onChangeContributeGoalScore = { score ->
                             viewModel.onChangeContributeGoalScore(score)
                         },

@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.yessorae.base.BaseScreenViewModel
 import com.yessorae.common.AnalyticsConstants
 import com.yessorae.common.Logger
+import com.yessorae.domain.common.DomainConstants
 import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.domain.repository.TodoRepository
 import com.yessorae.domain.usecase.GetTodoWithUpperGoalUseCase
@@ -17,6 +18,7 @@ import com.yessorae.presentation.screen.editors.EditorDialogState
 import com.yessorae.util.ResString
 import com.yessorae.util.StringModel
 import com.yessorae.util.fromHourMinute
+import com.yessorae.util.getWeekRangePair
 import com.yessorae.util.now
 import com.yessorae.util.toLocalDateTime
 import com.yessorae.util.toStartLocalDateTime
@@ -57,8 +59,8 @@ class TodoEditorViewModel @Inject constructor(
                     todoTitle = model.title,
                     startTime = model.startTime?.time,
                     endTime = model.endTime?.time,
-                    contributeGoal = model.upperGoalModel,
-                    contributionScore = model.upperGoalContributionScore ?: 0,
+                    upperGoal = model.upperGoalModel,
+                    upperGoalContributionScore = model.upperGoalContributionScore ?: 0,
                     memo = model.memo
                 )
             }
@@ -106,13 +108,29 @@ class TodoEditorViewModel @Inject constructor(
     }
 
     fun onSelectDate(milliSec: Long) {
-        val date = milliSec.toLocalDateTime().date
+        val oldDate = stateValue.paramDate
+        val newDate = milliSec.toLocalDateTime().date
+        val oldWeekRangePair = oldDate.getWeekRangePair()
+        val newUpperGoal: GoalModel? =
+            if (newDate !in oldWeekRangePair.first..oldWeekRangePair.second) {
+                null
+            } else {
+                stateValue.upperGoal
+            }
+
         updateState {
             stateValue.copy(
-                paramDate = date,
-                changed = true
+                paramDate = newDate,
+                changed = true,
+                upperGoal = newUpperGoal,
+                upperGoalContributionScore = if (newUpperGoal == null) {
+                    DomainConstants.DEFAULT_UPPER_GOAL_CONTRIBUTION_SCORE
+                } else {
+                    stateValue.upperGoalContributionScore
+                }
             )
         }
+
         onCancelDialog()
     }
 
@@ -152,6 +170,7 @@ class TodoEditorViewModel @Inject constructor(
                     )
                 }
             }
+
             else -> {}
         }
 
@@ -179,8 +198,8 @@ class TodoEditorViewModel @Inject constructor(
     fun onSelectContributeGoal(goal: GoalModel) {
         updateState {
             stateValue.copy(
-                contributeGoal = goal,
-                contributionScore = 0,
+                upperGoal = goal,
+                upperGoalContributionScore = 0,
                 changed = true
             )
         }
@@ -190,8 +209,8 @@ class TodoEditorViewModel @Inject constructor(
     fun onSelectNoneGoal() {
         updateState {
             stateValue.copy(
-                contributeGoal = null,
-                contributionScore = 0,
+                upperGoal = null,
+                upperGoalContributionScore = 0,
                 changed = true
             )
         }
@@ -201,7 +220,7 @@ class TodoEditorViewModel @Inject constructor(
     fun onChangeContributeGoalScore(score: Int) {
         updateState {
             stateValue.copy(
-                contributionScore = score,
+                upperGoalContributionScore = score,
                 changed = true
             )
         }
@@ -288,8 +307,8 @@ data class TodoEditorScreenState(
     val todoTitle: String? = null,
     val startTime: LocalTime? = null,
     val endTime: LocalTime? = null,
-    val contributeGoal: GoalModel? = null,
-    val contributionScore: Int = 0,
+    val upperGoal: GoalModel? = null,
+    val upperGoalContributionScore: Int = DomainConstants.DEFAULT_UPPER_GOAL_CONTRIBUTION_SCORE,
     val memo: String? = null,
     val changed: Boolean = false,
     val editorDialogState: EditorDialogState = EditorDialogState.None
@@ -318,8 +337,8 @@ data class TodoEditorScreenState(
                 date = paramDate,
                 startTime = startTime?.let { time -> paramDate.atTime(time) },
                 endTime = endTime?.let { it1 -> paramDate.atTime(it1) },
-                upperGoalModel = contributeGoal,
-                upperGoalContributionScore = contributionScore,
+                upperGoalModel = upperGoal,
+                upperGoalContributionScore = upperGoalContributionScore,
                 memo = memo
             )
         } ?: run {
@@ -328,8 +347,8 @@ data class TodoEditorScreenState(
                 date = paramDate,
                 startTime = startTime?.let { paramDate.atTime(it) },
                 endTime = endTime?.let { paramDate.atTime(it) },
-                upperGoalModel = contributeGoal,
-                upperGoalContributionScore = contributionScore,
+                upperGoalModel = upperGoal,
+                upperGoalContributionScore = upperGoalContributionScore,
                 memo = memo
             )
         }
