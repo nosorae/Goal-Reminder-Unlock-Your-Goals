@@ -118,4 +118,10 @@
     <string name="common_dialog_title_select_default_contribution_title">기여 목표 선택</string>
     <string name="common_error_occur">오류 발생</string>
     <string name="common_copied">복사됨</string>
+    <string name="common_toast_postpone_todo">투두 미루기 완료</string>
+    <string name="common_toast_postpone_goal">목표 미루기 완료</string>
+    <string name="common_toast_copy_todo">투두 복사 완료</string>
+    <string name="common_toast_copy_goal">목표 복사 완료</string>
+    <string name="common_toast_delete_todo">투두 삭제 완료</string>
+    <string name="common_toast_delete_goal">목표 삭제 완료</string>
 </resources>

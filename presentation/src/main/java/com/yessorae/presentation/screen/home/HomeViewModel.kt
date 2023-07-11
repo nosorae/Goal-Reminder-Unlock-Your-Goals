@@ -12,6 +12,7 @@ import com.yessorae.domain.usecase.CheckTodoTransactionUseCase
 import com.yessorae.domain.usecase.GetHomeUseCase
 import com.yessorae.presentation.FinalGoalDestination
 import com.yessorae.presentation.GoalEditorDestination
+import com.yessorae.presentation.R
 import com.yessorae.presentation.TodoEditorDestination
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.GoalWithUpperGoalModel
@@ -20,6 +21,7 @@ import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.model.asDomainModel
 import com.yessorae.presentation.model.asDomainWithGoalModel
 import com.yessorae.presentation.model.asModel
+import com.yessorae.util.ResString
 import com.yessorae.util.getWeekRangePair
 import com.yessorae.util.now
 import com.yessorae.util.toLocalDateTime
@@ -129,12 +131,12 @@ class HomeViewModel @Inject constructor(
 
         _redirectToWebBrowserEvent.emit(
             "https://nosorae.tistory.com/entry/" +
-                "%EC%9E%91%EC%84%B1%EC%A4%91-%EB%AA%A9%ED%91%9C" +
-                "-%EB%A6%AC%EB%A7%88%EC%9D%B8%EB%8D%94" +
-                "-%EB%8B%B9%EC%8B%A0%EC%9D%98" +
-                "-%EB%AA%A9%ED%91%9C%EB%A5%BC" +
-                "-%EC%9E%A0%EA%B8%88%ED%95%B4%EC%A0%9C" +
-                "-%EC%82%AC%EC%9A%A9%EB%B2%95"
+                    "%EC%9E%91%EC%84%B1%EC%A4%91-%EB%AA%A9%ED%91%9C" +
+                    "-%EB%A6%AC%EB%A7%88%EC%9D%B8%EB%8D%94" +
+                    "-%EB%8B%B9%EC%8B%A0%EC%9D%98" +
+                    "-%EB%AA%A9%ED%91%9C%EB%A5%BC" +
+                    "-%EC%9E%A0%EA%B8%88%ED%95%B4%EC%A0%9C" +
+                    "-%EC%82%AC%EC%9A%A9%EB%B2%95"
         )
     }
 
@@ -186,6 +188,7 @@ class HomeViewModel @Inject constructor(
                 currentScore = 0
             ).asDomainModel()
         )
+        _toast.emit(ResString(R.string.common_toast_copy_goal))
     }
 
     private fun copyTodo(todo: TodoModel, copyText: String) = ioScope.launch {
@@ -196,6 +199,7 @@ class HomeViewModel @Inject constructor(
                 done = false
             ).asDomainModel()
         )
+        _toast.emit(ResString(R.string.common_toast_copy_todo))
     }
 
     fun onSelectOptionPostponeOneDay(item: HomeOptionListItem) {
@@ -241,12 +245,17 @@ class HomeViewModel @Inject constructor(
                 // do nothing
             }
         }
+
+        if (old.type != GoalType.NONE) {
+            _toast.emit(ResString(R.string.common_toast_postpone_goal))
+        }
     }
 
     private fun postponeTodoOneDay(old: TodoModel) = ioScope.launch {
         val newDate = old.date.plus(1, DateTimeUnit.DAY)
         val newTodo = old.copy(date = newDate)
         todoRepository.updateTodoTransaction(todo = newTodo.asDomainModel())
+        _toast.emit(ResString(R.string.common_toast_postpone_todo))
     }
 
     fun onSelectOptionDelete(item: HomeOptionListItem) {
@@ -265,7 +274,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun showDeleteGoalConfirmDialog(goal: GoalModel) {
+    private fun showDeleteGoalConfirmDialog(goal: GoalModel) = ioScope.launch {
         updateState {
             stateValue.copy(
                 dialogState = HomeDialogState.DeleteGoalConfirmDialog(
@@ -273,9 +282,11 @@ class HomeViewModel @Inject constructor(
                 )
             )
         }
+
+        _toast.emit(ResString(R.string.common_toast_delete_goal))
     }
 
-    private fun showDeleteTodoConfirmDialog(todo: TodoModel) {
+    private fun showDeleteTodoConfirmDialog(todo: TodoModel) = ioScope.launch {
         updateState {
             stateValue.copy(
                 dialogState = HomeDialogState.DeleteTodoConfirmDialog(
@@ -283,6 +294,7 @@ class HomeViewModel @Inject constructor(
                 )
             )
         }
+        _toast.emit(ResString(R.string.common_toast_delete_todo))
     }
 
     fun onConfirmGoalDelete(dialogState: HomeDialogState.DeleteGoalConfirmDialog) = ioScope.launch {

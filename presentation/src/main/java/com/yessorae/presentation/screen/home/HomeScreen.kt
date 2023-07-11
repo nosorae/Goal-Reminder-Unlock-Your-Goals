@@ -107,6 +107,12 @@ fun HomeScreen(
                 )
             }
         }
+
+        launch {
+            viewModel.toast.collectLatest { stringModel ->
+                context.showToast(stringModel = stringModel)
+            }
+        }
     }
 
     Scaffold(
