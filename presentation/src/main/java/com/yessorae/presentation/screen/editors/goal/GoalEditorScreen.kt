@@ -64,7 +64,7 @@ import com.yessorae.presentation.ScreenConstants
 import com.yessorae.presentation.buttons.BackgroundTextButton
 import com.yessorae.presentation.dialogs.GoalReminderAlertDialog
 import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
-import com.yessorae.presentation.dialogs.OptionListDialog
+import com.yessorae.presentation.dialogs.OptionsDialog
 import com.yessorae.presentation.ext.BottomNavigationBarHeightDp
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TodoModel
@@ -331,38 +331,43 @@ fun GoalEditorScreen(
         }
     )
 
-    OptionListDialog(
-        showDialog = model.editorDialogState is EditorDialogState.ContributeGoal,
-        title = (model.editorDialogState as? EditorDialogState.ContributeGoal)?.title?.get(context)
-            ?: stringResource(id = R.string.common_dialog_title_select_default_contribution_title),
-        onCancel = {
-            viewModel.onCancelDialog()
-        }
-    ) {
-        itemsIndexed(
-            items = (model.editorDialogState as? EditorDialogState.ContributeGoal)?.goals
-                ?: listOf()
-        ) { _, goal ->
-
-            ListItem(
-                headlineContent = {
-                    Text(text = goal.title)
-                },
-                modifier = Modifier.clickable {
-                    viewModel.onSelectContributeGoal(goal)
+    when (val dialogState = model.editorDialogState) {
+        is EditorDialogState.ContributeGoal -> {
+            OptionsDialog(
+                title = dialogState.title.get(context),
+                onCancel = {
+                    viewModel.onCancelDialog()
                 }
-            )
-        }
+            ) {
+                itemsIndexed(
+                    items = dialogState.goals
+                ) { _, goal ->
 
-        item {
-            ListItem(
-                headlineContent = {
-                    Text(text = stringResource(id = R.string.todo_none_goal))
-                },
-                modifier = Modifier.clickable {
-                    viewModel.onSelectNoneGoal()
+                    ListItem(
+                        headlineContent = {
+                            Text(text = goal.title)
+                        },
+                        modifier = Modifier.clickable {
+                            viewModel.onSelectContributeGoal(goal)
+                        }
+                    )
                 }
-            )
+
+                item {
+                    ListItem(
+                        headlineContent = {
+                            Text(text = stringResource(id = R.string.todo_none_goal))
+                        },
+                        modifier = Modifier.clickable {
+                            viewModel.onSelectNoneGoal()
+                        }
+                    )
+                }
+            }
+        }
+        // todo 파라미터로 노출된 show 를 제거하고 when 문으로 이동
+        else -> {
+            // do nothing
         }
     }
 

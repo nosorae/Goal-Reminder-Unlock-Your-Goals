@@ -20,6 +20,7 @@ import com.yessorae.presentation.screen.editors.EditorDialogState
 import com.yessorae.util.ResString
 import com.yessorae.util.StringModel
 import com.yessorae.util.TextString
+import com.yessorae.util.getMonthRangePair
 import com.yessorae.util.getWeekRangePair
 import com.yessorae.util.now
 import com.yessorae.util.toLocalDateTime
@@ -241,12 +242,42 @@ class GoalEditorViewModel @Inject constructor(
     }
 
     fun onSelectDate(milliSec: Long) = ioScope.launch {
+        val oldDate = stateValue.paramDate
+        val newDate = milliSec.toLocalDateTime().date
+        val newUpperGoal = when (stateValue.paramGoalType) {
+            GoalType.WEEKLY -> {
+                val oldMonthRangePair = oldDate.getMonthRangePair()
+                if (newDate !in oldMonthRangePair.first..oldMonthRangePair.second) {
+                    null
+                } else {
+                    stateValue.upperGoal
+                }
+            }
+
+            GoalType.MONTHLY -> {
+                if (oldDate.year != newDate.year) {
+                    null
+                } else {
+                    stateValue.upperGoal
+                }
+            }
+
+            else -> {
+                stateValue.upperGoal
+            }
+        }
         updateState {
             stateValue.copy(
-                paramDate = milliSec.toLocalDateTime().date,
+                paramDate = newDate,
                 startDate = null,
                 endDate = null,
-                changed = true
+                changed = true,
+                upperGoal = newUpperGoal,
+                upperGoalContributionScore = if (newUpperGoal == null) {
+                    null
+                } else {
+                    stateValue.upperGoalContributionScore
+                }
             )
         }
         onCancelDialog()

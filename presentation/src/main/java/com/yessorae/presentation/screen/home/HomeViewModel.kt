@@ -12,17 +12,21 @@ import com.yessorae.domain.usecase.CheckTodoTransactionUseCase
 import com.yessorae.domain.usecase.GetHomeUseCase
 import com.yessorae.presentation.FinalGoalDestination
 import com.yessorae.presentation.GoalEditorDestination
+import com.yessorae.presentation.R
 import com.yessorae.presentation.TodoEditorDestination
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.GoalWithUpperGoalModel
+import com.yessorae.presentation.model.HomeOptionListItem
 import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.model.asDomainModel
 import com.yessorae.presentation.model.asDomainWithGoalModel
 import com.yessorae.presentation.model.asModel
+import com.yessorae.util.ResString
 import com.yessorae.util.getWeekRangePair
 import com.yessorae.util.now
 import com.yessorae.util.toLocalDateTime
 import com.yessorae.util.toMilliSecond
+import com.yessorae.util.toStartLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -35,7 +39,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.plus
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -148,7 +154,127 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    fun onClickGoalDelete(goal: GoalModel) {
+    fun onClickOption(item: HomeOptionListItem) {
+        updateState {
+            stateValue.copy(
+                dialogState = HomeDialogState.OptionDialog(selectedItem = item)
+            )
+        }
+    }
+
+    fun onSelectOptionCopy(item: HomeOptionListItem, copyText: String) {
+        when (item) {
+            is GoalModel -> {
+                copyGoal(goal = item, copyText = copyText)
+            }
+
+            is TodoModel -> {
+                copyTodo(todo = item, copyText = copyText)
+            }
+
+            else -> {
+                // do nothing
+            }
+        }
+
+        onCancelDialog()
+    }
+
+    private fun copyGoal(goal: GoalModel, copyText: String) = ioScope.launch {
+        goalRepository.insertGoal(
+            goal = goal.copy(
+                goalId = 0,
+                title = goal.title.plus(copyText),
+                currentScore = 0
+            ).asDomainModel()
+        )
+        _toast.emit(ResString(R.string.common_toast_copy_goal))
+    }
+
+    private fun copyTodo(todo: TodoModel, copyText: String) = ioScope.launch {
+        todoRepository.insertTodo(
+            todo = todo.copy(
+                todoId = 0,
+                title = todo.title.plus(copyText),
+                done = false
+            ).asDomainModel()
+        )
+        _toast.emit(ResString(R.string.common_toast_copy_todo))
+    }
+
+    fun onSelectOptionPostponeOneDay(item: HomeOptionListItem) {
+        when (item) {
+            is GoalModel -> {
+                postponeGoalOneDay(old = item)
+            }
+
+            is TodoModel -> {
+                postponeTodoOneDay(old = item)
+            }
+
+            else -> {
+                // do nothing
+            }
+        }
+
+        onCancelDialog()
+    }
+
+    private fun postponeGoalOneDay(old: GoalModel) = ioScope.launch {
+        val oldDate = old.dateFrom.date
+        when (old.type) {
+            GoalType.WEEKLY -> {
+                val newDate = oldDate.plus(7, DateTimeUnit.DAY)
+                val new = old.copy(dateFrom = newDate.toStartLocalDateTime())
+                goalRepository.updateGoalTransaction(goal = new.asDomainModel())
+            }
+
+            GoalType.MONTHLY -> {
+                val newDate = oldDate.plus(1, DateTimeUnit.MONTH)
+                val new = old.copy(dateFrom = newDate.toStartLocalDateTime())
+                goalRepository.updateGoalTransaction(goal = new.asDomainModel())
+            }
+
+            GoalType.YEARLY -> {
+                val newDate = oldDate.plus(1, DateTimeUnit.YEAR)
+                val new = old.copy(dateFrom = newDate.toStartLocalDateTime())
+                goalRepository.updateGoalTransaction(goal = new.asDomainModel())
+            }
+
+            else -> {
+                // do nothing
+            }
+        }
+
+        if (old.type != GoalType.NONE) {
+            _toast.emit(ResString(R.string.common_toast_postpone_goal))
+        }
+    }
+
+    private fun postponeTodoOneDay(old: TodoModel) = ioScope.launch {
+        val newDate = old.date.plus(1, DateTimeUnit.DAY)
+        val newTodo = old.copy(date = newDate)
+        todoRepository.updateTodoTransaction(todo = newTodo.asDomainModel())
+        _toast.emit(ResString(R.string.common_toast_postpone_todo))
+    }
+
+    fun onSelectOptionDelete(item: HomeOptionListItem) {
+        when (item) {
+            is GoalModel -> {
+                showDeleteGoalConfirmDialog(goal = item)
+            }
+
+            is TodoModel -> {
+                showDeleteTodoConfirmDialog(todo = item)
+            }
+
+            else -> {
+                // do nothing
+            }
+        }
+    }
+
+    private fun showDeleteGoalConfirmDialog(goal: GoalModel) = ioScope.launch {
         updateState {
             stateValue.copy(
                 dialogState = HomeDialogState.DeleteGoalConfirmDialog(
@@ -156,6 +282,19 @@ class HomeViewModel @Inject constructor(
                 )
             )
         }
+
+        _toast.emit(ResString(R.string.common_toast_delete_goal))
+    }
+
+    private fun showDeleteTodoConfirmDialog(todo: TodoModel) = ioScope.launch {
+        updateState {
+            stateValue.copy(
+                dialogState = HomeDialogState.DeleteTodoConfirmDialog(
+                    todoModel = todo
+                )
+            )
+        }
+        _toast.emit(ResString(R.string.common_toast_delete_todo))
     }
 
     fun onConfirmGoalDelete(dialogState: HomeDialogState.DeleteGoalConfirmDialog) = ioScope.launch {
@@ -185,16 +324,6 @@ class HomeViewModel @Inject constructor(
         _navigationEvent.emit(
             TodoEditorDestination.getRouteWithArgs(todoDay = currentDay.value.toMilliSecond())
         )
-    }
-
-    fun onClickTodoDelete(todo: TodoModel) {
-        updateState {
-            stateValue.copy(
-                dialogState = HomeDialogState.DeleteTodoConfirmDialog(
-                    todoModel = todo
-                )
-            )
-        }
     }
 
     fun onConfirmTodoDelete(dialogState: HomeDialogState.DeleteTodoConfirmDialog) = ioScope.launch {

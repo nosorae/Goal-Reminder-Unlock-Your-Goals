@@ -12,8 +12,10 @@ import kotlinx.datetime.atTime
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
+import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toLocalDateTime
 import java.text.NumberFormat
+import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -58,6 +60,16 @@ fun LocalDate.getWeekRangePair(): Pair<LocalDate, LocalDate> {
     val lastDayOfWarnings = firstDayOfWeek.plus(6, DateTimeUnit.DAY)
     return firstDayOfWeek to lastDayOfWarnings
 }
+
+fun LocalDate.getMonthRangePair(): Pair<LocalDate, LocalDate> {
+    val endDayOfMonth = YearMonth.of(this.year, this.monthNumber)
+        .atEndOfMonth().toKotlinLocalDate().dayOfMonth
+    return Pair(
+        first = this.minus(this.dayOfMonth - 1, DateTimeUnit.DAY),
+        second = this.plus(endDayOfMonth - this.dayOfMonth, DateTimeUnit.DAY)
+    )
+}
+
 fun LocalDateTime.Companion.now(): LocalDateTime =
     Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
