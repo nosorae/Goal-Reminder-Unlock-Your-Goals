@@ -371,7 +371,6 @@ fun GoalEditorScreen(
         }
     }
 
-
     ScreenLoadingProgressbar(show = loading)
 }
 

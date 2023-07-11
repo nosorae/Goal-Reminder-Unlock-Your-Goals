@@ -57,9 +57,11 @@ fun OptionsDialog(
                             .padding(
                                 top = Dimen.DefaultDividePadding,
                                 bottom = Dimen.SmallDividePadding,
-                                start = Dimen.SidePadding,
+                                start = Dimen.SidePadding
                             ),
-                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1
                     )

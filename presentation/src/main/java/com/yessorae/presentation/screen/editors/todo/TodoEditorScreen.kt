@@ -278,7 +278,6 @@ fun TodoEditorScreen(
                     )
                 }
             }
-
         }
         // todo 파라미터로 노출된 show 를 제거하고 when 문으로 이동
         else -> {

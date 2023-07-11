@@ -254,7 +254,7 @@ fun HomeScreen(
 
     OverlayPermissionDialog(
         showDialog = (model.dialogState is HomeDialogState.OverlayConfirmDialog) &&
-                completeOnBoarding == true,
+            completeOnBoarding == true,
         onOverlayConfirmed = { confirmed ->
             viewModel.onOverlayConfirmed(confirmed)
         }
@@ -354,8 +354,6 @@ fun HomeScreen(
             // do nothing
         }
     }
-
-
 
     if (completeOnBoarding == false) {
         onNavOutEvent(FinalGoalDestination.getRouteWithArgs(onBoarding = true))
