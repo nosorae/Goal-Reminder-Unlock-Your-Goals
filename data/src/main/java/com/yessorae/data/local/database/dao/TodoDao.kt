@@ -56,7 +56,9 @@ interface TodoDao : BaseDao<TodoEntity> {
 
         // 날짜만 바뀌었을 때 상위 목표 범위 벗어난 경우 상위 목표 제거.
         val newUpperGoalId = when {
-            new.upperGoalId != old.upperGoalId -> new.upperGoalId
+            new.upperGoalId != old.upperGoalId -> {
+                new.upperGoalId
+            }
 
             new.date != old.date -> {
                 new.upperGoalId?.let {
@@ -74,6 +76,18 @@ interface TodoDao : BaseDao<TodoEntity> {
             }
         }
 
+        // 현재  투두 업데이트
+        update(
+            new.copy(
+                upperGoalId = newUpperGoalId,
+                upperGoalContributionScore = if (newUpperGoalId == null) {
+                    null
+                } else {
+                    new.upperGoalContributionScore
+                }
+            )
+        )
+
         // 예전 상위 업데이트
         if (newUpperGoalId != old.upperGoalId) {
             old.upperGoalId?.let { oldUpperGoalId ->
@@ -85,18 +99,6 @@ interface TodoDao : BaseDao<TodoEntity> {
         newUpperGoalId?.let { upperGoalId ->
             updateUpperGoalScoreTransaction(upperGoalId = upperGoalId)
         }
-
-        // 최종 투두 업데이트
-        update(
-            new.copy(
-                upperGoalId = newUpperGoalId,
-                upperGoalContributionScore = if (newUpperGoalId == null) {
-                    null
-                } else {
-                    new.upperGoalContributionScore
-                }
-            )
-        )
     }
 
     @Transaction

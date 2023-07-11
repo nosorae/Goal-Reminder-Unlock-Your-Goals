@@ -95,18 +95,6 @@ interface GoalDao : BaseDao<GoalEntity> {
             }
         }
 
-        // 현재 목표의 예전 상위 목표 업데이트
-        if (newUpperGoalId != old.upperGoalId) {
-            old.upperGoalId?.let { oldUpperGoalId ->
-                updateUpperGoalScoreTransaction(upperGoalId = oldUpperGoalId)
-            }
-        }
-
-        // 현재 목표의 새로운 상위 목표 업데이트
-        newUpperGoalId?.let {
-            updateUpperGoalScoreTransaction(upperGoalId = it)
-        }
-
         // 현재 목표의 하위 투두/목표들 범위 체크
         val lowerTodos = loadTodosByUpperGoalId(new.goalId)
         val lowerGoals = loadGoalsByUpperGoalId(new.goalId)
@@ -167,7 +155,7 @@ interface GoalDao : BaseDao<GoalEntity> {
             }
         }
 
-        // 최종 목표 업데이트
+        // 현재 목표 먼저 업데이트
         update(
             new.copy(
                 currentScore = totalScore,
@@ -179,6 +167,18 @@ interface GoalDao : BaseDao<GoalEntity> {
                 }
             )
         )
+
+        // 그 다음에 현재 목표의, "예전" 상위 목표 업데이트
+        if (newUpperGoalId != old.upperGoalId) {
+            old.upperGoalId?.let { oldUpperGoalId ->
+                updateUpperGoalScoreTransaction(upperGoalId = oldUpperGoalId)
+            }
+        }
+
+        // 그 다음에 현재 목표의, "새로운" 상위 목표 업데이트
+        newUpperGoalId?.let {
+            updateUpperGoalScoreTransaction(upperGoalId = it)
+        }
     }
 
     @Transaction
