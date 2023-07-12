@@ -19,13 +19,16 @@ jobs:
           distribution: 'adopt'
           java-version: '11.0.13'
 
-      - name: Make local.properties
+      - name: Create local.properties
         run: |
           echo "sdk.dir=$ANDROID_HOME" > local.properties
           echo "ADMOB_APP_ID=${{ secrets.ADMOB_APP_ID }}" >> local.properties
           echo "ADMOB_MAIN_BANNER_ID=${{ secrets.ADMOB_MAIN_BANNER_ID }}" >> local.properties
           echo "ADMOB_EDITOR_BANNER_ID=${{ secrets.ADMOB_EDITOR_BANNER_ID }}" >> local.properties
           echo "ADMOB_BANNER_TEST=${{ secrets.ADMOB_BANNER_TEST }}" >> local.properties
+
+      - name: Create google-services.json
+        run: echo "${{ secrets.GOOGLE_SERVICES }}" > app/google-services.json
 
       - name: Build with Gradle
         run: ./gradlew bundleRelease
