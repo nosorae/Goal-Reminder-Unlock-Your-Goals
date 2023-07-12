@@ -19,8 +19,8 @@ android {
         applicationId "com.yessorae.goalreminder"
         minSdk 24
         targetSdk 33
-        versionCode 1_0_0_1
-        versionName "1.0.0.1"
+        versionCode 1_1_0_0
+        versionName "1.1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -39,8 +39,8 @@ android {
         }
         debug {
             resValue 'string', 'ADMOB_APP_ID', properties["ADMOB_APP_ID"]
-            buildConfigField "String", "ADMOB_MAIN_BANNER_ID", properties["ABMOB_BNNER_TEST"]
-            buildConfigField "String", "ADMOB_EDITOR_BANNER_ID", properties["ABMOB_BNNER_TEST"]
+            buildConfigField "String", "ADMOB_MAIN_BANNER_ID", properties["ADMOB_BANNER_TEST"]
+            buildConfigField "String", "ADMOB_EDITOR_BANNER_ID", properties["ADMOB_BANNER_TEST"]
         }
     }
     compileOptions {

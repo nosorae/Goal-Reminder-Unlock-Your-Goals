@@ -48,7 +48,7 @@ import com.yessorae.presentation.dialogs.GoalReminderAlertDialog
 import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
 import com.yessorae.presentation.dialogs.GoalReminderTimePickerDialog
 import com.yessorae.presentation.dialogs.NotificationPermissionDialog
-import com.yessorae.presentation.dialogs.OptionListDialog
+import com.yessorae.presentation.dialogs.OptionsDialog
 import com.yessorae.presentation.ext.BottomNavigationBarHeightDp
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.mockGoalDatumModels
@@ -154,8 +154,8 @@ fun TodoEditorScreen(
 
                 item {
                     GoalListItem(
-                        contributeGoal = model.contributeGoal,
-                        contributeScore = model.contributionScore,
+                        contributeGoal = model.upperGoal,
+                        contributeScore = model.upperGoalContributionScore,
                         onChangeContributeGoalScore = { score ->
                             viewModel.onChangeContributeGoalScore(score)
                         },
@@ -181,9 +181,7 @@ fun TodoEditorScreen(
                 modifier = Modifier
                     .padding(horizontal = Dimen.SidePadding)
                     .padding(
-                        bottom = (
-                            Dimen.BottomPadding - BottomNavigationBarHeightDp
-                            )
+                        bottom = (Dimen.BottomPadding - BottomNavigationBarHeightDp)
                             .value
                             .coerceAtLeast(0f)
                             .dp
@@ -245,39 +243,45 @@ fun TodoEditorScreen(
         }
     )
 
-    OptionListDialog(
-        showDialog = model.editorDialogState is EditorDialogState.ContributeGoal,
-        title = stringResource(
-            id = R.string.common_dialog_title_select_weekly_contribution_goal_title
-        ),
-        onCancel = {
-            viewModel.onCancelDialog()
-        }
-    ) {
-        itemsIndexed(
-            items = (model.editorDialogState as? EditorDialogState.ContributeGoal)?.goals
-                ?: listOf()
-        ) { _, goal ->
-
-            ListItem(
-                headlineContent = {
-                    Text(text = goal.title)
-                },
-                modifier = Modifier.clickable {
-                    viewModel.onSelectContributeGoal(goal)
+    when (val dialogState = model.editorDialogState) {
+        is EditorDialogState.ContributeGoal -> {
+            OptionsDialog(
+                title = stringResource(
+                    id = R.string.common_dialog_title_select_weekly_contribution_goal_title
+                ),
+                onCancel = {
+                    viewModel.onCancelDialog()
                 }
-            )
-        }
+            ) {
+                itemsIndexed(
+                    items = dialogState.goals
+                ) { _, goal ->
 
-        item {
-            ListItem(
-                headlineContent = {
-                    Text(text = stringResource(id = R.string.todo_none_goal))
-                },
-                modifier = Modifier.clickable {
-                    viewModel.onSelectNoneGoal()
+                    ListItem(
+                        headlineContent = {
+                            Text(text = goal.title)
+                        },
+                        modifier = Modifier.clickable {
+                            viewModel.onSelectContributeGoal(goal)
+                        }
+                    )
                 }
-            )
+
+                item {
+                    ListItem(
+                        headlineContent = {
+                            Text(text = stringResource(id = R.string.todo_none_goal))
+                        },
+                        modifier = Modifier.clickable {
+                            viewModel.onSelectNoneGoal()
+                        }
+                    )
+                }
+            }
+        }
+        // todo 파라미터로 노출된 show 를 제거하고 when 문으로 이동
+        else -> {
+            // do nothing
         }
     }
 
