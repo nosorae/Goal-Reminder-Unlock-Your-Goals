@@ -39,8 +39,8 @@ android {
         }
         debug {
             resValue 'string', 'ADMOB_APP_ID', properties["ADMOB_APP_ID"]
-            buildConfigField "String", "ADMOB_MAIN_BANNER_ID", properties["ABMOB_BNNER_TEST"]
-            buildConfigField "String", "ADMOB_EDITOR_BANNER_ID", properties["ABMOB_BNNER_TEST"]
+            buildConfigField "String", "ADMOB_MAIN_BANNER_ID", properties["ABMOB_BANNER_TEST"]
+            buildConfigField "String", "ADMOB_EDITOR_BANNER_ID", properties["ABMOB_BANNER_TEST"]
         }
     }
     compileOptions {
