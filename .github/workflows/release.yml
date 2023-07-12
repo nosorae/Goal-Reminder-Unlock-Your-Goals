@@ -37,3 +37,4 @@ jobs:
           packageName: com.yessorae.goalreminder
           releaseFiles: build/outputs/bundle/release/app-release.aab
           track: production
+          whatsNewDirectory: ./whatsnew
