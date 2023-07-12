@@ -21,7 +21,7 @@ jobs:
           echo "ADMOB_APP_ID=${{ secrets.ADMOB_APP_ID }}" >> local.properties
           echo "ADMOB_MAIN_BANNER_ID=${{ secrets.ADMOB_MAIN_BANNER_ID }}" >> local.properties
           echo "ADMOB_EDITOR_BANNER_ID=${{ secrets.ADMOB_EDITOR_BANNER_ID }}" >> local.properties
-          echo "ABMOB_BANNER_TEST=${{ secrets.ABMOB_BANNER_TEST }}" >> local.properties
+          echo "ADMOB_BANNER_TEST=${{ secrets.ADMOB_BANNER_TEST }}" >> local.properties
 
       - name: ktlint
         run: ./gradlew ktlintCheck
