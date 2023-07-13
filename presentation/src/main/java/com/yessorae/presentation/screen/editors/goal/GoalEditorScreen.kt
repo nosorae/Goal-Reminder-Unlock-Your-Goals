@@ -3,6 +3,7 @@ package com.yessorae.presentation.screen.editors.goal
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -465,6 +466,27 @@ private fun TimeListItem(
             onClickDay()
         }
     )
+}
+
+@Composable
+private fun AlarmListItem(
+
+) {
+
+}
+
+@Composable
+fun AlarmAddListItem(modifier: Modifier = Modifier) {
+    Box(
+        modifier = Modifier.padding(
+            vertical = Dimen.MediumDividePadding,
+            horizontal = Dimen.LargeDividePadding
+        )
+    ) {
+        Text(
+            text = stringResource(id = R.string.common_add_alarm)
+        )
+    }
 }
 
 @Composable

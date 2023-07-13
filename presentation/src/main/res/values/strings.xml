@@ -124,4 +124,5 @@
     <string name="common_toast_copy_goal">목표 복사 완료</string>
     <string name="common_toast_delete_todo">투두 삭제 완료</string>
     <string name="common_toast_delete_goal">목표 삭제 완료</string>
+    <string name="common_add_alarm">알림 추가하기</string>
 </resources>
