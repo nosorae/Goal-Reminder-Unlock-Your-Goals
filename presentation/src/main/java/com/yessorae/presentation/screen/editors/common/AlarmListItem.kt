@@ -18,15 +18,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.yessorae.designsystem.theme.Dimen
+import com.yessorae.designsystem.util.BasePreview
 import com.yessorae.presentation.R
-import com.yessorae.presentation.model.enum.AlarmType
+import com.yessorae.presentation.model.enums.AlarmType
 
 @Composable
-private fun AlarmListItem(
+fun AlarmListItem(
     modifier: Modifier = Modifier,
-    selectedAlarm: List<AlarmType>,
-    onClickDelete: (AlarmType) -> Unit
+    selectedAlarm: List<AlarmType> = listOf(),
+    onClickDelete: (AlarmType) -> Unit = {}
 ) {
     Row(
         modifier = modifier
@@ -95,6 +97,25 @@ fun AlarmAddListItem(
         Text(
             text = stringResource(id = R.string.common_add_alarm),
             modifier = Modifier.padding(start = Dimen.DefaultDividePadding)
+        )
+    }
+}
+
+@Preview
+@Composable
+fun AlarmListItemPreview() {
+    BasePreview {
+        AlarmListItem()
+        AlarmListItem(
+            selectedAlarm = listOf(
+                AlarmType.ONE_DAY,
+            )
+        )
+        AlarmListItem(
+            selectedAlarm = listOf(
+                AlarmType.ONE_MINUTE,
+                AlarmType.FIFTEEN_MINUTE
+            )
         )
     }
 }
