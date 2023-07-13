@@ -8,11 +8,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Alarm
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.presentation.R
@@ -22,6 +26,7 @@ import com.yessorae.presentation.model.enum.AlarmType
 private fun AlarmListItem(
     modifier: Modifier = Modifier,
     selectedAlarm: List<AlarmType>,
+    onClickDelete: (AlarmType) -> Unit
 ) {
     Row(
         modifier = modifier
@@ -37,9 +42,25 @@ private fun AlarmListItem(
         )
         Column(modifier = Modifier.weight(1f)) {
             if (selectedAlarm.isEmpty()) {
-                // todo placeholder 알림 추가
+                Text(
+                    text = stringResource(id = R.string.common_add_alarm),
+                    modifier = Modifier.padding(start = Dimen.DefaultDividePadding)
+                )
             } else {
-                // todo AlarmSelectedListItem
+                selectedAlarm.forEach {
+                    AlarmSelectedListItem(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                horizontal = Dimen.LargeDividePadding,
+                                vertical = Dimen.MediumDividePadding
+                            ),
+                        alarmType = it,
+                        onClickDelete = {
+                            onClickDelete(it)
+                        }
+                    )
+                }
             }
         }
     }
@@ -48,11 +69,15 @@ private fun AlarmListItem(
 @Composable
 fun AlarmSelectedListItem(
     modifier: Modifier = Modifier,
+    alarmType: AlarmType,
     onClickDelete: () -> Unit
 ) {
-    Row(modifier = modifier) {
-        // todo text
-        // todo icon x버튼
+    val context = LocalContext.current
+    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+        Text(text = alarmType.display.get(context), modifier = Modifier.weight(1f))
+        IconButton(onClick = { onClickDelete() }) {
+            Icon(imageVector = Icons.Filled.Close, contentDescription = null)
+        }
     }
 }
 
@@ -65,7 +90,7 @@ fun AlarmAddListItem(
             .background(color = MaterialTheme.colorScheme.background)
             .fillMaxWidth()
             .padding(start = Dimen.ListItemLeadingIconPadding, end = Dimen.LargeDividePadding)
-            .padding(vertical = Dimen.MediumDividePadding,)
+            .padding(vertical = Dimen.MediumDividePadding)
     ) {
         Text(
             text = stringResource(id = R.string.common_add_alarm),
