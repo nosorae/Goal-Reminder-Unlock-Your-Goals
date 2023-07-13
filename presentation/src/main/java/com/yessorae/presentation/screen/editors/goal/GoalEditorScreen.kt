@@ -2,6 +2,7 @@ package com.yessorae.presentation.screen.editors.goal
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.FlagCircle
 import androidx.compose.material.icons.filled.Notes
 import androidx.compose.material.icons.filled.Schedule
@@ -26,6 +28,7 @@ import androidx.compose.material.icons.filled.SubdirectoryArrowRight
 import androidx.compose.material.icons.filled.TableChart
 import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.LocalTextStyle
@@ -69,6 +72,7 @@ import com.yessorae.presentation.dialogs.OptionsDialog
 import com.yessorae.presentation.ext.BottomNavigationBarHeightDp
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TodoModel
+import com.yessorae.presentation.model.enum.AlarmType
 import com.yessorae.presentation.screen.editors.EditorDialogState
 import com.yessorae.presentation.screen.editors.EditorNumberField
 import com.yessorae.presentation.screen.editors.EditorTextField
@@ -76,11 +80,13 @@ import com.yessorae.presentation.screen.editors.EditorTopAppBar
 import com.yessorae.presentation.screen.editors.MultiLineEditorListItem
 import com.yessorae.presentation.screen.editors.SelectableEditorListItem
 import com.yessorae.presentation.screen.editors.SingleLineEditorListItem
+import com.yessorae.presentation.screen.editors.common.AlarmAddListItem
 import com.yessorae.util.StringModel
 import com.yessorae.util.showToast
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 
 @Composable
@@ -180,6 +186,14 @@ fun GoalEditorScreen(
                         },
                         onClickEndDay = {
                             viewModel.onClickEndDate()
+                        }
+                    )
+                }
+
+                item {
+                    AlarmAddListItem(
+                        modifier = Modifier.clickable {
+                            // todo
                         }
                     )
                 }
@@ -468,26 +482,7 @@ private fun TimeListItem(
     )
 }
 
-@Composable
-private fun AlarmListItem(
 
-) {
-
-}
-
-@Composable
-fun AlarmAddListItem(modifier: Modifier = Modifier) {
-    Box(
-        modifier = Modifier.padding(
-            vertical = Dimen.MediumDividePadding,
-            horizontal = Dimen.LargeDividePadding
-        )
-    ) {
-        Text(
-            text = stringResource(id = R.string.common_add_alarm)
-        )
-    }
-}
 
 @Composable
 private fun ContributionGoalListItem(
