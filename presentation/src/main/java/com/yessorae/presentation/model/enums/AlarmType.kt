@@ -1,4 +1,4 @@
-package com.yessorae.presentation.model.enum
+package com.yessorae.presentation.model.enums
 
 import com.yessorae.presentation.R
 import com.yessorae.util.ResString
