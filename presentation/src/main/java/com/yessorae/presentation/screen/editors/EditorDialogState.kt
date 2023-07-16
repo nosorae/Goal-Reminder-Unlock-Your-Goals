@@ -3,6 +3,7 @@ package com.yessorae.presentation.screen.editors
 import com.yessorae.domain.model.type.GoalType
 import com.yessorae.presentation.R
 import com.yessorae.presentation.model.GoalModel
+import com.yessorae.presentation.model.enums.AlarmType
 import com.yessorae.util.ResString
 
 sealed class EditorDialogState {
@@ -21,9 +22,11 @@ sealed class EditorDialogState {
             GoalType.WEEKLY -> {
                 ResString(R.string.common_dialog_title_select_monthly_contribution_goal_title)
             }
+
             GoalType.MONTHLY -> {
                 ResString(R.string.common_dialog_title_select_yearly_contribution_goal_title)
             }
+
             else -> {
                 ResString(R.string.common_dialog_title_select_default_contribution_title)
             }
@@ -32,4 +35,7 @@ sealed class EditorDialogState {
 
     object ExitConfirm : EditorDialogState()
     object NotificationPermission : EditorDialogState()
+
+    data class Alarms(val options: List<AlarmType> = AlarmType.values().toList()) :
+        EditorDialogState()
 }

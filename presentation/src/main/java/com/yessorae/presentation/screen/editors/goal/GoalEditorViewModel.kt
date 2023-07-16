@@ -16,6 +16,7 @@ import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.model.asDomainModel
 import com.yessorae.presentation.model.asModel
+import com.yessorae.presentation.model.enums.AlarmType
 import com.yessorae.presentation.screen.editors.EditorDialogState
 import com.yessorae.util.ResString
 import com.yessorae.util.StringModel
@@ -92,6 +93,7 @@ class GoalEditorViewModel @Inject constructor(
             val upperGoal = goalWithUpperGoal.upperGoal?.asModel()
             val lowerGoals = lowerGoalsJob.await()
             val lowerTodos = lowerTodosJob.await()
+            // todo alarm 정보도 가져와서 초기화
             updateState {
                 stateValue.copy(
                     goal = goal,
@@ -370,19 +372,46 @@ class GoalEditorViewModel @Inject constructor(
         onCancelDialog()
     }
 
-    fun onClickAddAlarm() {
-        updateState {
-            stateValue.copy(
-                editorDialogState = EditorDialogState.NotificationPermission
-            )
+    fun onClickAddAlarm(permissionGranted: Boolean) {
+        if (permissionGranted) {
+            // todo goalId 로 이미 저장된 알람타입들 제거하고 Alarms 파라미터에 전달
+            updateState {
+                stateValue.copy(
+                    editorDialogState = EditorDialogState.Alarms()
+                )
+            }
+        } else {
+            updateState {
+                stateValue.copy(
+                    editorDialogState = EditorDialogState.NotificationPermission
+                )
+            }
         }
     }
 
-    fun onPermissionLogicCompleted(result: Boolean) {
+    fun onPermissionLogicCompleted(result: Boolean) = ioScope.launch {
+        Logger.uiDebug("onPermissionLogicCompleted result $result")
         if (result) {
-            // todo add notification
+            // todo goalId 로 이미 저장된 알람타입들 제거하고 Alarms 파라미터에 전달
+            updateState {
+                stateValue.copy(
+                    editorDialogState = EditorDialogState.Alarms()
+                )
+            }
+            _toast.emit(ResString(R.string.common_toast_send_you_notification))
         } else {
+            _toast.emit(ResString(R.string.common_toast_can_not_use_without_permission))
         }
+
+        onCancelDialog()
+    }
+
+    fun onSelectNotification(alarmType: AlarmType) {
+        // todo impl
+    }
+
+    fun onDeleteNotification(alarmType: AlarmType) {
+        // todo impl
     }
 
     fun onSelectContributeGoal(goal: GoalModel) {

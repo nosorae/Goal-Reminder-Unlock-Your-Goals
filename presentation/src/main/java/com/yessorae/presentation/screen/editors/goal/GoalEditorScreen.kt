@@ -193,11 +193,7 @@ fun GoalEditorScreen(
                     Column {
                         AlarmListItem(
                             onClickAdd = {
-                                if (context.checkNotificationEnabled()) {
-                                    viewModel.onClickAddAlarm()
-                                } else {
-                                    // todo add Notification
-                                }
+                                viewModel.onClickAddAlarm(context.checkNotificationEnabled())
                             }
                         )
                     }
