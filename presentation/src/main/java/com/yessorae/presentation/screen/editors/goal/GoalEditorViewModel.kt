@@ -370,6 +370,21 @@ class GoalEditorViewModel @Inject constructor(
         onCancelDialog()
     }
 
+    fun onClickAddAlarm() {
+        updateState {
+            stateValue.copy(
+                editorDialogState = EditorDialogState.NotificationPermission
+            )
+        }
+    }
+
+    fun onPermissionLogicCompleted(result: Boolean) {
+        if (result) {
+            // todo add notification
+        } else {
+        }
+    }
+
     fun onSelectContributeGoal(goal: GoalModel) {
         updateState {
             stateValue.copy(

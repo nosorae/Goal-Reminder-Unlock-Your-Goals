@@ -64,7 +64,9 @@ import com.yessorae.presentation.ScreenConstants
 import com.yessorae.presentation.buttons.BackgroundTextButton
 import com.yessorae.presentation.dialogs.GoalReminderAlertDialog
 import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
+import com.yessorae.presentation.dialogs.NotificationPermissionDialog
 import com.yessorae.presentation.dialogs.OptionsDialog
+import com.yessorae.presentation.dialogs.checkNotificationEnabled
 import com.yessorae.presentation.ext.BottomNavigationBarHeightDp
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TodoModel
@@ -189,21 +191,13 @@ fun GoalEditorScreen(
                 // todo impl
                 item {
                     Column {
-                        AlarmListItem()
                         AlarmListItem(
-                            selectedAlarm = listOf(
-                                AlarmType.ONE_DAY,
-                            )
-                        )
-                        AlarmListItem(
-                            selectedAlarm = listOf(
-                                AlarmType.ONE_MINUTE,
-                                AlarmType.FIFTEEN_MINUTE
-                            )
-                        )
-                        AlarmAddListItem(
-                            modifier = Modifier.clickable {
-                                // todo
+                            onClickAdd = {
+                                if (context.checkNotificationEnabled()) {
+                                    viewModel.onClickAddAlarm()
+                                } else {
+                                    // todo add Notification
+                                }
                             }
                         )
                     }
@@ -392,6 +386,14 @@ fun GoalEditorScreen(
             }
         }
         // todo 파라미터로 노출된 show 를 제거하고 when 문으로 이동
+        is EditorDialogState.NotificationPermission -> {
+            NotificationPermissionDialog(
+                onCompleteNotificationPermissionLogic = { result ->
+                    viewModel.onPermissionLogicCompleted(result)
+                }
+            )
+        }
+
         else -> {
             // do nothing
         }
