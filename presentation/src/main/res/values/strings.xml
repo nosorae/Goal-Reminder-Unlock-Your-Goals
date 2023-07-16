@@ -128,4 +128,6 @@
     <string name="common_n_minute_ago">%d분 전</string>
     <string name="common_n_hour_ago">%d시간 전</string>
     <string name="common_n_day_ago">%d일 전</string>
+    <string name="common_toast_can_not_use_without_permission">알림 권한을 허용해야 사용하실 수 있어요🙏</string>
+    <string name="common_toast_send_you_notification">유용한 알림을 보내드릴게요</string>
 </resources>
