@@ -60,15 +60,17 @@ fun NotificationPermissionDialog(
                 }
             }
         }
+    } else {
+        showRationaleDialog = true
     }
 
     ConfirmDialog(
         showDialog = showRationaleDialog,
         title = stringResource(id = R.string.common_permission_request),
-        body = stringResource(id = R.string.dialog_body_overlay_permission_request),
+        body = stringResource(id = R.string.dialog_body_notification_permission_request),
         cancelText = stringResource(id = R.string.common_cancel),
         onClickCancel = {
-            showRationaleDialog = false
+            onCompleteNotificationPermissionLogic(false)
         },
         onClickConfirm = {
             if (context.checkNotificationEnabled().not()) {
