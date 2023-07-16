@@ -23,12 +23,11 @@ import com.yessorae.presentation.R
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun NotificationPermissionDialog(
-    needRequestPermission: Boolean = false,
     onCompleteNotificationPermissionLogic: (result: Boolean) -> Unit
 ) {
     val context = LocalContext.current
 
-    if (context.checkNotificationEnabled() || needRequestPermission.not()) return
+    if (context.checkNotificationEnabled()) return
 
     var showRationaleDialog by remember {
         mutableStateOf(false)

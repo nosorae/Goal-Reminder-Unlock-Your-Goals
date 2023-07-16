@@ -279,19 +279,18 @@ fun TodoEditorScreen(
                 }
             }
         }
+        is EditorDialogState.NotificationPermission -> {
+            NotificationPermissionDialog(
+                onCompleteNotificationPermissionLogic = { result ->
+                    viewModel.onPermissionLogicCompleted(result)
+                }
+            )
+        }
         // todo 파라미터로 노출된 show 를 제거하고 when 문으로 이동
         else -> {
             // do nothing
         }
     }
-
-    NotificationPermissionDialog(
-        needRequestPermission =
-        model.editorDialogState is EditorDialogState.NotificationPermission,
-        onCompleteNotificationPermissionLogic = { result ->
-            viewModel.onPermissionLogicCompleted(result)
-        }
-    )
 
     ScreenLoadingProgressbar(show = loading)
 }
