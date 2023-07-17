@@ -214,6 +214,7 @@ class TodoEditorViewModel @Inject constructor(
 
     fun onSelectNotification(alarmType: AlarmType) {
         // todo impl
+        onCancelDialog()
     }
 
     fun onDeleteNotification(alarmType: AlarmType) {

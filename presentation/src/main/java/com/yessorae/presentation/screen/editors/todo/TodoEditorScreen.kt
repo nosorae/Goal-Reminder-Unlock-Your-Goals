@@ -290,6 +290,7 @@ fun TodoEditorScreen(
                 }
             }
         }
+
         is EditorDialogState.NotificationPermission -> {
             NotificationPermissionDialog(
                 onCompleteNotificationPermissionLogic = { result ->
@@ -298,6 +299,29 @@ fun TodoEditorScreen(
             )
         }
         // todo 파라미터로 노출된 show 를 제거하고 when 문으로 이동
+
+        is EditorDialogState.Alarms -> {
+            OptionsDialog(
+                title = stringResource(id = R.string.common_add_alarm),
+                onCancel = {
+                    viewModel.onCancelDialog()
+                }
+            ) {
+                itemsIndexed(
+                    items = dialogState.options
+                ) { _, item ->
+                    ListItem(
+                        headlineContent = {
+                            Text(text = item.display.get(context))
+                        },
+                        modifier = Modifier.clickable {
+                            viewModel.onSelectNotification(item)
+                        }
+                    )
+                }
+            }
+        }
+
         else -> {
             // do nothing
         }

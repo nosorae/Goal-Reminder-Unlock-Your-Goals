@@ -42,7 +42,7 @@ fun SelectableEditorListItem(
             .clickable(enabled = clickEnabled) { onClick() }
             .background(color = MaterialTheme.colorScheme.background)
             .fillMaxWidth()
-            .padding(vertical = Dimen.MediumDividePadding)
+            .padding(bottom = Dimen.MediumDividePadding, top = Dimen.LargeDividePadding)
             .padding(start = Dimen.LargeDividePadding, end = Dimen.LargeDividePadding)
     ) {
         Icon(
