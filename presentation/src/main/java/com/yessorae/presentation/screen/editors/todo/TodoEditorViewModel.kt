@@ -14,6 +14,7 @@ import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.TodoModel
 import com.yessorae.presentation.model.asDomainModel
 import com.yessorae.presentation.model.asModel
+import com.yessorae.presentation.model.enums.AlarmType
 import com.yessorae.presentation.screen.editors.EditorDialogState
 import com.yessorae.util.ResString
 import com.yessorae.util.StringModel
@@ -177,6 +178,48 @@ class TodoEditorViewModel @Inject constructor(
         onCancelDialog()
     }
 
+    fun onClickAddAlarm(permissionGranted: Boolean) {
+        if (permissionGranted) {
+            // todo goalId 로 이미 저장된 알람타입들 제거하고 Alarms 파라미터에 전달
+            updateState {
+                stateValue.copy(
+                    editorDialogState = EditorDialogState.Alarms()
+                )
+            }
+        } else {
+            updateState {
+                stateValue.copy(
+                    editorDialogState = EditorDialogState.NotificationPermission
+                )
+            }
+        }
+    }
+
+    fun onPermissionLogicCompleted(result: Boolean) = ioScope.launch {
+        Logger.uiDebug("onPermissionLogicCompleted result $result")
+        if (result) {
+            // todo goalId 로 이미 저장된 알람타입들 제거하고 Alarms 파라미터에 전달
+            updateState {
+                stateValue.copy(
+                    editorDialogState = EditorDialogState.Alarms()
+                )
+            }
+            _toast.emit(ResString(R.string.todo_toast_will_send_you_notification))
+        } else {
+            _toast.emit(ResString(R.string.todo_toast_please_alarm_on))
+        }
+
+        onCancelDialog()
+    }
+
+    fun onSelectNotification(alarmType: AlarmType) {
+        // todo impl
+    }
+
+    fun onDeleteNotification(alarmType: AlarmType) {
+        // todo impl
+    }
+
     fun onClickContributeGoal() = ioScope.launch {
         goalRepository
             .getWeekdayGoalsFlow(stateValue.paramDate.toStartLocalDateTime())
@@ -250,15 +293,6 @@ class TodoEditorViewModel @Inject constructor(
     fun onConfirmBack() = ioScope.launch {
         onCancelDialog()
         back()
-    }
-
-    fun onPermissionLogicCompleted(result: Boolean) = ioScope.launch {
-        onCancelDialog()
-        if (result) {
-            _toast.emit(ResString(R.string.todo_toast_will_send_you_notification))
-        } else {
-            _toast.emit(ResString(R.string.todo_toast_please_alarm_on))
-        }
     }
 
     private suspend fun back() {

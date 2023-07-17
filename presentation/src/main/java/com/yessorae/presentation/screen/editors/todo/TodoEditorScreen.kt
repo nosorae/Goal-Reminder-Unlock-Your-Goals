@@ -49,6 +49,7 @@ import com.yessorae.presentation.dialogs.GoalReminderDatePickerDialog
 import com.yessorae.presentation.dialogs.GoalReminderTimePickerDialog
 import com.yessorae.presentation.dialogs.NotificationPermissionDialog
 import com.yessorae.presentation.dialogs.OptionsDialog
+import com.yessorae.presentation.dialogs.checkNotificationEnabled
 import com.yessorae.presentation.ext.BottomNavigationBarHeightDp
 import com.yessorae.presentation.model.GoalModel
 import com.yessorae.presentation.model.mockGoalDatumModels
@@ -57,6 +58,7 @@ import com.yessorae.presentation.screen.editors.EditorTextField
 import com.yessorae.presentation.screen.editors.EditorTopAppBar
 import com.yessorae.presentation.screen.editors.MultiLineEditorListItem
 import com.yessorae.presentation.screen.editors.SelectableEditorListItem
+import com.yessorae.presentation.screen.editors.common.AlarmListItem
 import com.yessorae.util.getWeekDisplay
 import com.yessorae.util.now
 import com.yessorae.util.showToast
@@ -148,6 +150,15 @@ fun TodoEditorScreen(
                         },
                         onClickEndTime = {
                             viewModel.onClickEndTime()
+                        }
+                    )
+                }
+
+                // todo impl
+                item {
+                    AlarmListItem(
+                        onClickAdd = {
+                            viewModel.onClickAddAlarm(context.checkNotificationEnabled())
                         }
                     )
                 }

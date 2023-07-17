@@ -398,9 +398,9 @@ class GoalEditorViewModel @Inject constructor(
                     editorDialogState = EditorDialogState.Alarms()
                 )
             }
-            _toast.emit(ResString(R.string.common_toast_send_you_notification))
+            _toast.emit(ResString(R.string.todo_toast_will_send_you_notification))
         } else {
-            _toast.emit(ResString(R.string.common_toast_can_not_use_without_permission))
+            _toast.emit(ResString(R.string.todo_toast_please_alarm_on))
         }
 
         onCancelDialog()
