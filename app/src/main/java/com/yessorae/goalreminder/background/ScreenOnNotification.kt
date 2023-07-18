@@ -140,7 +140,7 @@ class ScreenOnNotification @Inject constructor() {
             val channel = NotificationChannel(
                 id,
                 name,
-                NotificationManager.IMPORTANCE_HIGH
+                importance
             ).apply {
                 description = desc
             }
