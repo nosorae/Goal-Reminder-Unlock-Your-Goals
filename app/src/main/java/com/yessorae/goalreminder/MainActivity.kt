@@ -7,9 +7,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
+import androidx.work.Data
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.yessorae.common.Logger
 import com.yessorae.goalreminder.background.ScreenOnService
+import com.yessorae.goalreminder.background.worker.PeriodicNotificationWorker
 import com.yessorae.goalreminder.util.isServiceRunning
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -18,6 +24,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
+
+        Logger.uiDebug("before")
+        test()
         setScreen()
         startScreenOnOffService()
 
@@ -43,5 +52,27 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    // todo delete
+    private fun test() {
+        Logger.uiDebug("test1")
+        val worker = PeriodicWorkRequestBuilder<PeriodicNotificationWorker>(1, TimeUnit.MINUTES)
+            .setInputData(
+                Data.Builder().apply {
+                    putString(PeriodicNotificationWorker.PARAM_TITLE, "테스트 타이틀")
+                    putString(PeriodicNotificationWorker.PARAM_BODY, "테스트 바디")
+                }.build()
+            )
+//            .addTag()
+            .build()
+        Logger.uiDebug("test2")
+
+        WorkManager
+            .getInstance(this)
+            .enqueue(worker)
+
+        Logger.uiDebug("test3")
+
     }
 }
