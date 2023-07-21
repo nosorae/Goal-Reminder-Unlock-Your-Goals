@@ -3,6 +3,7 @@ package com.yessorae.goalreminder.background.worker
 import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
+import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.yessorae.common.Logger
 import com.yessorae.goalreminder.background.PeriodicNotificationManager
@@ -14,8 +15,8 @@ class PeriodicNotificationWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     private val notificationManager: PeriodicNotificationManager
-) : CoroutineWorker(context, params) {
-    override suspend fun doWork(): Result {
+) : Worker(context, params) {
+    override fun doWork(): Result {
         val title = inputData.getString(PARAM_TITLE) ?: DEFAULT_STRING
         val body = inputData.getString(PARAM_BODY) ?: DEFAULT_STRING
 
