@@ -11,19 +11,34 @@ import androidx.work.Data
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.yessorae.common.Logger
+import com.yessorae.goalreminder.background.PeriodicNotificationManager
 import com.yessorae.goalreminder.background.ScreenOnService
 import com.yessorae.goalreminder.background.worker.PeriodicNotificationWorker
 import com.yessorae.goalreminder.util.isServiceRunning
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
+    @Inject
+    lateinit var notificationManager: PeriodicNotificationManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
+        notificationManager.apply {
+            createNotificationChannel(context = applicationContext)
+            showNotification(
+                context = applicationContext,
+                builder = createNotification(
+                    context = applicationContext,
+                    title = "타이틀",
+                    body = "바디"
+                )
+            )
+        }
 
         Logger.uiDebug("before")
         test()
