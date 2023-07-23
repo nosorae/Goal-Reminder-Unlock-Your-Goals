@@ -1,6 +1,7 @@
 package com.yessorae.goalreminder.background.worker
 
 import android.content.Context
+import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.Worker
@@ -20,6 +21,7 @@ class PeriodicNotificationWorker @AssistedInject constructor(
         val title = inputData.getString(PARAM_TITLE) ?: DEFAULT_STRING
         val body = inputData.getString(PARAM_BODY) ?: DEFAULT_STRING
 
+        Log.d("SR-N","title $title, body $body")
         Logger.uiDebug("title $title, body $body")
         notificationManager.apply {
             createNotificationChannel(context = applicationContext)

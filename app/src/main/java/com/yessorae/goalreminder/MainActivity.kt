@@ -3,13 +3,16 @@ package com.yessorae.goalreminder
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
 import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import com.yessorae.common.Logger
 import com.yessorae.goalreminder.background.PeriodicNotificationManager
 import com.yessorae.goalreminder.background.ScreenOnService
@@ -28,20 +31,20 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        notificationManager.apply {
-            createNotificationChannel(context = applicationContext)
-            showNotification(
-                context = applicationContext,
-                builder = createNotification(
-                    context = applicationContext,
-                    title = "타이틀",
-                    body = "바디"
-                )
-            )
-        }
+//        notificationManager.apply {
+//            createNotificationChannel(context = applicationContext)
+//            showNotification(
+//                context = applicationContext,
+//                builder = createNotification(
+//                    context = applicationContext,
+//                    title = "타이틀",
+//                    body = "바디"
+//                )
+//            )
+//        }
 
         Logger.uiDebug("before")
-        test()
+//        test()
         setScreen()
         startScreenOnOffService()
 
@@ -71,23 +74,33 @@ class MainActivity : ComponentActivity() {
 
     // todo delete
     private fun test() {
-        Logger.uiDebug("test1")
-        val worker = PeriodicWorkRequestBuilder<PeriodicNotificationWorker>(1, TimeUnit.MINUTES)
-            .setInputData(
-                Data.Builder().apply {
-                    putString(PeriodicNotificationWorker.PARAM_TITLE, "테스트 타이틀")
-                    putString(PeriodicNotificationWorker.PARAM_BODY, "테스트 바디")
-                }.build()
-            )
-//            .addTag()
-            .build()
-        Logger.uiDebug("test2")
 
+        val uploadWorkRequest: WorkRequest =
+            OneTimeWorkRequestBuilder<PeriodicNotificationWorker>()
+                .build()
         WorkManager
             .getInstance(this)
-            .enqueue(worker)
-
-        Logger.uiDebug("test3")
+            .enqueue(uploadWorkRequest)
+//
+//        Log.d("SR-N","test1")
+//        Logger.uiDebug("test1")
+//        val worker = PeriodicWorkRequestBuilder<PeriodicNotificationWorker>(1, TimeUnit.MINUTES)
+//            .setInputData(
+//                Data.Builder().apply {
+//                    putString(PeriodicNotificationWorker.PARAM_TITLE, "테스트 타이틀")
+//                    putString(PeriodicNotificationWorker.PARAM_BODY, "테스트 바디")
+//                }.build()
+//            )
+//            .build()
+//        Log.d("SR-N","test2")
+//        Logger.uiDebug("test2")
+//
+//        WorkManager
+//            .getInstance(this)
+//            .enqueue(worker)
+//
+//        Log.d("SR-N","test3")
+//        Logger.uiDebug("test3")
 
     }
 }

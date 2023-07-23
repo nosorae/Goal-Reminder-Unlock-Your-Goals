@@ -18,7 +18,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 // todo make base class
-@Singleton
 class PeriodicNotificationManager @Inject constructor() {
 
     fun createNotification(
