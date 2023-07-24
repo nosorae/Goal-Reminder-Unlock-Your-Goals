@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
@@ -25,28 +26,17 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
+
     @Inject
     lateinit var notificationManager: PeriodicNotificationManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-//        notificationManager.apply {
-//            createNotificationChannel(context = applicationContext)
-//            showNotification(
-//                context = applicationContext,
-//                builder = createNotification(
-//                    context = applicationContext,
-//                    title = "타이틀",
-//                    body = "바디"
-//                )
-//            )
-//        }
-
         Logger.uiDebug("before")
-//        test()
+        test()
         setScreen()
-        startScreenOnOffService()
+//        startScreenOnOffService()
 
         viewModel.onCreateActivity()
     }
@@ -77,10 +67,18 @@ class MainActivity : ComponentActivity() {
 
         val uploadWorkRequest: WorkRequest =
             OneTimeWorkRequestBuilder<PeriodicNotificationWorker>()
+                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                 .build()
         WorkManager
             .getInstance(this)
+
             .enqueue(uploadWorkRequest)
+
+
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(uploadWorkRequest.id).observeForever {
+            Log.d("SR-N", "$it")
+            Logger.uiDebug("$it")
+        }
 //
 //        Log.d("SR-N","test1")
 //        Logger.uiDebug("test1")
