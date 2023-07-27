@@ -8,10 +8,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
-import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
-import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import com.yessorae.common.Logger
@@ -20,7 +18,6 @@ import com.yessorae.goalreminder.background.ScreenOnService
 import com.yessorae.goalreminder.background.worker.PeriodicNotificationWorker
 import com.yessorae.goalreminder.util.isServiceRunning
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -36,7 +33,7 @@ class MainActivity : ComponentActivity() {
         Logger.uiDebug("before")
         test()
         setScreen()
-//        startScreenOnOffService()
+        startScreenOnOffService()
 
         viewModel.onCreateActivity()
     }
@@ -65,17 +62,17 @@ class MainActivity : ComponentActivity() {
     // todo delete
     private fun test() {
 
-        val uploadWorkRequest: WorkRequest =
+        val notificationWorkerRequest: WorkRequest =
             OneTimeWorkRequestBuilder<PeriodicNotificationWorker>()
                 .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                .addTag("notificationWorkerRequest")
                 .build()
         WorkManager
             .getInstance(this)
+            .enqueue(notificationWorkerRequest)
 
-            .enqueue(uploadWorkRequest)
 
-
-        WorkManager.getInstance(this).getWorkInfoByIdLiveData(uploadWorkRequest.id).observeForever {
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(notificationWorkerRequest.id).observeForever {
             Log.d("SR-N", "$it")
             Logger.uiDebug("$it")
         }

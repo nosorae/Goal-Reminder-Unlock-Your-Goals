@@ -35,7 +35,7 @@ class ScreenOnService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        notification.cancel(this, FOREGROUND_SERVICE_NOTIFICATION_ID) // todo test
+        notification.cancel(this, FOREGROUND_SERVICE_NOTIFICATION_ID)
         unregisterReceiver(screenOnOffReceiver)
         job.cancel()
     }
