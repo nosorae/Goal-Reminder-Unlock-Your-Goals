@@ -30,8 +30,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        Logger.uiDebug("before")
-        test()
         setScreen()
         startScreenOnOffService()
 
@@ -57,45 +55,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-    // todo delete
-    private fun test() {
-
-        val notificationWorkerRequest: WorkRequest =
-            OneTimeWorkRequestBuilder<PeriodicNotificationWorker>()
-                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
-                .addTag("notificationWorkerRequest")
-                .build()
-        WorkManager
-            .getInstance(this)
-            .enqueue(notificationWorkerRequest)
-
-
-        WorkManager.getInstance(this).getWorkInfoByIdLiveData(notificationWorkerRequest.id).observeForever {
-            Log.d("SR-N", "$it")
-            Logger.uiDebug("$it")
-        }
-//
-//        Log.d("SR-N","test1")
-//        Logger.uiDebug("test1")
-//        val worker = PeriodicWorkRequestBuilder<PeriodicNotificationWorker>(1, TimeUnit.MINUTES)
-//            .setInputData(
-//                Data.Builder().apply {
-//                    putString(PeriodicNotificationWorker.PARAM_TITLE, "테스트 타이틀")
-//                    putString(PeriodicNotificationWorker.PARAM_BODY, "테스트 바디")
-//                }.build()
-//            )
-//            .build()
-//        Log.d("SR-N","test2")
-//        Logger.uiDebug("test2")
-//
-//        WorkManager
-//            .getInstance(this)
-//            .enqueue(worker)
-//
-//        Log.d("SR-N","test3")
-//        Logger.uiDebug("test3")
-
     }
 }
