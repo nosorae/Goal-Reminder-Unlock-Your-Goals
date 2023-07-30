@@ -1,6 +1,9 @@
 package com.yessorae.goalreminder.util
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import com.yessorae.common.Logger
 import com.yessorae.domain.model.Goal
 import com.yessorae.domain.model.Todo
@@ -10,12 +13,14 @@ import com.yessorae.domain.repository.GoalRepository
 import com.yessorae.domain.repository.PreferencesDatastoreRepository
 import com.yessorae.domain.repository.TodoRepository
 import com.yessorae.domain.usecase.CheckTodoTransactionUseCase
+import com.yessorae.goalreminder.background.periodicalarm.PeriodicNotificationReceiver
 import com.yessorae.presentation.R
 import com.yessorae.util.now
 import com.yessorae.util.toLocalDateTime
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.datetime.LocalDateTime
+import java.util.Calendar
 
 class InitDataHelper @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -29,6 +34,7 @@ class InitDataHelper @Inject constructor(
             preferencesDatastoreRepository.setCompleteOnBoardingMockData()
             try {
                 insertOnBoardingData()
+                minutesAlarmSetting()
             } catch (e: Exception) {
                 Logger.recordException(e)
             }
@@ -103,6 +109,56 @@ class InitDataHelper @Inject constructor(
                 todo = todo1_2.copy(todoId = todoId1_2),
                 upperGoal = weeklyGoal1_2.copy(goalId = weeklyGoalId1_2)
             )
+        )
+    }
+
+    private fun yearlyAlarmSetting() {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, PeriodicNotificationReceiver::class.java)
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            add(Calendar.DAY_OF_YEAR, 1)
+        }
+
+        alarmManager.setInexactRepeating(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            AlarmManager.INTERVAL_DAY,
+            pendingIntent
+        )
+    }
+
+    private fun minutesAlarmSetting() {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, PeriodicNotificationReceiver::class.java)
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            add(Calendar.MINUTE, 1)
+        }
+
+        alarmManager.setInexactRepeating(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            AlarmManager.INTERVAL_DAY,
+            pendingIntent
         )
     }
 }
