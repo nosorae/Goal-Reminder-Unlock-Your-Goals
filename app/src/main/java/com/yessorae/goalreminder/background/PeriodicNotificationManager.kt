@@ -79,8 +79,8 @@ class PeriodicNotificationManager @Inject constructor() {
     }
 
     companion object {
-        const val serviceChannelId = "Foreground service channel"
-        const val channelName = "Foreground service channel"
-        const val channelDescription = "launch app every screen on"
+        const val serviceChannelId = "Periodic notification channel"
+        const val channelName = "Periodic notification channel"
+        const val channelDescription = "daily remind"
     }
 }
