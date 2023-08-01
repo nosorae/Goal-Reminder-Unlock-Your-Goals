@@ -1,5 +1,8 @@
 package com.yessorae.goalreminder
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -15,9 +18,12 @@ import androidx.work.WorkRequest
 import com.yessorae.common.Logger
 import com.yessorae.goalreminder.background.PeriodicNotificationManager
 import com.yessorae.goalreminder.background.ScreenOnService
+import com.yessorae.goalreminder.background.periodicalarm.PeriodicNotificationReceiver
 import com.yessorae.goalreminder.background.worker.PeriodicNotificationWorker
-import com.yessorae.goalreminder.util.isServiceRunning
+import com.yessorae.goalreminder.util.setDailyNotification
+import com.yessorae.goalreminder.util.startScreenOnOffService
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Calendar
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -32,6 +38,7 @@ class MainActivity : ComponentActivity() {
 
         setScreen()
         startScreenOnOffService()
+        setDailyNotification()
 
         viewModel.onCreateActivity()
     }
@@ -39,21 +46,6 @@ class MainActivity : ComponentActivity() {
     private fun setScreen() {
         setContent {
             GoalReminderAppScreen()
-        }
-    }
-
-    private fun startScreenOnOffService() {
-        Intent(
-            this,
-            ScreenOnService::class.java
-        ).also { intent ->
-            if (!isServiceRunning(ScreenOnService::class.java)) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    startForegroundService(intent)
-                } else {
-                    startService(intent)
-                }
-            }
         }
     }
 }
