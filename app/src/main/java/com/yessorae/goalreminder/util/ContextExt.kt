@@ -23,7 +23,7 @@ fun Context.setDailyNotification() {
 
     val calendar = Calendar.getInstance().apply {
         timeInMillis = System.currentTimeMillis()
-        add(Calendar.MINUTE, 0) // todo HOUR_OF_DAY 로 교체
+        add(Calendar.HOUR_OF_DAY, 0)
     }
 
     alarmManager.setAndAllowWhileIdle(
@@ -31,11 +31,6 @@ fun Context.setDailyNotification() {
         calendar.timeInMillis,
         pendingIntent,
     )
-//    alarmManager.setExactAndAllowWhileIdle(
-//        AlarmManager.RTC_WAKEUP,
-//        calendar.timeInMillis,
-//        pendingIntent,
-//    )
 }
 
 fun Context.startScreenOnOffService() {
