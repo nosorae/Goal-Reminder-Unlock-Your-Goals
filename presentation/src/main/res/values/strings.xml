@@ -72,6 +72,7 @@
     <string name="todo_none_goal">없음</string>
     <string name="goal_toast_out_of_order_start_time">시작 시간은 종료 시간 이후일 수 없습니다.</string>
     <string name="goal_toast_out_of_order_end_time">종료 시간은 시작 시간 이전일 수 없습니다.</string>
+    <string name="goal_toast_start_time_first_for_alarm">알림을 설정하려면 먼저 시작시간을 적어주세요.</string>
 
 
     <!-- 반복 알람  -->

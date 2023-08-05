@@ -1,6 +1,8 @@
 package com.yessorae.presentation.screen.editors.todo
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
 import com.yessorae.base.BaseScreenViewModel
 import com.yessorae.common.AnalyticsConstants
 import com.yessorae.common.Logger
@@ -16,6 +18,7 @@ import com.yessorae.presentation.model.asDomainModel
 import com.yessorae.presentation.model.asModel
 import com.yessorae.presentation.model.enums.AlarmType
 import com.yessorae.presentation.screen.editors.EditorDialogState
+import com.yessorae.presentation.worker.TodoNotificationWorker
 import com.yessorae.util.ResString
 import com.yessorae.util.StringModel
 import com.yessorae.util.fromHourMinute
@@ -28,8 +31,10 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.atTime
+import java.util.concurrent.TimeUnit
 
 @HiltViewModel
 class TodoEditorViewModel @Inject constructor(
@@ -178,9 +183,13 @@ class TodoEditorViewModel @Inject constructor(
         onCancelDialog()
     }
 
-    fun onClickAddAlarm(permissionGranted: Boolean) {
+    fun onClickAddAlarm(permissionGranted: Boolean) = ioScope.launch {
+        stateValue.startTime ?: run {
+            _toast.emit(ResString(R.string.goal_toast_start_time_first_for_alarm))
+            return@launch
+        }
+
         if (permissionGranted) {
-            // todo goalId 로 이미 저장된 알람타입들 제거하고 Alarms 파라미터에 전달
             updateState {
                 stateValue.copy(
                     editorDialogState = EditorDialogState.Alarms()
@@ -196,9 +205,7 @@ class TodoEditorViewModel @Inject constructor(
     }
 
     fun onPermissionLogicCompleted(result: Boolean) = ioScope.launch {
-        Logger.debug("onPermissionLogicCompleted result $result")
         if (result) {
-            // todo goalId 로 이미 저장된 알람타입들 제거하고 Alarms 파라미터에 전달
             updateState {
                 stateValue.copy(
                     editorDialogState = EditorDialogState.Alarms()
@@ -212,14 +219,21 @@ class TodoEditorViewModel @Inject constructor(
         onCancelDialog()
     }
 
-    fun onSelectNotification(alarmType: AlarmType) {
-        // todo impl
-
+    fun onSelectNotification(alarmType: AlarmType) = ioScope.launch {
+        updateState {
+            stateValue.copy(
+                alarmTypes = stateValue.alarmTypes + setOf(alarmType)
+            )
+        }
         onCancelDialog()
     }
 
-    fun onDeleteNotification(alarmType: AlarmType) = ioScope.launch {
-        _toast.emit(ResString(R.string.todo_toast_cancel_notification))
+    fun onClickRemoveAlarm(alarmType: AlarmType) = ioScope.launch {
+        updateState {
+            stateValue.copy(
+                alarmTypes = stateValue.alarmTypes - setOf(alarmType)
+            )
+        }
     }
 
     fun onClickContributeGoal() = ioScope.launch {
@@ -310,26 +324,69 @@ class TodoEditorViewModel @Inject constructor(
     }
 
     fun onClickSave() = ioScope.launch {
-        stateValue.getTodo()?.asDomainModel()?.let {
+        stateValue.getTodo()?.let { todoModel ->
+            val domainModel = todoModel.asDomainModel()
             showLoading()
-            if (isUpdate) {
-                todoRepository.updateTodoTransaction(it)
+            val todoId: Int = if (isUpdate) {
+                todoRepository.updateTodoTransaction(domainModel)
+                domainModel.todoId
             } else {
                 with(AnalyticsConstants) {
                     Logger.logAnalyticsEvent(
                         event = EVENT_INSERT_TODO,
-                        PARAM_TITLE to it.title,
-                        PARAM_START to "${it.startTime}",
-                        PARAM_END to "${it.endTime}",
-                        PARAM_HAS_UPPER_GOAL to (it.upperGoalId != null)
+                        PARAM_TITLE to domainModel.title,
+                        PARAM_START to "${domainModel.startTime}",
+                        PARAM_END to "${domainModel.endTime}",
+                        PARAM_HAS_UPPER_GOAL to (domainModel.upperGoalId != null)
                     )
                 }
-                todoRepository.insertTodo(it)
+
+                todoRepository.insertTodo(domainModel)
             }
+            handleNotification(todoId = todoId, startTime = todoModel.startTime, alarms = stateValue.alarmTypes)
             hideLoading()
             back()
         }
     }
+
+    private fun handleNotification(todoId:Int, startTime: LocalDateTime?, alarms: Set<AlarmType>) =
+        ioScope.launch {
+            startTime ?: return@launch
+
+            // todo 실제 DB 수정해서 notificationId 받아와서 전달, 제거된 것은 cancel해줘야함.
+            enqueueNotification(
+                todoId = todoId,
+                notificationId = 0, // todo
+                alarms = alarms,
+                startTime = startTime
+            )
+        }
+
+    private fun enqueueNotification(
+        todoId: Int,
+        notificationId: Int,
+        alarms: Set<AlarmType>,
+        startTime: LocalDateTime?
+    ) = ioScope.launch {
+        Logger.error("enqueueNotification $todoId")
+        val workRequest = OneTimeWorkRequest.Builder(TodoNotificationWorker::class.java)
+            .setInitialDelay(5, TimeUnit.SECONDS)
+            .addTag(TodoNotificationWorker.createTag(todoId, notificationId))
+            .setInputData(
+                Data.Builder()
+                    .apply {
+                        putInt(TodoNotificationWorker.PARAM_TODO_ID, todoId)
+                        putInt(TodoNotificationWorker.PARAM_NOTIFICATION_ID, notificationId)
+                    }
+                    .build()
+            )
+            .build()
+
+        val workRequestUUID = workRequest.id
+        Logger.error("enqueueNotification workRequestUUID $workRequestUUID")
+        _oneTimeWorkRequestEvent.emit(workRequest)
+    }
+
 
     override fun createInitialState(): TodoEditorScreenState {
         return TodoEditorScreenState()
@@ -346,6 +403,7 @@ data class TodoEditorScreenState(
     val upperGoal: GoalModel? = null,
     val upperGoalContributionScore: Int = DomainConstants.DEFAULT_UPPER_GOAL_CONTRIBUTION_SCORE,
     val memo: String? = null,
+    val alarmTypes: Set<AlarmType> = setOf(),
     val changed: Boolean = false,
     val editorDialogState: EditorDialogState = EditorDialogState.None
 ) {

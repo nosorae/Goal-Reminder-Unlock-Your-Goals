@@ -33,7 +33,7 @@ import com.yessorae.presentation.model.enums.AlarmType
 @Composable
 fun AlarmListItem(
     modifier: Modifier = Modifier,
-    selectedAlarm: List<AlarmType> = listOf(),
+    selectedAlarm: Set<AlarmType> = setOf(),
     onClickAdd: () -> Unit = {},
     onClickDelete: (AlarmType) -> Unit = {}
 ) {
@@ -64,7 +64,6 @@ fun AlarmListItem(
                 contentDescription = null
             )
 
-            if (isSelectedAlarmEmpty) {
                 Text(
                     text = stringResource(id = R.string.common_add_alarm),
                     modifier = Modifier
@@ -73,38 +72,39 @@ fun AlarmListItem(
                             start = Dimen.DefaultDividePadding
                         )
                 )
-            } else {
-                selectedAlarm.firstOrNull()?.let { alarm ->
-                    Row(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(
-                                start = Dimen.DefaultDividePadding
-                            ),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = alarm.display.get(context),
-                            modifier = Modifier.weight(1f)
-                        )
-                        Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .clickable(
-                                    onClick = { onClickDelete(alarm) },
-                                    indication = null,
-                                    interactionSource = MutableInteractionSource()
-                                )
-                                .padding(Dimen.SmallDividePadding)
-                        )
-                    }
-                }
-            }
+//            if (isSelectedAlarmEmpty) {
+//            } else {
+//                selectedAlarm.firstOrNull()?.let { alarm ->
+//                    Row(
+//                        modifier = Modifier
+//                            .weight(1f)
+//                            .padding(
+//                                start = Dimen.DefaultDividePadding
+//                            ),
+//                        verticalAlignment = Alignment.CenterVertically
+//                    ) {
+//                        Text(
+//                            text = alarm.display.get(context),
+//                            modifier = Modifier.weight(1f)
+//                        )
+//                        Icon(
+//                            imageVector = Icons.Filled.Close,
+//                            contentDescription = null,
+//                            modifier = Modifier
+//                                .clickable(
+//                                    onClick = { onClickDelete(alarm) },
+//                                    indication = null,
+//                                    interactionSource = MutableInteractionSource()
+//                                )
+//                                .padding(Dimen.SmallDividePadding)
+//                        )
+//                    }
+//                }
+//            }
         }
 
         selectedAlarm.forEachIndexed { index, alarm ->
-            if (index != 0) {
+//            if (index != 0) {
                 AlarmSelectedListItem(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -117,7 +117,7 @@ fun AlarmListItem(
                         onClickDelete(alarm)
                     }
                 )
-            }
+//            }
         }
     }
 }
@@ -178,12 +178,12 @@ fun AlarmListItemPreview() {
     BasePreview {
         AlarmListItem()
         AlarmListItem(
-            selectedAlarm = listOf(
+            selectedAlarm = setOf(
                 AlarmType.ONE_DAY,
             )
         )
         AlarmListItem(
-            selectedAlarm = listOf(
+            selectedAlarm = setOf(
                 AlarmType.ONE_MINUTE,
                 AlarmType.FIFTEEN_MINUTE
             )

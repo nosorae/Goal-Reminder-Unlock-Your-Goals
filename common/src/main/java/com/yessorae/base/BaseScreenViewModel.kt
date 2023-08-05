@@ -2,6 +2,7 @@ package com.yessorae.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.OneTimeWorkRequest
 import com.yessorae.common.Logger
 import com.yessorae.util.StringModel
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +31,12 @@ abstract class BaseScreenViewModel<T> : ViewModel() {
 
     protected val _loading = MutableStateFlow(false)
     val loading: StateFlow<Boolean> = _loading.asStateFlow()
+
+    protected val _oneTimeWorkRequestEvent = MutableSharedFlow<OneTimeWorkRequest>()
+    val oneTimeWorkRequestEvent: SharedFlow<OneTimeWorkRequest> = _oneTimeWorkRequestEvent.asSharedFlow()
+
+    protected val _cancelWorkRequestEvent = MutableSharedFlow<String>()
+    val cancelWorkRequestEvent: SharedFlow<String> = _cancelWorkRequestEvent.asSharedFlow()
 
     val ioScope = viewModelScope + Dispatchers.IO
 

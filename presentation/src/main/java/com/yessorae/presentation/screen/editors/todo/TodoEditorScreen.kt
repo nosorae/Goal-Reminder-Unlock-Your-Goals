@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.yessorae.common.Logger
 import com.yessorae.designsystem.common.ScreenLoadingProgressbar
 import com.yessorae.designsystem.theme.Dimen
 import com.yessorae.designsystem.util.BasePreview
@@ -59,6 +60,7 @@ import com.yessorae.presentation.screen.editors.EditorTopAppBar
 import com.yessorae.presentation.screen.editors.MultiLineEditorListItem
 import com.yessorae.presentation.screen.editors.SelectableEditorListItem
 import com.yessorae.presentation.screen.editors.common.AlarmListItem
+import com.yessorae.util.enqueueOneTimeWork
 import com.yessorae.util.getWeekDisplay
 import com.yessorae.util.now
 import com.yessorae.util.showToast
@@ -95,6 +97,16 @@ fun TodoEditorScreen(
                 } ?: run {
                     onBackEvent()
                 }
+            }
+        }
+
+        launch {
+            viewModel.oneTimeWorkRequestEvent.collectLatest { workRequest ->
+                Logger.error("oneTimeWorkRequestEvent")
+                enqueueOneTimeWork(
+                    context = context,
+                    workRequest = workRequest
+                )
             }
         }
     }
@@ -157,8 +169,12 @@ fun TodoEditorScreen(
                 // todo impl
                 item {
                     AlarmListItem(
+                        selectedAlarm = model.alarmTypes,
                         onClickAdd = {
                             viewModel.onClickAddAlarm(context.checkNotificationEnabled())
+                        },
+                        onClickDelete = {
+                            viewModel.onClickRemoveAlarm(it)
                         }
                     )
                 }
@@ -298,7 +314,6 @@ fun TodoEditorScreen(
                 }
             )
         }
-        // todo 파라미터로 노출된 show 를 제거하고 when 문으로 이동
 
         is EditorDialogState.Alarms -> {
             OptionsDialog(
@@ -320,6 +335,7 @@ fun TodoEditorScreen(
                     )
                 }
             }
+            // todo 파라미터로 노출된 show 를 제거하고 when 문으로 이동
         }
 
         else -> {

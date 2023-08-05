@@ -6,6 +6,11 @@ import com.yessorae.util.StringModel
 import kotlinx.datetime.DateTimeUnit
 
 enum class AlarmType(val number: Int, val unit: DateTimeUnit, val display: StringModel) {
+    NOW(
+        number = 0,
+        unit = DateTimeUnit.MILLISECOND,
+        display = ResString(R.string.common_now)
+    ),
     ONE_MINUTE(
         number = 1,
         unit = DateTimeUnit.MINUTE,

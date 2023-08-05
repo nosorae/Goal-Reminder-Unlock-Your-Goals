@@ -11,17 +11,19 @@ import java.util.concurrent.TimeUnit
 fun getOneTimeWorkRequest(
     workerClass: Class<out ListenableWorker>,
     delayDurationMillis: Long,
+    tagId: String,
     data: Data
 ): OneTimeWorkRequest {
     return OneTimeWorkRequest.Builder(workerClass)
         .setInitialDelay(delayDurationMillis, TimeUnit.MILLISECONDS)
+        .addTag(tag = tagId)
         .setInputData(data)
         .build()
 }
 
-fun enqueueWork(context: Context, workTag: String, workRequest: OneTimeWorkRequest) {
+fun enqueueOneTimeWork(context: Context, workRequest: OneTimeWorkRequest) {
     WorkManager.getInstance(context).enqueueUniqueWork(
-        workTag,
+        "${workRequest.id}",
         ExistingWorkPolicy.KEEP,
         workRequest
     )

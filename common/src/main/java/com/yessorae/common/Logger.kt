@@ -7,11 +7,13 @@ import com.google.firebase.ktx.Firebase
 import timber.log.Timber
 
 object Logger {
-    private const val UI_TAG = "SRN-UI"
-    private const val DATA_TAG = "SRN-DATA"
-    private const val INSTANT_TAG = "SRN-INSTANT"
+    private const val UI_TAG = "SR-N"
     fun debug(message: String) {
         Timber.tag(UI_TAG).d(message)
+    }
+
+    fun error(message: String) {
+        Timber.tag(UI_TAG).e(message)
     }
 
     fun getNowSec(where: String) {
@@ -26,6 +28,8 @@ object Logger {
         event: String,
         vararg params: Pair<String, Any?>
     ) {
+        if (BuildConfig.DEBUG) return
+
         Bundle().apply {
             params.forEach { pair ->
                 when (val value = pair.second) {
