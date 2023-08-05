@@ -196,7 +196,7 @@ class TodoEditorViewModel @Inject constructor(
     }
 
     fun onPermissionLogicCompleted(result: Boolean) = ioScope.launch {
-        Logger.uiDebug("onPermissionLogicCompleted result $result")
+        Logger.debug("onPermissionLogicCompleted result $result")
         if (result) {
             // todo goalId 로 이미 저장된 알람타입들 제거하고 Alarms 파라미터에 전달
             updateState {
@@ -214,11 +214,12 @@ class TodoEditorViewModel @Inject constructor(
 
     fun onSelectNotification(alarmType: AlarmType) {
         // todo impl
+
         onCancelDialog()
     }
 
-    fun onDeleteNotification(alarmType: AlarmType) {
-        // todo impl
+    fun onDeleteNotification(alarmType: AlarmType) = ioScope.launch {
+        _toast.emit(ResString(R.string.todo_toast_cancel_notification))
     }
 
     fun onClickContributeGoal() = ioScope.launch {

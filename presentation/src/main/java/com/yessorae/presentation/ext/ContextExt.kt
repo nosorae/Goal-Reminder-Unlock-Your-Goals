@@ -7,7 +7,7 @@ import android.net.Uri
 import com.yessorae.common.Logger
 
 fun Context.redirectToWebBrowser(link: String, onActivityNotFoundException: () -> Unit) {
-    Logger.uiDebug("redirectToWebBrowser $link")
+    Logger.debug("redirectToWebBrowser $link")
     Intent(Intent.ACTION_VIEW, Uri.parse(link)).also { intent ->
         try {
             startActivity(intent)

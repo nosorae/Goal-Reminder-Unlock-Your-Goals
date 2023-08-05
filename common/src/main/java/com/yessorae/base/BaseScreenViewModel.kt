@@ -36,7 +36,7 @@ abstract class BaseScreenViewModel<T> : ViewModel() {
     open fun updateState(newState: () -> T) = viewModelScope.launch {
         _state.update {
             val new = newState.invoke()
-            Logger.uiDebug("message $new")
+            Logger.debug("message $new")
             new
         }
     }
