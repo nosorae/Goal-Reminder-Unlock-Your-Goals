@@ -8,7 +8,7 @@ import com.yessorae.goalreminder.background.worker.DailyNotificationWorker
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
-private fun Context.setDailyNotification() {
+fun Context.setDailyNotification() {
     val workManager = WorkManager.getInstance(this)
 
     val notificationWorkRequest = PeriodicWorkRequest.Builder(
