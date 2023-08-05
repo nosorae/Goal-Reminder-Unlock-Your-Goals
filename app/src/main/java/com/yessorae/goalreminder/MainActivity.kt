@@ -1,12 +1,7 @@
 package com.yessorae.goalreminder
 
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -14,17 +9,11 @@ import androidx.core.view.WindowCompat
 import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.OneTimeWorkRequest
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.OutOfQuotaPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
-import androidx.work.WorkRequest
 import com.yessorae.common.Logger
 import com.yessorae.goalreminder.background.PeriodicNotificationManager
-import com.yessorae.goalreminder.background.ScreenOnService
-import com.yessorae.goalreminder.background.periodicalarm.PeriodicNotificationReceiver
-import com.yessorae.goalreminder.background.worker.PeriodicNotificationWorker
-import com.yessorae.goalreminder.util.setDailyNotification
+import com.yessorae.goalreminder.background.worker.DailyNotificationWorker
 import com.yessorae.goalreminder.util.startScreenOnOffService
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -44,9 +33,7 @@ class MainActivity : ComponentActivity() {
 
         setScreen()
         startScreenOnOffService()
-//        setDailyNotification()
-        testWorkManager2()
-        tenSec()
+
         viewModel.onCreateActivity()
     }
 
@@ -62,11 +49,11 @@ class MainActivity : ComponentActivity() {
         val workManager = WorkManager.getInstance(this)
 
         val notificationWorkRequest =
-            OneTimeWorkRequest.Builder(PeriodicNotificationWorker::class.java)
+            OneTimeWorkRequest.Builder(DailyNotificationWorker::class.java)
                 .setInitialDelay(10, TimeUnit.SECONDS) // 10초 후에 작업 실행
                 .setInputData(Data.Builder().apply {
-                    putString(PeriodicNotificationWorker.PARAM_TITLE, "tenSec Title")
-                    putString(PeriodicNotificationWorker.PARAM_BODY, "tenSec Body")
+                    putString(DailyNotificationWorker.PARAM_TITLE, "tenSec Title")
+                    putString(DailyNotificationWorker.PARAM_BODY, "tenSec Body")
                 }.build())
                 .build()
 
@@ -81,7 +68,7 @@ class MainActivity : ComponentActivity() {
         val workManager = WorkManager.getInstance(this)
 
         val notificationWorkRequest = PeriodicWorkRequest.Builder(
-            workerClass = PeriodicNotificationWorker::class.java,
+            workerClass = DailyNotificationWorker::class.java,
             repeatInterval = 15,
             repeatIntervalTimeUnit = TimeUnit.MINUTES
         )
@@ -89,30 +76,7 @@ class MainActivity : ComponentActivity() {
             .build()
 
         workManager.enqueueUniquePeriodicWork(
-            PeriodicNotificationWorker.TAG,
-            ExistingPeriodicWorkPolicy.KEEP,
-            notificationWorkRequest
-        )
-
-        Logger.getNowSec("enqueue end")
-    }
-
-
-    private fun testWorkManager2() {
-
-        Logger.getNowSec(" enqueue start")
-        val workManager = WorkManager.getInstance(this)
-
-        val notificationWorkRequest = PeriodicWorkRequest.Builder(
-            workerClass = PeriodicNotificationWorker::class.java,
-            repeatInterval = 15,
-            repeatIntervalTimeUnit = TimeUnit.MINUTES
-        )
-            .setInitialDelay(1, TimeUnit.SECONDS)
-            .build()
-
-        workManager.enqueueUniquePeriodicWork(
-            PeriodicNotificationWorker.TAG,
+            DailyNotificationWorker.TAG,
             ExistingPeriodicWorkPolicy.KEEP,
             notificationWorkRequest
         )
@@ -139,18 +103,4 @@ class MainActivity : ComponentActivity() {
 //            notificationWorkRequest
 //        )
 //    }
-
-    fun calculateInitialDelay(): Long {
-        val now = Calendar.getInstance()
-        val nextMidnight = Calendar.getInstance().apply {
-            add(Calendar.DAY_OF_YEAR, 1)
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-        }
-
-        Timber.tag("SR-N").d("")
-
-        return nextMidnight.timeInMillis - now.timeInMillis
-    }
 }

@@ -11,7 +11,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
 @HiltWorker
-class PeriodicNotificationWorker @AssistedInject constructor(
+class DailyNotificationWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     private val notificationManager: PeriodicNotificationManager
@@ -20,8 +20,6 @@ class PeriodicNotificationWorker @AssistedInject constructor(
         val title = inputData.getString(PARAM_TITLE) ?: DEFAULT_STRING
         val body = inputData.getString(PARAM_BODY) ?: DEFAULT_STRING
 
-        Log.d("SR-N","title $title, body $body")
-        Logger.debug("title $title, body $body")
         notificationManager.apply {
             createNotificationChannel(context = applicationContext)
             showNotification(
