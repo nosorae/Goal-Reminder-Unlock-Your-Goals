@@ -1,4 +1,4 @@
-package com.yessorae.goalreminder.background
+package com.yessorae.presentation
 
 import android.Manifest
 import android.app.NotificationChannel
@@ -7,23 +7,22 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.yessorae.goalreminder.MainActivity
-import com.yessorae.goalreminder.R
+import com.yessorae.common.Logger
 import javax.inject.Inject
 
-// todo make base class
-class PeriodicNotificationManager @Inject constructor() {
-
+class TodoNotificationManager @Inject constructor() {
     fun createNotification(
         context: Context,
         title: String,
         body: String
     ): NotificationCompat.Builder {
-        return NotificationCompat.Builder(context, serviceChannelId)
+        return NotificationCompat.Builder(context, SERVICE_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_goal_reminder_notification)
             .setContentTitle(title)
             .setContentText(body)
@@ -46,12 +45,18 @@ class PeriodicNotificationManager @Inject constructor() {
         }
 
     private fun getDefaultPendingIntent(context: Context): PendingIntent {
-        val intent = Intent(context, MainActivity::class.java).apply {
+        Logger.debug("Timber getDefaultPendingIntent")
+        Log.e("SR-N", "log getDefaultPendingIntent")
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("goalreminder://main")).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
-        return PendingIntent.getActivity(
+
+        val pendingIntent = PendingIntent.getActivity(
             context, 0, intent, PendingIntent.FLAG_IMMUTABLE
         )
+        Logger.debug("Timber getDefaultPendingIntent")
+        Log.e("SR-N", "log getDefaultPendingIntent")
+        return pendingIntent
     }
 
     fun cancel(context: Context, serviceNotificationId: Int) {
@@ -63,11 +68,11 @@ class PeriodicNotificationManager @Inject constructor() {
     fun createNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                serviceChannelId,
-                channelName,
+                SERVICE_CHANNEL_ID,
+                CHANNEL_NAME,
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = channelDescription
+                description = CHANNEL_DESCRIPTION
             }
 
             val notificationManager: NotificationManager =
@@ -77,8 +82,8 @@ class PeriodicNotificationManager @Inject constructor() {
     }
 
     companion object {
-        const val serviceChannelId = "Periodic notification channel"
-        const val channelName = "Periodic notification channel"
-        const val channelDescription = "daily remind"
+        const val SERVICE_CHANNEL_ID = "Todo notification channel"
+        const val CHANNEL_NAME = "Todo notification channel"
+        const val CHANNEL_DESCRIPTION = "task remind"
     }
 }

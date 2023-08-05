@@ -67,6 +67,7 @@
     <string name="todo_confirm_dialog_cancel">계속 작성하기</string>
     <string name="todo_toast_please_alarm_on">알림권한을 켜야 알림을 받아보실 수 있어요 🥺</string>
     <string name="todo_toast_will_send_you_notification">알림을 보내드릴게요 😉</string>
+    <string name="todo_toast_will_send_you_notification_before">%s 알림 설정 완료</string>
     <string name="todo_toast_cancel_notification">알림이 취소 되었어요</string>
     <string name="todo_none_goal">없음</string>
     <string name="goal_toast_out_of_order_start_time">시작 시간은 종료 시간 이후일 수 없습니다.</string>
@@ -76,6 +77,11 @@
     <!-- 반복 알람  -->
     <string name="daily_noti_title">%d월%d일이 시작되었습니다.</string>
     <string name="daily_noti_body">오늘을 회고하고 내일 계획을 세워봐요 💪</string>
+
+    <!-- 투두 알람 -->
+    <string name="todo_noti_title">할 일 알림</string>
+    <string name="todo_noti_body">%d시 %d분에 %s을(를) 실행해야해요</string>
+    <string name="todo_noti_body_without_start_time">지금 %s을(를) 실행해야해요</string>
 
     <!-- 설정  -->
 
@@ -128,6 +134,7 @@
     <string name="common_toast_delete_todo">투두 삭제 완료</string>
     <string name="common_toast_delete_goal">목표 삭제 완료</string>
     <string name="common_add_alarm">알림 추가</string>
+    <string name="common_now">지금</string>
     <string name="common_n_minute_ago">%d분 전</string>
     <string name="common_n_hour_ago">%d시간 전</string>
     <string name="common_n_day_ago">%d일 전</string>
