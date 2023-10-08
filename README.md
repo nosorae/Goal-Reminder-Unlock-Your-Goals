@@ -36,7 +36,7 @@ UI는 생산성을 높이기 위해 Jetpack Compose를 사용하고 디자인을
   - UI 개발: Compose
   - 비동기 작업: Cotourine/Flow
   - 의존성 주입: Hilt
-  - 백그라운드 동작: WorkManager, Service + BroadcastReceiver
+  - 백그라운드 동작: Service + BroadcastReceiver
   - 로컬 데이터 저장: Room, Datastore-Preference
 
 ## 아키텍처
