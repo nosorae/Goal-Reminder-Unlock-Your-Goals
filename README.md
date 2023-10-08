@@ -5,7 +5,10 @@
 <img src="https://github.com/nosorae/Goal-Reminder-Unlock-Your-Goals/assets/62280009/3d341cb2-50b1-4028-902a-2c262aabe370" width="100%" height="0%"/>
 
 ## 소개
-### 만들게 된 계기 (서비스로서의 동기)
+### 제작자
+1인 기획/디자인/개발
+
+### 제작 동기
 제가 좌절할 때 받은 조언을 바탕으로 만들게 되었습니다.</br>
 저는 함께 일하고 싶은 좋은 개발자가 되고 싶고 돈도 많이 벌고 싶은 욕구가 있었습니다.</br>
 하지만 하루하루를 나름 열심히 산다고 하지만 가시적 성장이 나오지 않으니 불안하고 조급해지고 좌절하기도 했습니다.</br>
@@ -18,7 +21,7 @@
 3. 잊지 않게 잠금해제할 때마다 자동으로 앱이 실행되어있어요.
 
 ## 개발
-### 기술적인 동기 소개
+### 기술적인 동기
 만들 당시 Clean Architecture에 대해 관심을 가지고 공부하고 있었습니다.</br>
 공부만 하고 끝내기는 아쉬워서 Clean Architecture를 실제 서비스에 구현하기로 했습니다.</br>
 또한 의존성을 명확히 하기위해 아키텍쳐 수준에서의 Multi Module을 적용하게 되었습니다.</br>
@@ -26,15 +29,27 @@ UI는 생산성을 높이기 위해 Jetpack Compose를 사용하고 디자인을
 
 ### 언어 
   - Kotlin
+### 주요 기술
+- UI 개발: Compose
+- 비동기 작업: Cotourine/Flow
+- 의존성 주입: Hilt
+- 백그라운드 동작: WorkManager
+- 로컬 데이터베이스: Room
 
-### 라이브러리
-⚠️ (작성중)
-
-## 아키텍쳐
-⚠️ (작성중)
+## 아키텍처
+### Clean Architecture
+![mobile_clean_architecture_goal_reminder](https://github.com/nosorae/Goal-Reminder-Unlock-Your-Goals/assets/62280009/cbde61d2-5120-43ad-982c-4a6ccbfae9ec)
 
 ### 의존성 그래프
 ![project-dependency-graph](https://github.com/nosorae/Goal-Reminder-Unlock-Your-Goals/assets/62280009/79c8ed6e-a766-45dc-af78-c28d35686641)
+(made by [gradle-dependency-graph-generator-plugin](https://github.com/vanniktech/gradle-dependency-graph-generator-plugin))
+
+- UI레이어
+  - 단방향 데이터 흐름(UDF)으로 구성되어있습니다. 상태가 UI를 그리고 UI에서 발생한 이벤트가 상태롤 변경시킵니다.
+  - MVVM 패턴으로 구현하였습니다.
+  - Jetpack Compose 를 사용하였습니다.
+- Domain레이어는 안드로이드 프레임워크에 의존하지 않습니다.
+- Data레이어에서 데이터소스는 로컬(DB, Preference)데이터입니다. 현재 로컬만 지원합니다.
 
 ## 디자인
 - 요구사항과 관련된 레퍼런스를 찾아 어떻게 배치할지 정도만 정했습니다.
@@ -42,12 +57,13 @@ UI는 생산성을 높이기 위해 Jetpack Compose를 사용하고 디자인을
   -  [MDC3 문서](https://m3.material.io/components)
   -  Figma Community의 [Material 3 Design Kit](https://www.figma.com/file/KUN5AFovqZoflSJQTj4Wlk/Material-3-Design-Kit-(Community)?type=design&node-id=51964-62981&mode=design)
 
-## 회고
+## 회고. (기획 보강 후 진행 예정)
 ### 서비스 측면
 ⚠️ (작성중)
 
 ### 기술 측면
-⚠️ (작성중)
+혼자보는 문서로 정책이 헷갈리는 부분이 많은 것이 아쉽다.
+테스트 코드를 작성 -> Github Action CI에 통합하여 자동화하여 
 
 ### 디자인 측면 
 ⚠️ (작성중)
