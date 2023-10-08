@@ -2,7 +2,9 @@
 휴대폰을 켤 때마다 목표를 리마인드하고, 목표를 작게 분할하여 정복한다.</br>
 단순한 투두리스트가 아닌 '왜' 하는지 아는 투두가 된다.
 
-<img src="https://github.com/nosorae/Goal-Reminder-Unlock-Your-Goals/assets/62280009/3d341cb2-50b1-4028-902a-2c262aabe370" width="100%" height="0%"/>
+<img src="https://github.com/nosorae/Goal-Reminder-Unlock-Your-Goals/assets/62280009/3d341cb2-50b1-4028-902a-2c262aabe370" width="100%" height="0%"/></br>
+[구글플레이에서 앱을 확인해보세요!](https://play.google.com/store/apps/details?id=com.yessorae.goalreminder)
+
 
 ## 소개
 ### 제작자
@@ -30,18 +32,18 @@ UI는 생산성을 높이기 위해 Jetpack Compose를 사용하고 디자인을
 ### 언어 
   - Kotlin
 ### 주요 기술
-- UI 개발: Compose
-- 비동기 작업: Cotourine/Flow
-- 의존성 주입: Hilt
-- 백그라운드 동작: WorkManager
-- 로컬 데이터베이스: Room
+  - UI 개발: Compose
+  - 비동기 작업: Cotourine/Flow
+  - 의존성 주입: Hilt
+  - 백그라운드 동작: WorkManager
+  - 로컬 데이터 저장: Room, Datastore-Preference
 
 ## 아키텍처
 ### Clean Architecture
 ![mobile_clean_architecture_goal_reminder](https://github.com/nosorae/Goal-Reminder-Unlock-Your-Goals/assets/62280009/cbde61d2-5120-43ad-982c-4a6ccbfae9ec)
 
 ### 의존성 그래프
-![project-dependency-graph](https://github.com/nosorae/Goal-Reminder-Unlock-Your-Goals/assets/62280009/79c8ed6e-a766-45dc-af78-c28d35686641)
+![project-dependency-graph](https://github.com/nosorae/Goal-Reminder-Unlock-Your-Goals/assets/62280009/79c8ed6e-a766-45dc-af78-c28d35686641)</br>
 (made by [gradle-dependency-graph-generator-plugin](https://github.com/vanniktech/gradle-dependency-graph-generator-plugin))
 
 - UI레이어
@@ -62,10 +64,8 @@ UI는 생산성을 높이기 위해 Jetpack Compose를 사용하고 디자인을
 ⚠️ (작성중)
 
 ### 기술 측면
-혼자보는 문서로 정책이 헷갈리는 부분이 많은 것이 아쉽다.
+혼자보는 문서로 정책이 헷갈리는 부분이 많은 것이 아쉽다.</br>
 테스트 코드를 작성 -> Github Action CI에 통합하여 자동화하여 
 
 ### 디자인 측면 
 ⚠️ (작성중)
-
-[구글플레이에서 앱을 확인해보세요!](https://play.google.com/store/apps/details?id=com.yessorae.goalreminder)
