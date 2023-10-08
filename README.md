@@ -4,7 +4,7 @@
 
 <img src="https://github.com/nosorae/Goal-Reminder-Unlock-Your-Goals/assets/62280009/3d341cb2-50b1-4028-902a-2c262aabe370" width="100%" height="0%"/></br>
 [[구글플레이에서 보기]](https://play.google.com/store/apps/details?id=com.yessorae.goalreminder)</br>
-[[개인정보 처리방침]](https://fuschia-basement-f24.notion.site/Simple-AI-Photo-Enhancer-53c359a42f754b10bd4b6a19dfcbb075)
+[[개인정보 처리방침]](https://www.notion.so/6b0ca10f3abc438783b29b48169cdd48)
 
 ## 소개
 ### 제작자
