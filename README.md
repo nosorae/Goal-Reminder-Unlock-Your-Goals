@@ -1,5 +1,4 @@
-# 목표 리마인더: 당신의 목표를 잠금해제</br>
-(Goal Reminder: Unlock Your Goals)
+# 목표 리마인더: 당신의 목표를 잠금해제</br>(Goal Reminder: Unlock Your Goals)
 휴대폰을 켤 때마다 목표를 리마인드하고, 목표를 작게 분할하여 정복한다.</br>
 단순한 투두리스트가 아닌 '왜' 하는지 아는 투두가 된다.
 
